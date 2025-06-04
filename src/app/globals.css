@@ -3,6 +3,12 @@
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  --amaranth: #a93f55;
+  --wine: #682734;
+}
+
+@theme {
+  --color-amaranth: var(--amaranth);
 }
 
 @theme inline {
@@ -24,3 +30,35 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+button,
+.button {
+  font-family: inherit;
+  border: none;
+  background-color: var(--amaranth);
+  border-radius: var(--radius-sm);
+  padding: 0.25em 0.5em;
+  color: #fff;
+  border: 1.5px solid var(--amaranth);
+  font-size: 100%;
+}
+
+button:hover,
+button:active,
+button:focus,
+.button:hover,
+.button:active,
+.button:focus {
+  background-color: var(--wine);
+  border: 1.5px solid var(--wine);
+  color: var(--color-white);
+  cursor: pointer;
+}
+
+button:disabled,
+.button:disabled {
+  background-color: var(--color-gray-300);
+  border: 1.5px solid var(--color-gray-300);
+  cursor: not-allowed;
+}
+
