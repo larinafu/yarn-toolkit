@@ -2,26 +2,25 @@
 
 import { useRef, useState } from "react";
 import Image from "next/image";
-import { projectConstants } from "@/app/utils/constants";
-import ProjectLimitErrorField from "../../../(authenticated)/projects/components/projectsContainer/projectLimitErrorField/projectLimitErrorField";
-import gridIcon from "@/public/icons/frame-grid-icon.svg";
-import imageIcon from "@/public/icons/image-line-icon.svg";
 
-import BaseImageForm from "../baseImageForm/baseImageForm";
-import useScrollTo from "@/app/utils/hooks/animations/useScrollTo";
-import BaseForm from "../baseForm/baseForm";
-import styles from "./newPixelArtPage.module.css";
+import styles from "./page.module.css";
+import CreateWithImage from "@/components/pixelGrid/createWithImage/createWithImage";
+import useScrollIntoView from "@/hooks/general/useScrollIntoView";
+import InitCustomization from "@/components/pixelGrid/initCustomization/initCustomization";
 
 type BaseOption = "image" | "scratch";
 
+const cardHeaderStyle = "text-4xl";
+const cardSubheaderStyle = "text-xl m-4";
+
 export default function Create() {
-  const [baseOption, setBaseOption] = useState<BaseOption>(null);
+  const [baseOption, setBaseOption] = useState<BaseOption | null>(null);
   const baseOptionRef = useRef(null);
   const handleBaseChoice = (option: BaseOption) => {
     setBaseOption(option);
   };
 
-  useScrollTo(baseOptionRef, [baseOption]);
+  useScrollIntoView(baseOptionRef, [baseOption]);
 
   const addSelectedBorder = (card: BaseOption) => {
     if (card === baseOption) {
@@ -32,33 +31,37 @@ export default function Create() {
 
   return (
     <div className={`fadeIn`}>
-      <h1 className={`${styles.header}`}>Create New Pattern</h1>
-      <p className={styles.subHeader}>
+      <h1 className="mt-2 mb-2 text-center text-5xl">Create New Pattern</h1>
+      <p className="text-center mb-6 text-4xl">
         How would you like to start your pattern?
       </p>
-      <section className={styles.cardContainer}>
+      <section className="flex justify-evenly flex-wrap">
         <div
-          className={`card hoverable ${styles.card} ${addSelectedBorder(
-            "image"
-          )}`}
+          className={`card m-2 hover:cursor-pointer ${
+            styles.card
+          } ${addSelectedBorder("image")}`}
           onClick={() => handleBaseChoice("image")}
           tabIndex={0}
         >
-          <h3>Upload image</h3>
-          <p>We&apos;ll match the initial colors on your grid to fit your image</p>
-          <Image src={imageIcon} alt="image" width={100} height={100} />
+          <h3 className={cardHeaderStyle}>Upload image</h3>
+          <p className={cardSubheaderStyle}>
+            We&apos;ll match the initial colors on your grid to fit your image
+          </p>
+          <Image src="/image.svg" alt="image" width={100} height={100} />
         </div>
         <div
-          className={`card hoverable ${styles.card} ${addSelectedBorder(
-            "scratch"
-          )}`}
+          className={`card m-2 hover:cursor-pointer ${
+            styles.card
+          } ${addSelectedBorder("scratch")}`}
           onClick={() => handleBaseChoice("scratch")}
           tabIndex={0}
         >
-          <h3>Start from scratch</h3>
-          <p>We&apos;ll start you off with a blank grid</p>
+          <h3 className={cardHeaderStyle}>Start from scratch</h3>
+          <p className={cardSubheaderStyle}>
+            We&apos;ll start you off with a blank grid
+          </p>
           <Image
-            src={gridIcon}
+            src="/grid.svg"
             alt="grid denoting blank pattern"
             width={100}
             height={100}
@@ -68,15 +71,11 @@ export default function Create() {
       {baseOption && (
         <section ref={baseOptionRef}>
           {baseOption === "image" ? (
-            <BaseImageForm isLoggedIn={isLoggedIn} />
+            <CreateWithImage />
           ) : (
-            baseOption === "scratch" && <BaseForm isLoggedIn={isLoggedIn} />
+            baseOption === "scratch" && <InitCustomization />
           )}
         </section>
-      )}
-
-      {numProjects >= projectConstants.numProjectsLimit && (
-        <ProjectLimitErrorField />
       )}
     </div>
   );

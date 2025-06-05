@@ -14,8 +14,8 @@ export default function Navbar() {
         </Link>
       </div>
       <div className={styles.center}>
-        <Link href="/">
-          <p>blog</p>
+        <Link href="create">
+          <p>create`</p>
         </Link>
       </div>
     </nav>

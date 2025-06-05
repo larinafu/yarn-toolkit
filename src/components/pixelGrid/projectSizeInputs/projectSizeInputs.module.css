@@ -1,0 +1,20 @@
+.container {
+  display: grid;
+  width: fit-content;
+  margin: 0 auto;
+  grid-template-columns: 3fr 1fr 3fr;
+}
+
+.gridContainer {
+  stroke: var(--color-amaranth);
+  fill: var(--color-amaranth);
+  dominant-baseline: middle;
+  text-anchor: middle;
+}
+
+.input input {
+  width: var(--spacing-m);
+  aspect-ratio: 1;
+  font-size: var(--fs-m);
+  text-align: center;
+}

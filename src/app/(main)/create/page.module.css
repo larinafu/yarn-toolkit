@@ -1,0 +1,23 @@
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-evenly;
+  width: 25rem;
+  aspect-ratio: 1;
+  text-align: center;
+  border: 2px solid transparent;
+}   
+
+.card:hover,
+.card:focus,
+.card:active {
+  border: 2px solid var(--color-amaranth);
+}
+
+.card.selected,
+.card.selected:hover,
+.card.selected:active,
+.card.selected:focus {
+  border: 2px solid var(--color-amaranth);
+}
