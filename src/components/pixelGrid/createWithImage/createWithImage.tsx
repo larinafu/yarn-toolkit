@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import React, { useRef, useState } from "react";
 import imageCompression from "browser-image-compression";
 
@@ -69,12 +68,12 @@ export default function CreateWithImage() {
     <form className="fadeIn">
       <section>
         <label
-          className={`button w-fit m-auto mt-10 relative flex items-center hover:cursor-pointer`}
+          className={`button w-fit m-auto mt-10 mb-10 relative flex items-center hover:cursor-pointer`}
         >
-          <p className="text-xl">click to upload image</p>
+          <p className="text-3xl">click to upload image</p>
           <input
             ref={imageInputRef}
-            className="w-0 h-0 opacity-0"
+            className="absolute w-0 h-0 opacity-0"
             type="file"
             name="image_uploads"
             accept="image/jpg, image/jpeg, image/png, image/heic"

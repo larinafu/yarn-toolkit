@@ -4,6 +4,7 @@
   --background: #fbfaf4;
   --foreground: #171717;
   --amaranth: #a93f55;
+  --amaranth-light: rgba(169, 63, 85, 0.15);
   --wine: #682734;
 
   --shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 3px 10px 0 rgba(0, 0, 0, 0.2);
@@ -11,6 +12,7 @@
 
 @theme {
   --color-amaranth: var(--amaranth);
+  --color-amaranth-light: var(--amaranth-light);
 }
 
 @theme inline {
@@ -26,73 +28,99 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-button,
-.button {
-  font-family: inherit;
-  border: none;
-  background-color: var(--amaranth);
-  border-radius: var(--radius-sm);
-  padding: 0.25em 0.5em;
-  color: #fff;
-  border: 1.5px solid var(--amaranth);
-  font-size: 100%;
+input[type="text"],
+input[type="password"] {
+  appearance: none;
+  padding: var(--spacing-xxs);
+  border: 2px solid gray;
+  border-radius: 3px;
 }
 
-button:hover,
-button:active,
-button:focus,
-.button:hover,
-.button:active,
-.button:focus {
-  background-color: var(--wine);
-  border: 1.5px solid var(--wine);
-  color: var(--color-white);
-  cursor: pointer;
+input[type="text"]:focus,
+input[type="password"]:focus {
+  appearance: none;
+  outline: none;
+  border-color: var(--color-amaranth);
 }
 
-button:disabled,
-.button:disabled {
-  background-color: var(--color-gray-300);
-  border: 1.5px solid var(--color-gray-300);
-  cursor: not-allowed;
-}
+@layer components {
+  button,
+  .button {
+    font-family: inherit;
+    border: none;
+    background-color: var(--amaranth);
+    border-radius: var(--radius-sm);
+    padding: 0.25em 0.5em;
+    color: #fff;
+    border: 1.5px solid var(--amaranth);
+  }
 
-.card {
-  border-radius: 10px;
-  padding: 0.5vw;
-  background-color: white;
-  box-shadow: var(--shadow);
-}
+  button:hover,
+  button:active,
+  button:focus,
+  .button:hover,
+  .button:active,
+  .button:focus {
+    background-color: var(--wine);
+    border: 1.5px solid var(--wine);
+    color: var(--color-white);
+    cursor: pointer;
+  }
 
-.info-green {
-  background-color: var(--light-green);
-  border: var(--border-xs) solid var(--green);
-  color: var(--dark-green);
-  border-radius: var(--border-radius-xs);
-}
+  button:disabled,
+  .button:disabled {
+    background-color: var(--color-gray-300);
+    border: 1.5px solid var(--color-gray-300);
+    cursor: not-allowed;
+  }
 
-.info-red {
-  background-color: var(--light-red);
-  border: var(--border-xs) solid var(--red);
-  border-radius: var(--border-radius-xs);
-  color: var(--dark-red);
-}
+  .buttonBlank,
+  .buttonBlank:active,
+  .buttonBlank:focus,
+  .buttonBlank:hover,
+  .buttonBlank:active,
+  .buttonBlank:focus,
+  .buttonBlank:disabled {
+    background-color: transparent;
+    border: 1.5px solid transparent;
+  }
+  .card {
+    border-radius: 10px;
+    padding: 0.5vw;
+    background-color: white;
+    box-shadow: var(--shadow);
+  }
 
-.info-yellow {
-  background-color: var(--light-yellow);
-  border: var(--border-xs) solid var(--dark-brown);
-  border-radius: var(--border-radius-xs);
-  color: var(--dark-brown);
-}
+  .info-green {
+    background-color: var(--light-green);
+    border: var(--border-xs) solid var(--green);
+    color: var(--dark-green);
+    border-radius: var(--border-radius-xs);
+  }
 
-.fadeIn {
-  animation-name: fade-in;
-  animation-duration: 1s;
-}
+  .info-red {
+    background-color: var(--light-red);
+    border: var(--border-xs) solid var(--red);
+    border-radius: var(--border-radius-xs);
+    color: var(--dark-red);
+  }
 
-.fadeInFast {
-  animation-name: fade-in;
-  animation-duration: 0.2s;
+  .info-yellow {
+    background-color: var(--light-yellow);
+    border: var(--border-xs) solid var(--dark-brown);
+    border-radius: var(--border-radius-xs);
+    color: var(--dark-brown);
+  }
+
+  .fadeIn {
+    animation-name: fade-in;
+    animation-duration: 1s;
+  }
+
+  .fadeInFast {
+    animation-name: fade-in;
+    animation-duration: 0.2s;
+  }
 }
 
 @keyframes fade-in {

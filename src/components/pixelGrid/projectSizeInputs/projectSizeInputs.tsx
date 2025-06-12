@@ -246,7 +246,7 @@ export default function ProjectSizeInputs({
           ></rect>
           {generateVertLinesAndNums()}
         </svg>
-        <div className={styles.input}>
+        <div className="flex flex-col items-center">
           <input
             type="text"
             inputMode="numeric"
@@ -257,11 +257,12 @@ export default function ProjectSizeInputs({
               handlePatternSizeInputChange({ numRows: e.target.value })
             }
             disabled={isGaugeChangeLoading}
+            className="w-10 aspect-square text-center"
           />
           <label htmlFor="num_rows">rows</label>
         </div>
         <span />
-        <div className={styles.input}>
+        <div className="flex flex-col items-center">
           <input
             type="text"
             inputMode="numeric"
@@ -272,6 +273,7 @@ export default function ProjectSizeInputs({
               handlePatternSizeInputChange({ numCols: e.target.value })
             }
             disabled={isGaugeChangeLoading}
+            className="w-10 aspect-square text-center"
           />
           <label htmlFor="num_cols">columns</label>
         </div>

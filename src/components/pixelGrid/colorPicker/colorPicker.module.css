@@ -1,0 +1,27 @@
+.mainColor {
+  margin: 0 0.1em;
+  width: 44px;
+  height: 26px;
+}
+
+.expandContainer {
+  position: absolute;
+  left: 50%;
+  top: 110%;
+  pointer-events: none;
+}
+
+.expand {
+  position: relative;
+  z-index: 2;
+  width: 15.5em;
+  height: 500%;
+  overflow-y: scroll;
+  left: -50%;
+  pointer-events: auto;
+}
+
+.mainColor:hover .plus,
+.mainColor:active .plus {
+  display: block;
+}

@@ -89,7 +89,7 @@ export default function InitPixelGridPreview({
   );
 
   return (
-    <section ref={containerDimTools.ref} className={`card h-full`}>
+    <section ref={containerDimTools.ref} className={`card h-100 md:h-dvh m-2 mr-4`}>
       <canvas ref={canvasRef}></canvas>
     </section>
   );

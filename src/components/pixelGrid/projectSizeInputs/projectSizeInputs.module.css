@@ -11,10 +11,3 @@
   dominant-baseline: middle;
   text-anchor: middle;
 }
-
-.input input {
-  width: var(--spacing-m);
-  aspect-ratio: 1;
-  font-size: var(--fs-m);
-  text-align: center;
-}

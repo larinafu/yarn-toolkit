@@ -26,6 +26,7 @@ import {
   generateNewPixelGrid,
   generateNewPixelGridNoImage,
 } from "@/utils/pixelGrid/gridGeneratorUtils";
+import { SAVED_CANVAS_DATA_LOC } from "@/constants/pixelGrid/sessionStorage";
 
 export default function InitCustomization({
   imageInfo,
@@ -178,17 +179,17 @@ export default function InitCustomization({
 
   const handlePatternCreate = async () => {
     setPatternCreating(true);
-    const reader = new FileReader();
-    reader.onloadend = async () => {
-      const patternObj = {
-        pixels: basePattern,
-        swatch,
-        previewImg: "",
-        numberFormat: "numbersBetween",
-      };
-      window.sessionStorage.setItem("patternObj", JSON.stringify(patternObj));
-      router.push("/projects/new");
+    const patternObj: PixelGridCanvasSavedData = {
+      pixels: basePattern,
+      swatch,
+      previewImg: "",
+      numberFormat: "numbersBetween",
     };
+    window.sessionStorage.setItem(
+      SAVED_CANVAS_DATA_LOC,
+      JSON.stringify(patternObj)
+    );
+    router.push("/projects/new");
   };
 
   return (
@@ -197,10 +198,10 @@ export default function InitCustomization({
       <p className="text-center text-4xl mb-6">
         We need a few more details to generate your starting pattern.
       </p>
-      <div className="flex justify-evenly">
-        <div className="w-3/12">
-          <section className="card">
-            <h3 className="text-center">set your cell ratio</h3>
+      <div className="flex flex-wrap justify-evenly">
+        <div className="flex flex-row md:block w-3/12 min-w-xs">
+          <section className="card m-2">
+            <h3 className="text-center text-xl">set your cell ratio</h3>
             <GaugeSwatchInputs
               size={150}
               swatchInputs={swatchInputs}
@@ -212,8 +213,8 @@ export default function InitCustomization({
               setValidForm={setValidForm}
             />
           </section>
-          <section className="card mt-2">
-            <h3 className="text-center">set your pattern size</h3>
+          <section className="card m-2">
+            <h3 className="text-center text-xl">set your pattern size</h3>
             <ProjectSizeInputs
               widthHeightRatio={widthHeightRatio}
               patternSizeInputs={patternSizeInputs}
@@ -228,7 +229,7 @@ export default function InitCustomization({
           </section>
         </div>
 
-        <section className={`relative w-8/12`}>
+        <section className={`relative m-auto grow md:w-8/12 md:min-h-5/6`}>
           {(isGaugeChangeLoading || isSizeChangeLoading) && (
             <div className="p-2 absolute top-2 right-2 rounded-b-full bg-amaranth">
               <Spinner color={"#fff"} isSpinning />
@@ -241,7 +242,7 @@ export default function InitCustomization({
         </section>
       </div>
       <button
-        className="block sticky text-xl bottom-2 m-2 w-max ml-auto"
+        className="block sticky text-2xl bottom-2 m-2 w-max ml-auto"
         disabled={!isValidForm || isPatternCreating}
         onClick={handlePatternCreate}
       >

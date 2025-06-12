@@ -13,6 +13,7 @@ import {
 } from "@/types/pixelGrid";
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
 import { knitting } from "@/constants/pixelGrid/stitches";
+import { createFromSvgPath } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 
 const drawGridLines = ({
   cellDimensions,
@@ -372,12 +373,3 @@ export default {
   drawFullCanvasPreview,
   numberFormatGuides,
 };
-function createFromSvgPath(
-  x: number,
-  y: number,
-  w: number,
-  h: number,
-  arg4: string
-): Path2D {
-  throw new Error("Function not implemented.");
-}

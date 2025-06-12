@@ -10,8 +10,8 @@ import InitCustomization from "@/components/pixelGrid/initCustomization/initCust
 
 type BaseOption = "image" | "scratch";
 
-const cardHeaderStyle = "text-4xl";
-const cardSubheaderStyle = "text-xl m-4";
+const cardHeaderStyle = "text-xl lg:text-4xl";
+const cardSubheaderStyle = "text-m lg:text-xl m-4";
 
 export default function Create() {
   const [baseOption, setBaseOption] = useState<BaseOption | null>(null);
@@ -35,7 +35,7 @@ export default function Create() {
       <p className="text-center mb-6 text-4xl">
         How would you like to start your pattern?
       </p>
-      <section className="flex justify-evenly flex-wrap">
+      <section className="flex justify-evenly">
         <div
           className={`card m-2 hover:cursor-pointer ${
             styles.card

@@ -9,7 +9,7 @@ import {
 const MARGIN = 5;
 const MIN_NUM_ROWS_OR_COLS = 4;
 
-const cellRatioInputStyle = "w-4 aspect-square text-center mr-auto";
+const cellRatioInputStyle = "w-10 aspect-square text-center mr-auto";
 
 export default function GaugeSwatchInputs({
   size,
@@ -145,7 +145,7 @@ export default function GaugeSwatchInputs({
               disabled={isSizeChangeLoading}
             />
           </label>
-          <label className={styles.cellHeightInput}>
+          <label className="m-auto">
             <input
               type="text"
               inputMode="numeric"
@@ -181,7 +181,7 @@ export default function GaugeSwatchInputs({
       <div
         className={`${
           isValidSwatchDisplay.isValid ? "info-green" : "info-red"
-        } pd-xs ${styles.cellRatioInfo} mg-t-xs`}
+        } p-2 text-center mt-2 ml-auto mr-auto`}
       >
         <strong>ratio: {getAspectRatio()}</strong>
         {isValidSwatchDisplay.error && <p>{isValidSwatchDisplay.error}</p>}

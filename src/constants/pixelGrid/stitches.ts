@@ -7,7 +7,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "p", name: "Purl" },
     },
     svgPaths: ["", "stroke"],
-    svg: "",
+    svg: "/stitches/knitting/k.svg",
   },
   p: {
     info: {
@@ -15,12 +15,12 @@ export const knitting: StitchGroup = {
       ws: { abbr: "k", name: "Knit" },
     },
     svgPaths: ["M 40 50 A 1 1 0 0 0 60 50 A 1 1 0 0 0 40 50", "fill"],
-    svg: "",
+    svg: "/stitches/knitting/p.svg",
   },
   yo: {
     info: { abbr: "yo", name: "Yarn over" },
     svgPaths: ["M 90 53 A 1 1 0 0 0 10 50 A 1 1 0 0 0 90 53", "stroke"],
-    svg: "",
+    svg: "/stitches/knitting/yo.svg",
   },
   k2tog: {
     info: {
@@ -28,7 +28,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "p2tog", name: "Purl two stitches together" },
     },
     svgPaths: ["M 7 93 L 93 7", "stroke"],
-    svg: "",
+    svg: "/stitches/knitting/k2tog.svg",
   },
   p2tog: {
     info: {
@@ -39,7 +39,7 @@ export const knitting: StitchGroup = {
       ["M 28 35 A 1 1 0 0 0 28 16 A 1 1 0 0 0 28 35", "fill"],
       ["M 7 93 L 93 7", "stroke"],
     ],
-    svg: "",
+    svg: "/stitches/knitting/p2tog.svg",
   },
   ssk: {
     info: {
@@ -57,6 +57,7 @@ export const knitting: StitchGroup = {
       ["M 65 28 A 1 1 90 0 0 84 28 A 1 1 90 0 0 65 28", "fill"],
       ["M 7 7 L 93 93", "stroke"],
     ],
+    svg: "/stitches/knitting/ssp.svg",
   },
   k1fb: {
     info: {
@@ -219,7 +220,7 @@ export const knitting: StitchGroup = {
       "M 25 85 Q 75 66 75 30 A 1 1 0 0 0 25 30 Q 25 66 75 85",
       "stroke",
     ],
-    svg: "",
+    svg: "/stitches/knitting/k1-tbl.svg",
   },
   p1_tbl: {
     info: {
