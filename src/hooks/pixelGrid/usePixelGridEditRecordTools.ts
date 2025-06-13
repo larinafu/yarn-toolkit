@@ -21,6 +21,7 @@ type Session =
       mode: "specialShapeChange";
       data: {
         shapeId: number;
+        type: "create" | "update";
         prev: Point[];
         new: Point[];
       };
@@ -78,6 +79,7 @@ export default function usePixelGridEditRecordTools({
   const sessionRef = useRef<Session>(null);
   const recordRef = useRef<Record>([]);
   const [recordPos, setRecordPos] = useState(0);
+  console.log(recordRef);
   const addToSession = (row: number, col: number, data: any) => {
     let prevData;
     switch (editMode) {
@@ -115,6 +117,7 @@ export default function usePixelGridEditRecordTools({
           mode: "specialShapeChange",
           data: {
             shapeId: data.shapeId,
+            type: data.type,
             prev: prevData,
             new: [
               ...prevData.slice(0, data.pointId),
@@ -155,7 +158,6 @@ export default function usePixelGridEditRecordTools({
         }
         break;
       case "specialShapeChange":
-        console.log(sessionRef.current?.data);
         if (
           sessionRef.current &&
           sessionRef.current.mode === "specialShapeChange"
@@ -176,32 +178,51 @@ export default function usePixelGridEditRecordTools({
   const undo = () => {
     const session: Session = recordRef.current[recordPos - 1];
     if (session) {
-      for (const [rowIdx, cols] of Object.entries(session.data)) {
-        for (const [colIdx, data] of Object.entries(cols)) {
-          switch (session.mode) {
-            case "colorChange":
-              savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                parseInt(colIdx)
-              ].hex = (data as any).prev;
-              updatePixelColor({
-                row: parseInt(rowIdx),
-                col: parseInt(colIdx),
-                hex: (data as any).prev,
-              });
-              break;
-            case "symbolChange":
-              savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                parseInt(colIdx)
-              ].stitch = (data as any).prev;
-              updateStitch({
-                row: parseInt(rowIdx),
-                col: parseInt(colIdx),
-                stitch: (data as any).prev,
-                color: "#000",
-              });
+      switch (session.mode) {
+        case "colorChange":
+        case "symbolChange":
+          for (const [rowIdx, cols] of Object.entries(session.data)) {
+            for (const [colIdx, data] of Object.entries(cols)) {
+              switch (session.mode) {
+                case "colorChange":
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].hex = (data as any).prev;
+                  updatePixelColor({
+                    row: parseInt(rowIdx),
+                    col: parseInt(colIdx),
+                    hex: (data as any).prev,
+                  });
+                  break;
+                case "symbolChange":
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].stitch = (data as any).prev;
+                  updateStitch({
+                    row: parseInt(rowIdx),
+                    col: parseInt(colIdx),
+                    stitch: (data as any).prev,
+                    color: "#000",
+                  });
+                  break;
+              }
+            }
           }
-        }
+          break;
+        case "specialShapeChange":
+          switch (session.data.type) {
+            case "update":
+              specialShapesRef.current[session.data.shapeId].points =
+                session.data.prev;
+              break;
+            case "create":
+              specialShapesRef.current = [
+                ...specialShapesRef.current.slice(0, session.data.shapeId),
+                ...specialShapesRef.current.slice(session.data.shapeId + 1),
+              ];
+          }
       }
+
       setRecordPos(recordPos - 1);
     }
   };
@@ -209,32 +230,54 @@ export default function usePixelGridEditRecordTools({
   const redo = () => {
     const session: Session = recordRef.current[recordPos];
     if (session) {
-      for (const [rowIdx, cols] of Object.entries(session.data)) {
-        for (const [colIdx, data] of Object.entries(cols)) {
-          switch (session.mode) {
-            case "colorChange":
-              savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                parseInt(colIdx)
-              ].hex = (data as any).new;
-              updatePixelColor({
-                row: parseInt(rowIdx),
-                col: parseInt(colIdx),
-                hex: (data as any).new,
-              });
-              break;
-            case "symbolChange":
-              savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                parseInt(colIdx)
-              ].stitch = (data as any).new;
-              updateStitch({
-                row: parseInt(rowIdx),
-                col: parseInt(colIdx),
-                stitch: (data as any).new,
-                color: "#000",
-              });
+      switch (session.mode) {
+        case "colorChange":
+        case "symbolChange":
+          for (const [rowIdx, cols] of Object.entries(session.data)) {
+            for (const [colIdx, data] of Object.entries(cols)) {
+              switch (session.mode) {
+                case "colorChange":
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].hex = (data as any).new;
+                  updatePixelColor({
+                    row: parseInt(rowIdx),
+                    col: parseInt(colIdx),
+                    hex: (data as any).new,
+                  });
+                  break;
+                case "symbolChange":
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].stitch = (data as any).new;
+                  updateStitch({
+                    row: parseInt(rowIdx),
+                    col: parseInt(colIdx),
+                    stitch: (data as any).new,
+                    color: "#000",
+                  });
+              }
+            }
           }
-        }
+          break;
+        case "specialShapeChange":
+          switch (session.data.type) {
+            case "update":
+              specialShapesRef.current[session.data.shapeId].points =
+                session.data.new;
+              break;
+            case "create":
+              specialShapesRef.current = [
+                ...specialShapesRef.current.slice(0, session.data.shapeId),
+                {
+                  shape: "line",
+                  points: session.data.new,
+                },
+                ...specialShapesRef.current.slice(session.data.shapeId),
+              ];
+          }
       }
+
       setRecordPos(recordPos + 1);
     }
   };

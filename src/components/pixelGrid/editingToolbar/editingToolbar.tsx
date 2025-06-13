@@ -8,11 +8,12 @@ import { PixelGridLineCanvasTools } from "@/hooks/pixelGrid/usePixelGridLineCanv
 import StitchPicker from "../stitchPicker/stitchPicker";
 import { StitchCanvasTools } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import { EditRecordTools } from "@/hooks/pixelGrid/usePixelGridEditRecordTools";
-import React, { SetStateAction } from "react";
+import React, { SetStateAction, useMemo } from "react";
 import PixelGridDownloadPreview from "../pixelGridDownloadPreview/pixelGridDownloadPreview";
 import FormattingOptions from "../formattingOptions/formattingOptions";
 import {
   ActiveColorPalette,
+  ActiveShapePalette,
   ActiveStitchPalette,
   EditMode,
 } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
@@ -23,6 +24,11 @@ import {
   PixelGridNumberFormat,
 } from "@/types/pixelGrid";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
+import SpecialShapePicker from "../specialShapePicker/specialShapePicker";
+import {
+  PixelGridSpecialShapesCanvasTools,
+  SpecialShape,
+} from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 
 type EditModeIcon = {
   mode: EditMode;
@@ -31,28 +37,31 @@ type EditModeIcon = {
 };
 
 export default function EditingToolbar({
-  pixelSize,
   shiftPixelSize,
   windowTools,
   colorCanvasTools,
   gridLineTools,
   activeColorPalette,
+  activeShapePalette,
   activeStitchPalette,
+  activeShapeIdx,
   activeStitchIdx,
   swapColorInPalette,
   activeColorIdx,
   setActiveColorIdx,
   setActiveStitchIdx,
+  setActiveShapeIdx,
   editMode,
   setEditMode,
   updateFullCanvas,
   stitchCanvasTools,
+  specialShapesTools,
   editRecordTools,
   savedCanvasDataRef,
+  specialShapesRef,
   numberFormat,
   setNumberFormat,
 }: {
-  pixelSize: number;
   shiftPixelSize: (shift: "up" | "down") => {
     canvasWindow: PixelGridCanvasWindow;
     canvasCellDimensions: PixelGridCanvasCellDimensions;
@@ -62,11 +71,14 @@ export default function EditingToolbar({
   colorCanvasTools: ColorCanvasTools;
   gridLineTools: PixelGridLineCanvasTools;
   activeColorPalette: ActiveColorPalette;
+  activeShapePalette: ActiveShapePalette;
   activeStitchPalette: ActiveStitchPalette;
+  activeShapeIdx: number | null;
   activeStitchIdx: number;
   swapColorInPalette: (colorIdx: number, hex: string) => void;
   activeColorIdx: number;
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
+  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
   editMode: EditMode;
   setEditMode: React.Dispatch<React.SetStateAction<EditMode>>;
@@ -82,8 +94,10 @@ export default function EditingToolbar({
   }) => void;
   editRecordTools: EditRecordTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  specialShapesRef: React.RefObject<SpecialShape[]>;
   numberFormat: PixelGridNumberFormat;
   setNumberFormat: React.Dispatch<SetStateAction<PixelGridNumberFormat>>;
+  specialShapesTools: PixelGridSpecialShapesCanvasTools;
 }) {
   const editModeIcons: EditModeIcon[] = [
     {
@@ -102,6 +116,44 @@ export default function EditingToolbar({
       color: "#000",
     },
   ];
+
+  const activePicker = useMemo(() => {
+    switch (editMode) {
+      case "colorChange":
+        return (
+          <ColorPicker
+            activeColorPalette={activeColorPalette}
+            swapColorInPalette={swapColorInPalette}
+            activeColorIdx={activeColorIdx}
+            setActiveColorIdx={setActiveColorIdx}
+          />
+        );
+      case "symbolChange":
+        return (
+          <StitchPicker
+            activeStitchPalette={activeStitchPalette}
+            activeStitchIdx={activeStitchIdx}
+            setActiveStitchIdx={setActiveStitchIdx}
+          />
+        );
+      case "specialShapeChange":
+        return (
+          <SpecialShapePicker
+            activeShapeIdx={activeShapeIdx}
+            activeShapePalette={activeShapePalette}
+            setActiveShapeIdx={setActiveShapeIdx}
+          />
+        );
+    }
+  }, [
+    editMode,
+    activeColorIdx,
+    activeColorPalette,
+    activeStitchIdx,
+    activeShapePalette,
+    activeShapeIdx,
+    activeShapePalette,
+  ]);
   return (
     <section className="flex justify-center mt-1">
       <header className={`card mg-0-auto w-fit-content pd-0`}>
@@ -177,6 +229,11 @@ export default function EditingToolbar({
                 });
                 canvasSizingUtils.resizeCanvas({
                   ref: stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<HTMLCanvasElement>,
                   gridWidth: gridDimensions.width,
                   gridHeight: gridDimensions.height,
                 });
@@ -256,20 +313,7 @@ export default function EditingToolbar({
           </section>
         </div>
         <section className="border-t-amaranth border-t-1">
-          {editMode === "colorChange" ? (
-            <ColorPicker
-              activeColorPalette={activeColorPalette}
-              swapColorInPalette={swapColorInPalette}
-              activeColorIdx={activeColorIdx}
-              setActiveColorIdx={setActiveColorIdx}
-            />
-          ) : (
-            <StitchPicker
-              activeStitchPalette={activeStitchPalette}
-              activeStitchIdx={activeStitchIdx}
-              setActiveStitchIdx={setActiveStitchIdx}
-            />
-          )}
+          {activePicker}
         </section>
       </header>
       <FormattingOptions
@@ -279,6 +323,7 @@ export default function EditingToolbar({
       />
       <PixelGridDownloadPreview
         savedCanvasDataRef={savedCanvasDataRef}
+        specialShapesRef={specialShapesRef}
         canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
         canvasCellWidthHeightRatio={
           savedCanvasDataRef.current.swatch.width /

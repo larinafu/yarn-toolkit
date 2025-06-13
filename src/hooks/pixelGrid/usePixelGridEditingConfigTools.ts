@@ -4,19 +4,23 @@ import { knitting } from "@/constants/pixelGrid/stitches";
 
 export type ActiveColorPalette = [string, number][];
 export type ActiveStitchPalette = [string, string][];
+export type ActiveShapePalette = [string, string][];
 
 export type EditMode = "colorChange" | "symbolChange" | "specialShapeChange";
 
 type EditingConfigTools = {
   activeColorPalette: ActiveColorPalette;
+  activeShapePalette: ActiveShapePalette;
   activeStitchPalette: ActiveStitchPalette;
   editMode: EditMode;
   setEditMode: React.Dispatch<React.SetStateAction<EditMode>>;
   swapColorInPalette: (colorIdx: number, hex: string) => void;
   activeColorIdx: number;
+  activeShapeIdx: number | null;
   activeStitchIdx: number;
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
+  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
 };
 
 const NUM_ACTIVE_COLORS = 6;
@@ -41,13 +45,13 @@ export default function usePixelGridEditingConfigTools({
       ["p2tog", knitting["p2tog"].svg as string],
       ["k1_tbl", knitting["k1_tbl"].svg as string],
     ]);
-  const [activeShapePalette, setActiveShapePalette] = useState([
-    "line",
-    "/specialShapes/line.svg",
-  ]);
+  const [activeShapePalette, setActiveShapePalette] =
+    useState<ActiveShapePalette>([["line", "/specialShapes/line.svg"]]);
 
   const [activeColorIdx, setActiveColorIdx] = useState(0);
   const [activeStitchIdx, setActiveStitchIdx] = useState(0);
+
+  const [activeShapeIdx, setActiveShapeIdx] = useState<number | null>(null);
 
   const [editMode, setEditMode] = useState<EditMode>("colorChange");
 
@@ -63,11 +67,14 @@ export default function usePixelGridEditingConfigTools({
 
   return {
     activeColorIdx,
+    activeShapeIdx,
     activeStitchIdx,
     setActiveColorIdx,
+    setActiveShapeIdx,
     setActiveStitchIdx,
     activeColorPalette,
     activeStitchPalette,
+    activeShapePalette,
     editMode,
     setEditMode,
     swapColorInPalette,

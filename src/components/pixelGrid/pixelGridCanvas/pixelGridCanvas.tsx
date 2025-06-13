@@ -19,16 +19,20 @@ export default function PixelGridCanvas({
   curPixel,
   setCurPixel,
   curRow,
+  activeShapeIdx,
+  setActiveShapeIdx,
   savedCanvasData,
   canvasWindowTools,
   colorCanvasTools,
   gridLineTools,
-  interactionLayerActions,
+  interactionLayerTools,
   canvasEditTools,
   editMode,
   stitchCanvasTools,
   specialShapesTools,
 }: {
+  activeShapeIdx: number | null;
+  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
   curPixel: any;
   setCurPixel: any;
   curRow: number;
@@ -36,7 +40,7 @@ export default function PixelGridCanvas({
   canvasWindowTools: PixelGridWindowTools;
   colorCanvasTools: ColorCanvasTools;
   gridLineTools: PixelGridLineCanvasTools;
-  interactionLayerActions: PixelGridInteractionLayerTools;
+  interactionLayerTools: PixelGridInteractionLayerTools;
   canvasEditTools: PixelGridEditTools;
   editMode: EditMode;
   stitchCanvasTools: StitchCanvasTools;
@@ -53,15 +57,21 @@ export default function PixelGridCanvas({
       stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
     const lineCanvasRef =
       gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
+    const specialShapesCanvasRef =
+      specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
     const colorCanvasContext = colorCanvasRef.current.getContext("2d");
     const lineCanvasContext = lineCanvasRef.current.getContext("2d");
     const stitchCanvasContext = stitchCanvasRef.current.getContext("2d");
+    const specialShapesCanvasContext =
+      specialShapesCanvasRef.current.getContext("2d");
     canvasWindowTools.resizeCanvas(colorCanvasRef);
     canvasWindowTools.resizeCanvas(lineCanvasRef);
     canvasWindowTools.resizeCanvas(stitchCanvasRef);
+    canvasWindowTools.resizeCanvas(specialShapesCanvasRef);
     colorCanvasTools.setCtx(colorCanvasContext);
     gridLineTools.setCtx(lineCanvasContext);
     stitchCanvasTools.setCtx(stitchCanvasContext);
+    specialShapesTools.setCtx(specialShapesCanvasContext);
     gridLineTools.handleInitialRender(
       lineCanvasContext as CanvasRenderingContext2D
     );
@@ -95,22 +105,18 @@ export default function PixelGridCanvas({
         }
       }
     }
+    specialShapesTools.drawShapesOnCanvas({ ctx: specialShapesCanvasContext });
   }, []);
 
   const pixelPos =
     curPixel &&
-    interactionLayerActions.getXYCoordsFromPixelPos({
+    interactionLayerTools.getXYCoordsFromPixelPos({
       row: curPixel[0],
       col: curPixel[1],
     });
 
-  const { y: rowStartPos } = interactionLayerActions.getXYCoordsFromPixelPos({
-    row: curRow,
-    col: 0,
-  });
-
   const handlePointerMove = (e: PointerEvent) => {
-    const { row, col } = interactionLayerActions.getPixelPosFromPointerCoords(
+    const { row, col } = interactionLayerTools.getPixelPosFromPointerCoords(
       e,
       editMode
     );
@@ -137,7 +143,7 @@ export default function PixelGridCanvas({
           );
         case "specialShapeChange":
           return (
-            <circle cx={pixelPos.x} cy={pixelPos.y} r={5} fill="red"></circle>
+            <circle cx={pixelPos.x} cy={pixelPos.y} r={3} fill="red"></circle>
           );
       }
     }
@@ -155,6 +161,12 @@ export default function PixelGridCanvas({
             className={canvasLayerStyle}
             ref={stitchCanvasTools.ref}
           ></canvas>
+          <canvas
+            className={`${canvasLayerStyle} ${
+              editMode === "specialShapeChange" ? "hidden" : ""
+            }`}
+            ref={specialShapesTools.ref}
+          ></canvas>
           <svg
             ref={pointerEventsRef}
             className={`${canvasLayerStyle} cursor-pointer`}
@@ -167,7 +179,12 @@ export default function PixelGridCanvas({
               }
             }}
             onPointerDown={(e) => {
-              canvasEditTools.handleCanvasEdit(e, "down");
+              if (
+                editMode !== "specialShapeChange" ||
+                activeShapeIdx !== null
+              ) {
+                canvasEditTools.handleCanvasEdit(e, "down");
+              }
             }}
             onPointerLeave={() => {
               setCurPixel(null);
@@ -177,71 +194,82 @@ export default function PixelGridCanvas({
             }}
           >
             {pointer}
-            {specialShapesTools.specialShapesRef.current.map(
-              (specialShape, idx) => {
-                if (specialShapesTools.tarPoint?.shapeId === idx) {
-                }
-                const pointsPos = [];
-                const path = [];
-                for (const [pointIdx, point] of specialShape.points.entries()) {
-                  let tarPoint;
-                  if (
-                    specialShapesTools.tarPoint?.shapeId === idx &&
-                    specialShapesTools.tarPoint.pointId === pointIdx
-                  ) {
-                    tarPoint = specialShapesTools.tarPoint.curLoc;
-                  } else {
-                    tarPoint = point;
+            {editMode === "specialShapeChange" &&
+              specialShapesTools.specialShapesRef.current.map(
+                (specialShape, idx) => {
+                  if (specialShapesTools.tarPoint?.shapeId === idx) {
                   }
-                  const { x, y } =
-                    interactionLayerActions.getXYCoordsFromPixelPos(tarPoint);
-                  pointsPos.push({ x, y });
-                  path.push(`${path.length === 0 ? "M" : "L"} ${x} ${y}`);
-                }
+                  const pointsPos = [];
+                  const path = [];
+                  for (const [
+                    pointIdx,
+                    point,
+                  ] of specialShape.points.entries()) {
+                    let tarPoint;
+                    if (
+                      specialShapesTools.tarPoint?.shapeId === idx &&
+                      specialShapesTools.tarPoint.pointId === pointIdx
+                    ) {
+                      tarPoint = specialShapesTools.tarPoint.curLoc;
+                    } else {
+                      tarPoint = point;
+                    }
+                    const { x, y } =
+                      interactionLayerTools.getXYCoordsFromPixelPos(tarPoint);
+                    pointsPos.push({ x, y });
+                    path.push(`${path.length === 0 ? "M" : "L"} ${x} ${y}`);
+                  }
 
-                return (
-                  <>
-                    <path d={path.join(" ")} stroke="red" strokeWidth={5} />
-                    {pointsPos.map(({ x, y }, pointIdx) => {
-                      return (
-                        <>
-                          <circle cx={x} cy={y} r={5}></circle>
-                          <rect
-                            x={
-                              x -
-                              canvasWindowTools.canvasCellDimensions.width / 2
-                            }
-                            y={
-                              y -
-                              canvasWindowTools.canvasCellDimensions.height / 2
-                            }
-                            width={canvasWindowTools.canvasCellDimensions.width}
-                            height={
-                              canvasWindowTools.canvasCellDimensions.height
-                            }
-                            fillOpacity={0}
-                            onPointerDown={(e) => {
-                              e.stopPropagation();
-                              specialShapesTools.capturePoint(idx, pointIdx);
-                            }}
-                            onPointerUp={(e) => {
-                              e.stopPropagation();
-                              console.log("pointer up in point");
-                              canvasEditTools.handleCompleteCanvasEdit();
-                              specialShapesTools.releasePoint();
-                            }}
-                            onClick={(e) => {
-                              e.stopPropagation();
-                            }}
-                            className="z-20"
-                          ></rect>
-                        </>
-                      );
-                    })}
-                  </>
-                );
-              }
-            )}
+                  return (
+                    <g key={idx}>
+                      <path d={path.join(" ")} stroke="red" strokeWidth={5} />
+                      {pointsPos.map(({ x, y }, pointIdx) => {
+                        return (
+                          <g key={pointIdx}>
+                            <circle cx={x} cy={y} r={5}></circle>
+                            <rect
+                              x={
+                                x -
+                                canvasWindowTools.canvasCellDimensions.width / 2
+                              }
+                              y={
+                                y -
+                                canvasWindowTools.canvasCellDimensions.height /
+                                  2
+                              }
+                              width={
+                                canvasWindowTools.canvasCellDimensions.width
+                              }
+                              height={
+                                canvasWindowTools.canvasCellDimensions.height
+                              }
+                              fillOpacity={0}
+                              onPointerDown={() => {
+                                if (activeShapeIdx === null) {
+                                  specialShapesTools.capturePoint(
+                                    idx,
+                                    pointIdx
+                                  );
+                                }
+                              }}
+                              onPointerUp={(e) => {
+                                e.stopPropagation();
+                                canvasEditTools.handleCompleteCanvasEdit();
+                                specialShapesTools.releasePoint();
+                                setActiveShapeIdx(null);
+                              }}
+                              onClick={(e) => {
+                                e.stopPropagation();
+                              }}
+                              className="z-20"
+                            ></rect>
+                          </g>
+                        );
+                      })}
+                    </g>
+                  );
+                }
+              )}
           </svg>
         </div>
       </div>

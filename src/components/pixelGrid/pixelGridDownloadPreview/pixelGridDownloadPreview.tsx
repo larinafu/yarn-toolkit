@@ -9,11 +9,14 @@ import { useRef, useState } from "react";
 import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
 import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
+import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 
 const PixelGridPreviewDisplay = ({
   savedCanvasDataRef,
+  specialShapesRef,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  specialShapesRef: React.RefObject<SpecialShape[]>;
 }) => {
   const previewRef = useRef<any>(null);
   const container = useEffectWithContainerDimensions((rect) => {
@@ -23,13 +26,14 @@ const PixelGridPreviewDisplay = ({
         maxPxWidth: rect.width,
         maxPxHeight: rect.height,
         savedCanvasData: savedCanvasDataRef.current,
+        specialShapes: specialShapesRef.current,
         ref: previewRef,
         ctx,
       });
     }
   });
   return (
-    <div ref={container.ref} className="w-1/2 h-4/5">
+    <div ref={container.ref} className="size-200">
       <canvas ref={previewRef}></canvas>
     </div>
   );
@@ -39,10 +43,12 @@ type sizer = "s" | "m" | "l";
 
 export default function PixelGridDownloadPreview({
   savedCanvasDataRef,
+  specialShapesRef,
   canvasNumRowsAndCols,
   canvasCellWidthHeightRatio,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  specialShapesRef: React.RefObject<SpecialShape[]>;
   canvasNumRowsAndCols: PixelGridCanvasNumRowsAndCols;
   canvasCellWidthHeightRatio: number;
 }) {
@@ -97,6 +103,7 @@ export default function PixelGridDownloadPreview({
       maxPxWidth: width,
       maxPxHeight: height,
       savedCanvasData: savedCanvasDataRef.current,
+      specialShapes: specialShapesRef.current,
       ctx: offscreenCanvasCtx as OffscreenCanvasRenderingContext2D,
     });
     const blob = await offscreenCanvas.convertToBlob();
@@ -114,7 +121,10 @@ export default function PixelGridDownloadPreview({
       <ModalTools.modal>
         <h2>Pattern Preview</h2>
         <div className="flex">
-          <PixelGridPreviewDisplay savedCanvasDataRef={savedCanvasDataRef} />
+          <PixelGridPreviewDisplay
+            savedCanvasDataRef={savedCanvasDataRef}
+            specialShapesRef={specialShapesRef}
+          />
           <form>
             <fieldset>
               <legend>Select an image size:</legend>

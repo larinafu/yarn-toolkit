@@ -57,14 +57,14 @@ export default function PixelGridEditor({
     },
   });
 
-  const interactionLayerActions = usePixelGridInteractionLayerTools({
+  const interactionLayerTools = usePixelGridInteractionLayerTools({
     canvasWindowTools,
   });
 
   const colorCanvasTools = usePixelGridColorCanvasTools({
     canvasWindowTools,
     savedCanvasDataRef: savedCanvasDataRef,
-    interactionLayerActions,
+    interactionLayerTools,
   });
   const gridLineTools = usePixelGridLineCanvasTools({
     canvasWindowTools,
@@ -76,11 +76,14 @@ export default function PixelGridEditor({
 
   const stitchCanvasTools = usePixelGridStitchCanvasTools({
     canvasWindowTools,
-    interactionLayerActions,
+    interactionLayerTools,
     savedCanvasDataRef,
   });
 
-  const specialShapesTools = usePixelGridSpecialShapesCanvasTools();
+  const specialShapesTools = usePixelGridSpecialShapesCanvasTools({
+    canvasWindowTools,
+    interactionLayerTools,
+  });
 
   const editRecordTools = usePixelGridEditRecordTools({
     editMode: editConfigTools.editMode,
@@ -99,18 +102,21 @@ export default function PixelGridEditor({
       editConfigTools.activeColorPalette[editConfigTools.activeColorIdx][0],
     activeStitch:
       editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx][0],
-    interactionLayerActions,
+    interactionLayerTools,
     savedCanvasDataRef,
     editRecordTools,
+    activeShapeIdx: editConfigTools.activeShapeIdx,
   });
 
   const updateFullCanvas = ({
     colorCanvasContext,
     stitchCanvasContext,
+    specialShapesCanvasContext,
     windowTools,
   }: {
     colorCanvasContext?: CanvasRenderingContext2D;
     stitchCanvasContext?: CanvasRenderingContext2D;
+    specialShapesCanvasContext?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
   }) => {
     const colorCtx =
@@ -118,6 +124,9 @@ export default function PixelGridEditor({
     const stitchCtx =
       stitchCanvasContext ||
       (stitchCanvasTools.ctx as CanvasRenderingContext2D);
+    const specialShapesCtx =
+      specialShapesCanvasContext ||
+      (specialShapesTools.ctx as CanvasRenderingContext2D);
     const curCanvasWindowTools = {
       ...canvasWindowTools,
       ...windowTools,
@@ -162,6 +171,10 @@ export default function PixelGridEditor({
         }
       }
     }
+    specialShapesTools.drawShapesOnCanvas({
+      windowTools: curCanvasWindowTools,
+      ctx: specialShapesCtx,
+    });
   };
 
   // window resize
@@ -172,6 +185,8 @@ export default function PixelGridEditor({
       stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
     const gridLineCanvasRef =
       gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
+    const specialShapesCanvasRef =
+      specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
     const colorCtx =
       colorCanvasTools.ctx ||
       (colorCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
@@ -181,6 +196,11 @@ export default function PixelGridEditor({
     const gridLineCtx =
       gridLineTools.ctx ||
       (gridLineCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
+    const specialShapesCtx =
+      specialShapesTools.ctx ||
+      (specialShapesCanvasRef.current.getContext(
+        "2d"
+      ) as CanvasRenderingContext2D);
     const handleResize = () => {
       const { canvasWindow, gridDimensions } = canvasWindowTools.recalcGridSize(
         {}
@@ -209,9 +229,15 @@ export default function PixelGridEditor({
           gridDimensions.width,
           gridDimensions.height
         );
+        canvasWindowTools.resizeCanvas(
+          specialShapesCanvasRef,
+          gridDimensions.width,
+          gridDimensions.height
+        );
         updateFullCanvas({
           colorCanvasContext: colorCtx,
           stitchCanvasContext: stitchCtx,
+          specialShapesCanvasContext: specialShapesCtx,
           windowTools: { canvasWindow, gridDimensions },
         });
         gridLineTools.drawCanvasLines({
@@ -232,7 +258,6 @@ export default function PixelGridEditor({
   return (
     <>
       <EditingToolbar
-        pixelSize={canvasWindowTools.canvasCellDimensions.width}
         shiftPixelSize={canvasWindowTools.shiftPixelSize}
         windowTools={canvasWindowTools}
         colorCanvasTools={colorCanvasTools}
@@ -240,9 +265,12 @@ export default function PixelGridEditor({
         activeColorPalette={editConfigTools.activeColorPalette}
         activeColorIdx={editConfigTools.activeColorIdx}
         setActiveColorIdx={editConfigTools.setActiveColorIdx}
+        setActiveShapeIdx={editConfigTools.setActiveShapeIdx}
         setActiveStitchIdx={editConfigTools.setActiveStitchIdx}
+        activeShapePalette={editConfigTools.activeShapePalette}
         activeStitchPalette={editConfigTools.activeStitchPalette}
         swapColorInPalette={editConfigTools.swapColorInPalette}
+        activeShapeIdx={editConfigTools.activeShapeIdx}
         activeStitchIdx={editConfigTools.activeStitchIdx}
         editMode={editConfigTools.editMode}
         setEditMode={editConfigTools.setEditMode}
@@ -250,8 +278,10 @@ export default function PixelGridEditor({
         stitchCanvasTools={stitchCanvasTools}
         editRecordTools={editRecordTools}
         savedCanvasDataRef={savedCanvasDataRef}
+        specialShapesRef={specialShapesTools.specialShapesRef}
         numberFormat={numberFormat}
         setNumberFormat={setNumberFormat}
+        specialShapesTools={specialShapesTools}
       />
       <section className="w-screen flex justify-between touch-manipulation">
         <section className={`card m-2 grow`}>
@@ -262,10 +292,12 @@ export default function PixelGridEditor({
             numberFormat={numberFormat}
           >
             <PixelGridCanvas
+              activeShapeIdx={editConfigTools.activeShapeIdx}
+              setActiveShapeIdx={editConfigTools.setActiveShapeIdx}
               curPixel={curPixel}
               editMode={editConfigTools.editMode}
               setCurPixel={setCurPixel}
-              interactionLayerActions={interactionLayerActions}
+              interactionLayerTools={interactionLayerTools}
               curRow={curRow}
               savedCanvasData={savedCanvasData}
               canvasWindowTools={canvasWindowTools}

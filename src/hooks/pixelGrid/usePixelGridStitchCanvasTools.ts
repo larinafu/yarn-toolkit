@@ -32,10 +32,10 @@ export type StitchCanvasTools = {
 export default function usePixelGridStitchCanvasTools({
   canvasWindowTools,
   savedCanvasDataRef,
-  interactionLayerActions,
+  interactionLayerTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
-  interactionLayerActions: PixelGridInteractionLayerTools;
+  interactionLayerTools: PixelGridInteractionLayerTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
 }): StitchCanvasTools {
   const stitchCanvasRef = useRef(null);
@@ -92,7 +92,7 @@ export default function usePixelGridStitchCanvasTools({
       ...canvasWindowTools,
       ...windowTools,
     };
-    const { x, y } = interactionLayerActions.getXYCoordsFromPixelPos({
+    const { x, y } = interactionLayerTools.getXYCoordsFromPixelPos({
       row,
       col,
       windowTools: curCanvasWindowTools,

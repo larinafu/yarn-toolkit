@@ -14,6 +14,7 @@ import {
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
 import { knitting } from "@/constants/pixelGrid/stitches";
 import { createFromSvgPath } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
+import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 
 const drawGridLines = ({
   cellDimensions,
@@ -153,6 +154,39 @@ const drawPixelGridColorsAndStitches = ({
         }
       }
     }
+  }
+};
+
+const drawSpecialShapes = ({
+  specialShapesCtx,
+  specialShapes,
+  cellDims,
+  offset,
+}: {
+  specialShapesCtx:
+    | CanvasRenderingContext2D
+    | OffscreenCanvasRenderingContext2D;
+  specialShapes: SpecialShape[];
+  cellDims: PixelGridCanvasCellDimensions;
+  offset?: PixelGridCanvasDimensions;
+}) => {
+  const curOffset = {
+    width: 0,
+    height: 0,
+    ...offset,
+  };
+  specialShapesCtx.lineWidth = 5;
+  specialShapesCtx.strokeStyle = "red";
+  for (const shape of specialShapes) {
+    const linePath = [];
+    for (const point of shape.points) {
+      linePath.push(
+        `${linePath.length ? "L" : "M"} ${
+          point.col * cellDims.width + curOffset.width
+        } ${point.row * cellDims.height + curOffset.height}`
+      );
+    }
+    specialShapesCtx.stroke(new Path2D(linePath.join(" ")));
   }
 };
 
@@ -304,6 +338,7 @@ const drawFullCanvasPreview = ({
   maxPxWidth,
   maxPxHeight,
   savedCanvasData,
+  specialShapes,
   ref,
   ctx,
 }:
@@ -311,6 +346,7 @@ const drawFullCanvasPreview = ({
       maxPxWidth: number;
       maxPxHeight: number;
       savedCanvasData: PixelGridCanvasSavedData;
+      specialShapes: SpecialShape[];
       ref: React.RefObject<any>;
       ctx: CanvasRenderingContext2D;
     }
@@ -318,6 +354,7 @@ const drawFullCanvasPreview = ({
       maxPxWidth: number;
       maxPxHeight: number;
       savedCanvasData: PixelGridCanvasSavedData;
+      specialShapes: SpecialShape[];
       ref?: never;
       ctx: OffscreenCanvasRenderingContext2D;
     }) => {
@@ -364,6 +401,12 @@ const drawFullCanvasPreview = ({
     numberFormatGuide: numberFormatGuides[savedCanvasData.numberFormat],
     offset,
   });
+  drawSpecialShapes({
+    specialShapes,
+    cellDims,
+    offset,
+    specialShapesCtx: ctx,
+  });
 };
 
 export default {
@@ -371,5 +414,6 @@ export default {
   drawPixelGridColorsAndStitches,
   drawGridNumbers,
   drawFullCanvasPreview,
+  drawSpecialShapes,
   numberFormatGuides,
 };

@@ -276,7 +276,15 @@ export default function useViewboxTools({
               0
             ),
           ];
-          pixelGridCanvasWindowTools.shiftWindow(newRowStart, newColStart);
+          if (
+            !(
+              newRowStart ===
+                pixelGridCanvasWindowTools.canvasWindow.startRow &&
+              newColStart === pixelGridCanvasWindowTools.canvasWindow.startCol
+            )
+          ) {
+            pixelGridCanvasWindowTools.shiftWindow(newRowStart, newColStart);
+          }
           return {
             ...pixelGridCanvasWindow,
             startRow: newRowStart,

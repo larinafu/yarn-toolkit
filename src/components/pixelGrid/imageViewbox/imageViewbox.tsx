@@ -21,10 +21,12 @@ export default function ImageViewbox({
   updateFullCanvas: ({
     colorCanvasContext,
     stitchCanvasContext,
+    specialShapesCanvasContext,
     windowTools,
   }: {
     colorCanvasContext?: CanvasRenderingContext2D;
     stitchCanvasContext?: CanvasRenderingContext2D;
+    specialShapesCanvasContext?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
   }) => void;
 }) {
@@ -93,12 +95,21 @@ export default function ImageViewbox({
           const newCanvasWindow =
             viewboxTools.pointerActions.handleViewboxMove(e);
           if (viewboxTools.pointerActions.isPointerDown) {
-            updateFullCanvas({
-              windowTools: {
-                ...canvasWindowTools,
-                canvasWindow: newCanvasWindow,
-              },
-            });
+            if (
+              !(
+                newCanvasWindow?.startRow ===
+                  canvasWindowTools.canvasWindow.startRow &&
+                newCanvasWindow?.startCol ===
+                  canvasWindowTools.canvasWindow.startCol
+              )
+            ) {
+              updateFullCanvas({
+                windowTools: {
+                  ...canvasWindowTools,
+                  canvasWindow: newCanvasWindow,
+                },
+              });
+            }
           }
         }}
         onPointerUp={(e) => {

@@ -1,4 +1,7 @@
 import React, { useRef, useState } from "react";
+import { PixelGridWindowTools } from "./usePixelGridWindowTools";
+import { PixelGridInteractionLayerTools } from "./usePixelGridInteractionLayerTools";
+import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 
 export type PixelGridSpecialShapesCanvasTools = {
   ref: React.RefObject<HTMLCanvasElement | null>;
@@ -14,9 +17,14 @@ export type PixelGridSpecialShapesCanvasTools = {
     pointId: number;
     curLoc: Point;
   } | null;
+  drawShapesOnCanvas: ({
+    windowTools,
+    ctx,
+  }: {
+    windowTools?: Partial<PixelGridWindowTools>;
+    ctx?: CanvasRenderingContext2D | null;
+  }) => void;
 };
-
-type LineShape = {};
 
 export type Point = { row: number; col: number };
 
@@ -25,7 +33,13 @@ export type SpecialShape = {
   points: Point[];
 };
 
-export default function usePixelGridSpecialShapesCanvasTools(): PixelGridSpecialShapesCanvasTools {
+export default function usePixelGridSpecialShapesCanvasTools({
+  canvasWindowTools,
+  interactionLayerTools,
+}: {
+  canvasWindowTools: PixelGridWindowTools;
+  interactionLayerTools: PixelGridInteractionLayerTools;
+}): PixelGridSpecialShapesCanvasTools {
   const specialShapesCanvasRef = useRef(null);
   const [specialShapesCtx, setSpecialShapesCtx] =
     useState<CanvasRenderingContext2D | null>(null);
@@ -69,6 +83,39 @@ export default function usePixelGridSpecialShapesCanvasTools(): PixelGridSpecial
     }
   };
 
+  const drawShapesOnCanvas = ({
+    windowTools,
+    ctx,
+  }: {
+    windowTools?: Partial<PixelGridWindowTools>;
+    ctx?: CanvasRenderingContext2D | null;
+  }) => {
+    const tarCtx = ctx || (specialShapesCtx as CanvasRenderingContext2D);
+    const tarWindowTools = {
+      ...canvasWindowTools,
+      ...windowTools,
+    };
+    tarCtx.clearRect(
+      0,
+      0,
+      tarWindowTools.gridDimensions.width,
+      tarWindowTools.gridDimensions.height
+    );
+    tarCtx.lineWidth = 5;
+    tarCtx.strokeStyle = "red";
+    for (const shape of specialShapesRef.current) {
+      const linePath = [];
+      for (const point of shape.points) {
+        const { x, y } = interactionLayerTools.getXYCoordsFromPixelPos({
+          windowTools: tarWindowTools,
+          ...point,
+        });
+        linePath.push(`${linePath.length ? "L" : "M"} ${x} ${y}`);
+      }
+      tarCtx.stroke(new Path2D(linePath.join(" ")));
+    }
+  };
+
   return {
     ref: specialShapesCanvasRef,
     ctx: specialShapesCtx,
@@ -79,5 +126,6 @@ export default function usePixelGridSpecialShapesCanvasTools(): PixelGridSpecial
     releasePoint,
     moveTarPoint,
     tarPoint,
+    drawShapesOnCanvas,
   };
 }

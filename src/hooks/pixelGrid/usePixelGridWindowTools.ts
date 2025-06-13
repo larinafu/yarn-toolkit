@@ -21,7 +21,7 @@ export type PixelGridWindowTools = {
   ) => PixelGridCanvasCellDimensions;
   gridDimensions: PixelGridCanvasCellDimensions;
   resizeCanvas: (
-    ref: React.MutableRefObject<HTMLCanvasElement>,
+    ref: React.RefObject<HTMLCanvasElement>,
     canvasWidth?: number,
     canvasHeight?: number
   ) => void;
@@ -255,7 +255,7 @@ export default function usePixelGridWindowTools({
     getGridDimensionsFromCell,
     gridDimensions: getGridDimensionsFromCell(canvasCellDimensions),
     resizeCanvas: (
-      ref: React.MutableRefObject<HTMLCanvasElement>,
+      ref: React.RefObject<HTMLCanvasElement>,
       canvasWidth?: number,
       canvasHeight?: number
     ) => {

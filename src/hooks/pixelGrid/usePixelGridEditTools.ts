@@ -18,9 +18,10 @@ export default function usePixelGridEditTools({
   editMode,
   activeColor,
   activeStitch,
-  interactionLayerActions,
+  interactionLayerTools,
   savedCanvasDataRef,
   editRecordTools,
+  activeShapeIdx,
 }: {
   colorCanvasTools: ColorCanvasTools;
   stitchCanvasTools: StitchCanvasTools;
@@ -28,15 +29,16 @@ export default function usePixelGridEditTools({
   editMode: EditMode;
   activeColor: string;
   activeStitch: string;
-  interactionLayerActions: PixelGridInteractionLayerTools;
+  interactionLayerTools: PixelGridInteractionLayerTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   editRecordTools: EditRecordTools;
+  activeShapeIdx: number | null;
 }): PixelGridEditTools {
   const handleCanvasEdit = (
     e: PointerEvent,
     pointerTrigger: "move" | "down"
   ) => {
-    const { row, col } = interactionLayerActions.getPixelPosFromPointerCoords(
+    const { row, col } = interactionLayerTools.getPixelPosFromPointerCoords(
       e,
       editMode
     );
@@ -87,6 +89,7 @@ export default function usePixelGridEditTools({
               editRecordTools.addToSession(row, col, {
                 shapeId: specialShapesTools.tarPoint.shapeId,
                 pointId: specialShapesTools.tarPoint.pointId,
+                type: activeShapeIdx === null ? "update" : "create",
                 newLoc: { row, col },
               });
             }

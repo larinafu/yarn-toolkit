@@ -38,11 +38,11 @@ export type ColorCanvasTools = {
 export default function usePixelGridColorCanvasTools({
   canvasWindowTools,
   savedCanvasDataRef,
-  interactionLayerActions,
+  interactionLayerTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
-  interactionLayerActions: PixelGridInteractionLayerTools;
+  interactionLayerTools: PixelGridInteractionLayerTools;
 }): ColorCanvasTools {
   const colorCanvasRef = useRef(null);
   const [colorCanvasContext, setColorCanvasContext] =
@@ -79,8 +79,8 @@ export default function usePixelGridColorCanvasTools({
     const context = (ctx as CanvasRenderingContext2D) || colorCanvasContext;
     const curCanvasWindowTools = windowTools || canvasWindowTools;
     const [rowPos, colPos] = [
-      interactionLayerActions.getRowPos(row, curCanvasWindowTools.canvasWindow),
-      interactionLayerActions.getColPos(col, curCanvasWindowTools.canvasWindow),
+      interactionLayerTools.getRowPos(row, curCanvasWindowTools.canvasWindow),
+      interactionLayerTools.getColPos(col, curCanvasWindowTools.canvasWindow),
     ];
     context.fillStyle = hex;
     context.fillRect(
