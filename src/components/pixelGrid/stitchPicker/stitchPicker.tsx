@@ -1,30 +1,98 @@
 import Image from "next/image";
 import { ActiveStitchPalette } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
+import Dropdown from "@/components/general/dropdown/dropdown";
+import { useState } from "react";
+import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
+import { knitting } from "@/constants/pixelGrid/stitches";
 
 export default function StitchPicker({
   activeStitchPalette,
   activeStitchIdx,
   setActiveStitchIdx,
+  swapStitchInPalette,
 }: {
   activeStitchPalette: ActiveStitchPalette;
   activeStitchIdx: number;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
+  swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
 }) {
   return (
-    <div>
+    <div className="flex">
       {activeStitchPalette.map((stitch, idx) => (
-        <button
+        <StitchOption
           key={idx}
-          className={`buttonBlank pd-xxs mg-xxs rounded-sm ${
-            activeStitchIdx === idx
-              ? "border-amaranth hover:border-amaranth active:border-amaranth"
-              : "border-gray-100 hover:border-gray-100 active:border-gray-100"
-          }`}
-          onClick={() => setActiveStitchIdx(idx)}
-        >
-          <Image src={stitch[1]} alt={stitch[0]} width={25} height={25} />
-        </button>
+          idx={idx}
+          selected={activeStitchIdx === idx}
+          setActiveStitchIdx={setActiveStitchIdx}
+          swapStitchInPalette={swapStitchInPalette}
+          stitch={stitch}
+        />
       ))}
     </div>
   );
 }
+
+const StitchOption = ({
+  idx,
+  selected,
+  setActiveStitchIdx,
+  stitch,
+  swapStitchInPalette,
+}: {
+  idx: number;
+  selected: boolean;
+  setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
+  stitch: string;
+  swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
+}) => {
+  const [openExpand, setOpenExpand] = useState(false);
+  const expandRef = useRefWithClickawayListener(() => setOpenExpand(false), []);
+  const handlePaletteSelection = () => {
+    if (selected) {
+      setOpenExpand(!openExpand);
+    } else {
+      setActiveStitchIdx(idx);
+    }
+  };
+  return (
+    <div className="relative" ref={expandRef}>
+      <button
+        key={idx}
+        className={`buttonBlank pd-xxs mg-xxs rounded-sm ${
+          selected
+            ? "border-amaranth hover:border-amaranth active:border-amaranth"
+            : "border-gray-400 hover:border-gray-400 active:border-gray-400"
+        } size-8 m-1`}
+        onClick={handlePaletteSelection}
+      >
+        <Image src={knitting[stitch].svg} alt={stitch} width={25} height={25} />
+      </button>
+      {openExpand && (
+        <div className="absolute top-[110%] left-[50%] pointer-events-none:">
+          <section
+            className={`card relative w-sm z-20 overflow-y-scroll left-[-50%] pointer-events-auto fadeInFast`}
+          >
+            {Object.entries(knitting).map(([stitchKey, stitch]) => (
+              <button
+                key={stitchKey}
+                className="buttonBlank p-1 size-10 m-1 border border-gray-500"
+                onClick={() => {
+                  swapStitchInPalette(idx, stitchKey);
+                  setOpenExpand(false);
+                }}
+              >
+                <Image
+                  src={stitch.svg}
+                  alt={stitchKey}
+                  width={20}
+                  height={20}
+                  className="w-full h-full"
+                />
+              </button>
+            ))}
+          </section>
+        </div>
+      )}
+    </div>
+  );
+};

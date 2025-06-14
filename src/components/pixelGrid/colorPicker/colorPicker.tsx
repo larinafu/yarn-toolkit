@@ -57,7 +57,7 @@ const ColorOption = ({
   return (
     <div className="relative" ref={expandRef}>
       <button
-        className={`buttonBlank ${styles.mainColor} shadow flex items-center justify-center`}
+        className={`buttonBlank ${styles.mainColor} shadow flex items-center justify-center size-8 m-1 p-1`}
         key={`${colorHex}-main`}
         onClick={handlePaletteSelection}
         style={{
@@ -66,9 +66,9 @@ const ColorOption = ({
       >
         {selected && (
           <Image
-            className={styles.plus}
-            width={13}
-            height={13}
+            className={`${styles.plus} size-4/5`}
+            width={20}
+            height={20}
             src={getColor(colorHex).isDark ? "/pen-light.svg" : "/pen-dark.svg"}
             alt="plus"
           />
@@ -76,13 +76,13 @@ const ColorOption = ({
       </button>
       {openExpand && (
         <div className={styles.expandContainer}>
-          <section className={`card ${styles.expand}`}>
+          <section className={`card ${styles.expand} fadeInFast`}>
             {defaultColorsConstants.map((colorRow, idx) => (
-              <div key={idx}>
+              <div key={idx} className="flex">
                 {Object.values(colorRow).map((expandedColorHex) => (
                   <button
                     key={expandedColorHex.hex}
-                    className="m-2 inline-flex"
+                    className="size-6 m-1 border border-gray-500"
                     onClick={() => {
                       swapColorInPalette(colorIdx, expandedColorHex.hex);
                       setOpenExpand(false);

@@ -3,7 +3,7 @@ import { ColorCountTracker } from "./useColorCanvasTools";
 import { knitting } from "@/constants/pixelGrid/stitches";
 
 export type ActiveColorPalette = [string, number][];
-export type ActiveStitchPalette = [string, string][];
+export type ActiveStitchPalette = string[];
 export type ActiveShapePalette = [string, string][];
 
 export type EditMode = "colorChange" | "symbolChange" | "specialShapeChange";
@@ -15,6 +15,7 @@ type EditingConfigTools = {
   editMode: EditMode;
   setEditMode: React.Dispatch<React.SetStateAction<EditMode>>;
   swapColorInPalette: (colorIdx: number, hex: string) => void;
+  swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
   activeColorIdx: number;
   activeShapeIdx: number | null;
   activeStitchIdx: number;
@@ -37,14 +38,7 @@ export default function usePixelGridEditingConfigTools({
   );
 
   const [activeStitchPalette, setActiveStitchPalette] =
-    useState<ActiveStitchPalette>([
-      ["p", knitting["p"].svg as string],
-      ["k", knitting["k"].svg as string],
-      ["yo", knitting["yo"].svg as string],
-      ["k2tog", knitting["k2tog"].svg as string],
-      ["p2tog", knitting["p2tog"].svg as string],
-      ["k1_tbl", knitting["k1_tbl"].svg as string],
-    ]);
+    useState<ActiveStitchPalette>(["p", "k", "yo", "k2tog", "p2tog", "k1_tbl"]);
   const [activeShapePalette, setActiveShapePalette] =
     useState<ActiveShapePalette>([["line", "/specialShapes/line.svg"]]);
 
@@ -63,7 +57,13 @@ export default function usePixelGridEditingConfigTools({
     ]);
   };
 
-  const swapStitchInPalette = (stitchIdx: number) => {};
+  const swapStitchInPalette = (stitchIdx: number, stitch: string) => {
+    setActiveStitchPalette([
+      ...activeStitchPalette.slice(0, stitchIdx),
+      stitch,
+      ...activeStitchPalette.slice(stitchIdx + 1),
+    ]);
+  };
 
   return {
     activeColorIdx,
@@ -78,5 +78,6 @@ export default function usePixelGridEditingConfigTools({
     editMode,
     setEditMode,
     swapColorInPalette,
+    swapStitchInPalette,
   };
 }

@@ -101,7 +101,7 @@ export default function PixelGridEditor({
     activeColor:
       editConfigTools.activeColorPalette[editConfigTools.activeColorIdx][0],
     activeStitch:
-      editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx][0],
+      editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx],
     interactionLayerTools,
     savedCanvasDataRef,
     editRecordTools,
@@ -282,6 +282,7 @@ export default function PixelGridEditor({
         numberFormat={numberFormat}
         setNumberFormat={setNumberFormat}
         specialShapesTools={specialShapesTools}
+        swapStitchInPalette={editConfigTools.swapStitchInPalette}
       />
       <section className="w-screen flex justify-between touch-manipulation">
         <section className={`card m-2 grow`}>

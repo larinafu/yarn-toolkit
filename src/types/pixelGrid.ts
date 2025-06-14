@@ -116,6 +116,6 @@ export type StitchGroup = {
       | StitchInfo
       | StitchInfo[];
     svgPaths: SvgPaths;
-    svg?: string;
+    svg: string;
   };
 };

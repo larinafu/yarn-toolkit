@@ -1,6 +1,5 @@
 import Image from "next/image";
 
-import styles from "./editingToolbar.module.css";
 import ColorPicker from "../colorPicker/colorPicker";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
 import { ColorCanvasTools } from "@/hooks/pixelGrid/useColorCanvasTools";
@@ -29,6 +28,7 @@ import {
   PixelGridSpecialShapesCanvasTools,
   SpecialShape,
 } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import { knitting } from "@/constants/pixelGrid/stitches";
 
 type EditModeIcon = {
   mode: EditMode;
@@ -61,6 +61,7 @@ export default function EditingToolbar({
   specialShapesRef,
   numberFormat,
   setNumberFormat,
+  swapStitchInPalette,
 }: {
   shiftPixelSize: (shift: "up" | "down") => {
     canvasWindow: PixelGridCanvasWindow;
@@ -98,16 +99,17 @@ export default function EditingToolbar({
   numberFormat: PixelGridNumberFormat;
   setNumberFormat: React.Dispatch<SetStateAction<PixelGridNumberFormat>>;
   specialShapesTools: PixelGridSpecialShapesCanvasTools;
+  swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
 }) {
   const editModeIcons: EditModeIcon[] = [
     {
       mode: "colorChange",
-      icon: "/pixelGridEditor/pen.svg",
+      icon: "/paint.svg",
       color: activeColorPalette[activeColorIdx][0],
     },
     {
       mode: "symbolChange",
-      icon: activeStitchPalette[activeStitchIdx][1],
+      icon: knitting[activeStitchPalette[activeStitchIdx]].svg,
       color: "#000",
     },
     {
@@ -134,6 +136,7 @@ export default function EditingToolbar({
             activeStitchPalette={activeStitchPalette}
             activeStitchIdx={activeStitchIdx}
             setActiveStitchIdx={setActiveStitchIdx}
+            swapStitchInPalette={swapStitchInPalette}
           />
         );
       case "specialShapeChange":
@@ -153,10 +156,11 @@ export default function EditingToolbar({
     activeShapePalette,
     activeShapeIdx,
     activeShapePalette,
+    activeStitchPalette
   ]);
   return (
     <section className="flex justify-center mt-1">
-      <header className={`card mg-0-auto w-fit-content pd-0`}>
+      <header className={`card w-3/5 mg-0-auto w-fit-content pd-0`}>
         <div className="flex align-center">
           <button
             className="buttonBlank pd-xxs"
@@ -208,7 +212,7 @@ export default function EditingToolbar({
                   height={20}
                 />
                 <div
-                  className={styles.colorLinePreview}
+                  className="w-full h-1 mt-0.5 shadow rounded-2xl"
                   style={{
                     backgroundColor: editModeIcon.color,
                   }}
@@ -312,7 +316,7 @@ export default function EditingToolbar({
             </button>
           </section>
         </div>
-        <section className="border-t-amaranth border-t-1">
+        <section className="border-t-amaranth border-t-1 flex justify-center">
           {activePicker}
         </section>
       </header>
