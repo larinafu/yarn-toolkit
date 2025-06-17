@@ -8,9 +8,13 @@
           }
     </style>
     <text x="18" y="28" text-anchor="end" dominant-baseline="middle" class="font">4</text>
+    <text x="18" y="43" text-anchor="end" dominant-baseline="middle" class="font">3</text>
     <text x="18" y="58" text-anchor="end" dominant-baseline="middle" class="font">2</text>
+    <text x="18" y="73" text-anchor="end" dominant-baseline="middle" class="font">1</text>
 
+    <text x="82" y="28" text-anchor="start" dominant-baseline="middle" class="font">4</text>
     <text x="82" y="43" text-anchor="start" dominant-baseline="middle" class="font">3</text>
+    <text x="82" y="58" text-anchor="start" dominant-baseline="middle" class="font">2</text>
     <text x="82" y="73" text-anchor="start" dominant-baseline="middle" class="font">1</text>
 
     <text x="28" y="18" text-anchor="middle" dominant-baseline="end" class="font">4</text>

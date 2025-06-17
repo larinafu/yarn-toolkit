@@ -15,7 +15,7 @@ export default function SpecialShapePicker({
       {activeShapePalette.map(([shapeKey, img], idx) => (
         <button
           key={idx}
-          className={`buttonBlank pd-xxs mg-xxs rounded-sm ${
+          className={`buttonBlank p-2 m-2 rounded-sm size-10 ${
             activeShapeIdx === idx
               ? "border-amaranth hover:border-amaranth active:border-amaranth"
               : "border-gray-100 hover:border-gray-100 active:border-gray-100"

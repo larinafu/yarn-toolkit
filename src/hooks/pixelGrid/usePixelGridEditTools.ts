@@ -19,7 +19,6 @@ export default function usePixelGridEditTools({
   activeColor,
   activeStitch,
   interactionLayerTools,
-  savedCanvasDataRef,
   editRecordTools,
   activeShapeIdx,
 }: {
@@ -30,7 +29,6 @@ export default function usePixelGridEditTools({
   activeColor: string;
   activeStitch: string;
   interactionLayerTools: PixelGridInteractionLayerTools;
-  savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   editRecordTools: EditRecordTools;
   activeShapeIdx: number | null;
 }): PixelGridEditTools {

@@ -55,9 +55,9 @@ const ColorOption = ({
     }
   };
   return (
-    <div className="relative" ref={expandRef}>
+    <div ref={expandRef}>
       <button
-        className={`buttonBlank ${styles.mainColor} shadow flex items-center justify-center size-8 m-1 p-1`}
+        className={`buttonBlank ${styles.mainColor} shadow flex items-center justify-center size-10 m-2 p-2`}
         key={`${colorHex}-main`}
         onClick={handlePaletteSelection}
         style={{
@@ -75,7 +75,7 @@ const ColorOption = ({
         )}
       </button>
       {openExpand && (
-        <div className={styles.expandContainer}>
+        <div className="absolute pointer-events-none">
           <section className={`card ${styles.expand} fadeInFast`}>
             {defaultColorsConstants.map((colorRow, idx) => (
               <div key={idx} className="flex">

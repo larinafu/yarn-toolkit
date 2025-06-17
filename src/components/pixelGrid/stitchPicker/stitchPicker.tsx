@@ -1,6 +1,5 @@
 import Image from "next/image";
 import { ActiveStitchPalette } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
-import Dropdown from "@/components/general/dropdown/dropdown";
 import { useState } from "react";
 import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
 import { knitting } from "@/constants/pixelGrid/stitches";
@@ -55,20 +54,20 @@ const StitchOption = ({
     }
   };
   return (
-    <div className="relative" ref={expandRef}>
+    <div ref={expandRef}>
       <button
         key={idx}
-        className={`buttonBlank pd-xxs mg-xxs rounded-sm ${
+        className={`buttonBlank p-2 m-2 rounded-sm ${
           selected
             ? "border-amaranth hover:border-amaranth active:border-amaranth"
             : "border-gray-400 hover:border-gray-400 active:border-gray-400"
-        } size-8 m-1`}
+        } size-10`}
         onClick={handlePaletteSelection}
       >
         <Image src={knitting[stitch].svg} alt={stitch} width={25} height={25} />
       </button>
       {openExpand && (
-        <div className="absolute top-[110%] left-[50%] pointer-events-none:">
+        <div className="absolute pointer-events-none:">
           <section
             className={`card relative w-sm z-20 overflow-y-scroll left-[-50%] pointer-events-auto fadeInFast`}
           >

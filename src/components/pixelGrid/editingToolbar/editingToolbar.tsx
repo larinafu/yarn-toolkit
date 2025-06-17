@@ -156,7 +156,7 @@ export default function EditingToolbar({
     activeShapePalette,
     activeShapeIdx,
     activeShapePalette,
-    activeStitchPalette
+    activeStitchPalette,
   ]);
   return (
     <section className="flex justify-center mt-1">
@@ -203,6 +203,9 @@ export default function EditingToolbar({
                 }`}
                 onClick={() => {
                   setEditMode(editModeIcon.mode);
+                  if (editModeIcon.mode !== "specialShapeChange") {
+                    specialShapesTools.drawShapesOnCanvas({});
+                  }
                 }}
               >
                 <Image
@@ -285,6 +288,16 @@ export default function EditingToolbar({
                   gridWidth: gridDimensions.width,
                   gridHeight: gridDimensions.height,
                 });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
                 updateFullCanvas({
                   windowTools: {
                     canvasCellDimensions,
@@ -316,24 +329,24 @@ export default function EditingToolbar({
             </button>
           </section>
         </div>
-        <section className="border-t-amaranth border-t-1 flex justify-center">
+        <section className="border-t-amaranth border-t-1 flex justify-center overflow-x-auto">
           {activePicker}
         </section>
+        <FormattingOptions
+          numberFormat={numberFormat}
+          setNumberFormat={setNumberFormat}
+          savedCanvasDataRef={savedCanvasDataRef}
+        />
+        <PixelGridDownloadPreview
+          savedCanvasDataRef={savedCanvasDataRef}
+          specialShapesRef={specialShapesRef}
+          canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
+          canvasCellWidthHeightRatio={
+            savedCanvasDataRef.current.swatch.width /
+            savedCanvasDataRef.current.swatch.height
+          }
+        />
       </header>
-      <FormattingOptions
-        numberFormat={numberFormat}
-        setNumberFormat={setNumberFormat}
-        savedCanvasDataRef={savedCanvasDataRef}
-      />
-      <PixelGridDownloadPreview
-        savedCanvasDataRef={savedCanvasDataRef}
-        specialShapesRef={specialShapesRef}
-        canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
-        canvasCellWidthHeightRatio={
-          savedCanvasDataRef.current.swatch.width /
-          savedCanvasDataRef.current.swatch.height
-        }
-      />
     </section>
   );
 }

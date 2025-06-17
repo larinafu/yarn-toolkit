@@ -9,6 +9,8 @@ import React, { useState, useRef } from "react";
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 import { vhToPx, vwToPx } from "@/utils/general/sizeConversionUtils";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
+import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
+import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 
 const MAX_PREVIEW_WIDTH_VW = 20;
 const MAX_PREVIEW_HEIGHT_VH = 100;
@@ -29,10 +31,15 @@ export type ViewboxPosition = {
   viewableBoxHeightPx: number;
 };
 
-type ViewboxTools = {
+export type ViewboxTools = {
   ref: React.RefObject<HTMLCanvasElement | null>;
+  specialShapesRef: React.RefObject<HTMLCanvasElement | null>;
   ctx: CanvasRenderingContext2D | null;
   setCtx: React.Dispatch<React.SetStateAction<CanvasRenderingContext2D | null>>;
+  specialShapesCtx: CanvasRenderingContext2D | null;
+  setSpecialShapesCtx: React.Dispatch<
+    React.SetStateAction<CanvasRenderingContext2D | null>
+  >;
   pointerActions: PointerActions;
   updateViewboxPixelColor: ({
     row,
@@ -45,12 +52,6 @@ type ViewboxTools = {
     hex: string;
     ctx?: CanvasRenderingContext2D;
   }) => void;
-  updateViewboxPixelColorOnInitialRender: (
-    row: number,
-    col: number,
-    hex: string,
-    ctx: CanvasRenderingContext2D
-  ) => void;
   viewboxDims: ViewboxDims;
   viewboxCellDims: ViewboxCellDims;
   viewboxPosition: ViewboxPosition;
@@ -61,6 +62,8 @@ type ViewboxTools = {
     windowTools?: Partial<PixelGridWindowTools>;
     viewContext?: CanvasRenderingContext2D;
   }) => void;
+  drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
+  drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => void;
 };
 
 const getViewboxSizing = ({
@@ -137,16 +140,21 @@ const getViewboxPosition = ({
 export default function useViewboxTools({
   pixelGridCanvasWindowTools,
   savedCanvasDataRef,
+  specialShapesRef,
 }: {
   pixelGridCanvasWindowTools: PixelGridWindowTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  specialShapesRef: React.RefObject<SpecialShape[]>;
 }): ViewboxTools {
   const [maxPreviewWidthPx, maxPreviewHeightPx] = [
     vwToPx(MAX_PREVIEW_WIDTH_VW),
     vhToPx(MAX_PREVIEW_HEIGHT_VH),
   ];
   const viewboxRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
+  const viewboxSpecialShapesRef = useRef(null);
   const [viewboxContext, setViewboxContext] =
+    useState<CanvasRenderingContext2D | null>(null);
+  const [viewboxSpecialShapesContext, setViewboxSpecialShapesContext] =
     useState<CanvasRenderingContext2D | null>(null);
   const widthHeightRatio =
     savedCanvasDataRef.current.swatch.width /
@@ -215,31 +223,40 @@ export default function useViewboxTools({
         gridHeight: newViewDims.height,
         ref: viewboxRef as React.RefObject<any>,
       });
-      for (
-        let row = 0;
-        row < curWindowTools.canvasNumRowsAndCols.numRows;
-        row++
-      ) {
-        for (
-          let col = 0;
-          col < curWindowTools.canvasNumRowsAndCols.numCols;
-          col++
-        ) {
-          updateViewboxPixelColor({
-            row,
-            col,
-            hex: savedCanvasDataRef.current.pixels[row][col].hex,
-            cellDims: newCellDims,
-            ctx,
-          });
-        }
-      }
+      canvasSizingUtils.resizeCanvas({
+        gridWidth: newViewDims.width,
+        gridHeight: newViewDims.height,
+        ref: viewboxSpecialShapesRef as React.RefObject<any>,
+      });
+      canvasContextUtils.drawPixelGridColors({
+        colorCtx: ctx,
+        cellDims: newCellDims,
+        cells: savedCanvasDataRef.current.pixels,
+      });
     }
   };
 
   return {
     ref: viewboxRef,
     ctx: viewboxContext,
+    specialShapesRef: viewboxSpecialShapesRef,
+    specialShapesCtx: viewboxSpecialShapesContext,
+    setSpecialShapesCtx: setViewboxSpecialShapesContext,
+    drawViewboxColors: (ctx?: CanvasRenderingContext2D) =>
+      canvasContextUtils.drawPixelGridColors({
+        colorCtx: ctx || (viewboxContext as CanvasRenderingContext2D),
+        cellDims: viewboxCellDims,
+        cells: savedCanvasDataRef.current.pixels,
+      }),
+    drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => {
+      canvasContextUtils.drawSpecialShapes({
+        specialShapesCtx:
+          ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
+        specialShapes: specialShapesRef.current,
+        cellDims: viewboxCellDims,
+        gridDims: viewboxDims,
+      });
+    },
     setCtx: setViewboxContext,
     pointerActions: {
       isPointerDown: pointerDownPos !== null,
@@ -294,12 +311,6 @@ export default function useViewboxTools({
       },
     },
     updateViewboxPixelColor,
-    updateViewboxPixelColorOnInitialRender: (
-      row: number,
-      col: number,
-      hex: string,
-      ctx: CanvasRenderingContext2D
-    ) => updateViewboxPixelColor({ row, col, hex, ctx }),
     viewboxDims,
     viewboxCellDims,
     viewboxPosition: getViewboxPosition({

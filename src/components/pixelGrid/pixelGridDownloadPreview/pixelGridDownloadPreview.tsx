@@ -10,6 +10,8 @@ import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithConta
 import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import useThrottler from "@/hooks/general/useThrottler";
+import SpinnerSmall from "@/components/general/spinnerSmall/spinnerSmall";
 
 const PixelGridPreviewDisplay = ({
   savedCanvasDataRef,
@@ -33,7 +35,7 @@ const PixelGridPreviewDisplay = ({
     }
   });
   return (
-    <div ref={container.ref} className="size-200">
+    <div ref={container.ref} className="grow">
       <canvas ref={previewRef}></canvas>
     </div>
   );
@@ -109,7 +111,12 @@ export default function PixelGridDownloadPreview({
     const blob = await offscreenCanvas.convertToBlob();
     return blob;
   };
-  const [blob, setBlob] = useState<string>();
+  const [blob, setBlob] = useState<string | null>();
+
+  const generateBlob = useThrottler(async (width: number, height: number) => {
+    const blob = await generateImage(width, height);
+    setBlob(URL.createObjectURL(blob));
+  });
 
   return (
     <>
@@ -118,28 +125,31 @@ export default function PixelGridDownloadPreview({
           <Image src="/eye.svg" alt="preview pattern" height={25} width={25} />
         </div>
       </ModalTools.btn>
-      <ModalTools.modal>
-        <h2>Pattern Preview</h2>
-        <div className="flex">
+      <ModalTools.modal className="size-4/5">
+        <h2 className="text-3xl text-center">Download as PNG</h2>
+        <div className="flex h-4/5 w-full">
           <PixelGridPreviewDisplay
             savedCanvasDataRef={savedCanvasDataRef}
             specialShapesRef={specialShapesRef}
           />
           <form>
             <fieldset>
-              <legend>Select an image size:</legend>
+              <legend className="text-3xl">Select an image size:</legend>
               {(Object.entries(sizesInfo) as [sizer, any][]).map(
                 ([size, sizeInfo]) => (
                   <div
                     key={size}
                     onClick={async () => {
                       setSizeSelection(size);
-                      const blob = await generateImage(
+                      setBlob(null);
+                      generateBlob.throttle(
                         sizeInfo.dimensions.width,
                         sizeInfo.dimensions.height
                       );
-                      setBlob(URL.createObjectURL(blob));
                     }}
+                    className={`text-2xl p-2 rounded-lg last:mb-5 ${
+                      size === sizeSelection && "bg-amaranth-light"
+                    }`}
                   >
                     <input
                       type="radio"
@@ -149,12 +159,15 @@ export default function PixelGridDownloadPreview({
                       checked={size === sizeSelection}
                       onChange={async () => {
                         setSizeSelection(size);
-                        const blob = await generateImage(
-                          sizeInfo.dimensions.width,
-                          sizeInfo.dimensions.height
-                        );
-                        setBlob(URL.createObjectURL(blob));
+                        setTimeout(async () => {
+                          const blob = await generateImage(
+                            sizeInfo.dimensions.width,
+                            sizeInfo.dimensions.height
+                          );
+                          setBlob(URL.createObjectURL(blob));
+                        }, 2000);
                       }}
+                      className="absolute opacity-0"
                     />
                     <label htmlFor={size}>
                       {sizeInfo.display} - {sizeInfo.dimensions.width}x
@@ -164,9 +177,15 @@ export default function PixelGridDownloadPreview({
                 )
               )}
             </fieldset>
-            <a href={blob} className="button" download={"pattern"}>
-              download image
-            </a>
+            {blob ? (
+              <a href={blob} className="button" download={"pattern"}>
+                download image
+              </a>
+            ) : (
+              <div className="button flex w-fit">
+                <p className="mr-5">generating PNG</p> <SpinnerSmall />
+              </div>
+            )}
           </form>
         </div>
       </ModalTools.modal>

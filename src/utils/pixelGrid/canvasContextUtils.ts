@@ -93,6 +93,40 @@ const drawStitchPath = (
   }
 };
 
+const drawPixelGridColors = ({
+  colorCtx,
+  cellDims,
+  cells,
+  offset,
+}: {
+  colorCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  cellDims: PixelGridCanvasCellDimensions;
+  cells: PixelGridCanvasCell[][];
+  offset?: PixelGridCanvasDimensions;
+}) => {
+  const curOffset = {
+    width: 0,
+    height: 0,
+    ...offset,
+  };
+  const numRowsAndCols: PixelGridCanvasNumRowsAndCols = {
+    numRows: cells.length,
+    numCols: cells[0].length,
+  };
+  for (let row = 0; row < numRowsAndCols.numRows; row++) {
+    for (let col = 0; col < numRowsAndCols.numCols; col++) {
+      drawColoredSquare({
+        x: col * cellDims.width + curOffset.width,
+        y: row * cellDims.height + curOffset.height,
+        w: cellDims.width,
+        h: cellDims.height,
+        color: cells[row][col].hex,
+        ctx: colorCtx,
+      });
+    }
+  }
+};
+
 const drawPixelGridColorsAndStitches = ({
   colorCtx,
   stitchCtx,
@@ -161,6 +195,7 @@ const drawSpecialShapes = ({
   specialShapesCtx,
   specialShapes,
   cellDims,
+  gridDims,
   offset,
 }: {
   specialShapesCtx:
@@ -168,6 +203,7 @@ const drawSpecialShapes = ({
     | OffscreenCanvasRenderingContext2D;
   specialShapes: SpecialShape[];
   cellDims: PixelGridCanvasCellDimensions;
+  gridDims?: PixelGridCanvasDimensions;
   offset?: PixelGridCanvasDimensions;
 }) => {
   const curOffset = {
@@ -175,6 +211,7 @@ const drawSpecialShapes = ({
     height: 0,
     ...offset,
   };
+  gridDims && specialShapesCtx.clearRect(0, 0, gridDims.width, gridDims.height);
   specialShapesCtx.lineWidth = 5;
   specialShapesCtx.strokeStyle = "red";
   for (const shape of specialShapes) {
@@ -411,6 +448,7 @@ const drawFullCanvasPreview = ({
 
 export default {
   drawGridLines,
+  drawPixelGridColors,
   drawPixelGridColorsAndStitches,
   drawGridNumbers,
   drawFullCanvasPreview,

@@ -51,7 +51,7 @@ export default function FormattingOptions({
           />
         }
       >
-        <div className="card pd-0">
+        <div className="card p-0">
           <form>
             <fieldset className="flex">
               {(
@@ -62,7 +62,7 @@ export default function FormattingOptions({
               ).map(([id, option]) => (
                 <div
                   key={id}
-                  className={`bd-rad-xs pd-xxs ${
+                  className={`rounded-lg p-1 ${
                     id === numberFormat ? "bg-amaranth-light" : ""
                   }`}
                   onClick={() => {
@@ -75,7 +75,7 @@ export default function FormattingOptions({
                     id={id}
                     name={id}
                     value={id}
-                    className="hidden-input pos-abs"
+                    className="opacity-0 absolute"
                     checked={id === numberFormat}
                     onChange={() => {
                       setNumberFormat(id);

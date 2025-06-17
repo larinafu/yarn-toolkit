@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react";
 
-import useViewboxTools from "@/hooks/pixelGrid/useViewboxTools";
+import useViewboxTools, {
+  ViewboxTools,
+} from "@/hooks/pixelGrid/useViewboxTools";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
 import { ColorCanvasTools } from "@/hooks/pixelGrid/useColorCanvasTools";
 import { StitchCanvasTools } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
@@ -9,14 +11,11 @@ import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 
 export default function ImageViewbox({
   canvasWindowTools,
-  colorCanvasTools,
-  stitchCanvasTools,
   savedCanvasDataRef,
   updateFullCanvas,
+  viewboxTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
-  colorCanvasTools: ColorCanvasTools;
-  stitchCanvasTools: StitchCanvasTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   updateFullCanvas: ({
     colorCanvasContext,
@@ -29,6 +28,7 @@ export default function ImageViewbox({
     specialShapesCanvasContext?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
   }) => void;
+  viewboxTools: ViewboxTools;
 }) {
   const viewboxVisibleRef = useRef(null);
 
@@ -36,31 +36,27 @@ export default function ImageViewbox({
     savedCanvasDataRef.current.pixels.length,
     savedCanvasDataRef.current.pixels[0].length,
   ];
-  const viewboxTools = useViewboxTools({
-    pixelGridCanvasWindowTools: canvasWindowTools,
-    savedCanvasDataRef,
-  });
 
   useEffect(() => {
     const viewboxContext = (
       viewboxTools.ref.current as HTMLCanvasElement
-    ).getContext("2d");
+    ).getContext("2d") as CanvasRenderingContext2D;
     viewboxTools.setCtx(viewboxContext);
+    const viewboxSpecialShapesContext = (
+      viewboxTools.specialShapesRef.current as HTMLCanvasElement
+    ).getContext("2d") as CanvasRenderingContext2D;
+    viewboxTools.setSpecialShapesCtx(viewboxSpecialShapesContext);
     canvasSizingUtils.resizeCanvas({
       ref: viewboxTools.ref as React.RefObject<HTMLCanvasElement>,
       gridWidth: viewboxTools.viewboxDims.width,
       gridHeight: viewboxTools.viewboxDims.height,
     });
-    for (let row = 0; row < numRows; row++) {
-      for (let col = 0; col < numCols; col++) {
-        viewboxTools.updateViewboxPixelColorOnInitialRender(
-          row,
-          col,
-          savedCanvasDataRef.current.pixels[row][col].hex,
-          viewboxContext as CanvasRenderingContext2D
-        );
-      }
-    }
+    canvasSizingUtils.resizeCanvas({
+      ref: viewboxTools.specialShapesRef as React.RefObject<HTMLCanvasElement>,
+      gridWidth: viewboxTools.viewboxDims.width,
+      gridHeight: viewboxTools.viewboxDims.height,
+    });
+    viewboxTools.drawViewboxColors(viewboxContext);
   }, []);
 
   // window resize
@@ -76,7 +72,11 @@ export default function ImageViewbox({
 
   return (
     <section className="m-auto mt-0 mb-0 relative touch-none">
-      <canvas ref={viewboxTools.ref}></canvas>
+      <canvas ref={viewboxTools.ref} className="absolute top-0 left-0"></canvas>
+      <canvas
+        ref={viewboxTools.specialShapesRef}
+        className="absolute top-0 left-0"
+      ></canvas>
       <div
         ref={viewboxVisibleRef}
         className="absolute border-2 border-amber-300 hover:cursor-pointer"
@@ -90,6 +90,9 @@ export default function ImageViewbox({
         onPointerDown={(e) => {
           (viewboxVisibleRef.current as any).setPointerCapture(e.pointerId);
           viewboxTools.pointerActions.handleViewboxGrab(e);
+        }}
+        onPointerLeave={() => {
+          viewboxTools.pointerActions.handleViewboxRelease();
         }}
         onPointerMove={(e) => {
           const newCanvasWindow =

@@ -1,4 +1,5 @@
 "use client";
+import Image from "next/image";
 import { RefObject, useEffect, useRef, useState } from "react";
 
 import ImageViewbox from "../imageViewbox/imageViewbox";
@@ -24,6 +25,8 @@ import usePixelGridEditRecordTools from "@/hooks/pixelGrid/usePixelGridEditRecor
 import usePixelGridStitchCanvasTools from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import usePixelGridEditTools from "@/hooks/pixelGrid/usePixelGridEditTools";
 import usePixelGridSpecialShapesCanvasTools from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import useViewboxTools from "@/hooks/pixelGrid/useViewboxTools";
+import Link from "next/link";
 
 const MAX_WINDOW_WIDTH_VW = 75;
 const MAX_WINDOW_HEIGHT_VH = 75;
@@ -85,12 +88,20 @@ export default function PixelGridEditor({
     interactionLayerTools,
   });
 
+  const viewboxTools = useViewboxTools({
+    pixelGridCanvasWindowTools: canvasWindowTools,
+    savedCanvasDataRef,
+    specialShapesRef: specialShapesTools.specialShapesRef,
+  });
+
   const editRecordTools = usePixelGridEditRecordTools({
     editMode: editConfigTools.editMode,
     savedCanvasDataRef,
     specialShapesRef: specialShapesTools.specialShapesRef,
     updatePixelColor: colorCanvasTools.updatePixelColor,
     updateStitch: stitchCanvasTools.updateStitch,
+    viewboxTools,
+    drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
   });
 
   const canvasEditTools = usePixelGridEditTools({
@@ -103,7 +114,6 @@ export default function PixelGridEditor({
     activeStitch:
       editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx],
     interactionLayerTools,
-    savedCanvasDataRef,
     editRecordTools,
     activeShapeIdx: editConfigTools.activeShapeIdx,
   });
@@ -257,6 +267,9 @@ export default function PixelGridEditor({
 
   return (
     <>
+      <Link className="buttonBlank" href="/">
+        <Image src="/leave.svg" width={30} height={30} alt="exit" />
+      </Link>
       <EditingToolbar
         shiftPixelSize={canvasWindowTools.shiftPixelSize}
         windowTools={canvasWindowTools}
@@ -284,7 +297,7 @@ export default function PixelGridEditor({
         specialShapesTools={specialShapesTools}
         swapStitchInPalette={editConfigTools.swapStitchInPalette}
       />
-      <section className="w-screen flex justify-between touch-manipulation">
+      <section className="w-screen flex justify-between touch-manipulation select-none">
         <section className={`card m-2 grow`}>
           <RowColTracker
             canvasWindow={canvasWindowTools.canvasWindow}
@@ -310,13 +323,12 @@ export default function PixelGridEditor({
             />
           </RowColTracker>
         </section>
-        <div className="flex flex-col w-1/5">
+        <div className="w-1/5">
           <ImageViewbox
             savedCanvasDataRef={savedCanvasDataRef}
             canvasWindowTools={canvasWindowTools}
-            colorCanvasTools={colorCanvasTools}
-            stitchCanvasTools={stitchCanvasTools}
             updateFullCanvas={updateFullCanvas}
+            viewboxTools={viewboxTools}
           />
         </div>
       </section>

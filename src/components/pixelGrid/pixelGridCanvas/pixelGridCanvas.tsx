@@ -48,7 +48,6 @@ export default function PixelGridCanvas({
 }) {
   const pointerEventsRef = useRef(null);
   const isPointerDown = useIsPointerDown();
-  console.log(specialShapesTools.specialShapesRef);
 
   useEffect(() => {
     const colorCanvasRef =
@@ -183,6 +182,7 @@ export default function PixelGridCanvas({
                 editMode !== "specialShapeChange" ||
                 activeShapeIdx !== null
               ) {
+                (pointerEventsRef.current as any).releasePointerCapture(e.pointerId);
                 canvasEditTools.handleCanvasEdit(e, "down");
               }
             }}
@@ -190,7 +190,12 @@ export default function PixelGridCanvas({
               setCurPixel(null);
             }}
             onPointerUp={() => {
-              canvasEditTools.handleCompleteCanvasEdit();
+              if (
+                editMode !== "specialShapeChange" ||
+                activeShapeIdx !== null
+              ) {
+                canvasEditTools.handleCompleteCanvasEdit();
+              }
             }}
           >
             {pointer}

@@ -3,6 +3,7 @@ import { EditMode } from "./usePixelGridEditingConfigTools";
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 import { Point, SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
+import { ViewboxTools } from "./useViewboxTools";
 
 type Session =
   | null
@@ -47,6 +48,8 @@ export default function usePixelGridEditRecordTools({
   specialShapesRef,
   updatePixelColor,
   updateStitch,
+  viewboxTools,
+  drawShapesOnCanvas,
 }: {
   editMode: EditMode;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
@@ -75,11 +78,18 @@ export default function usePixelGridEditRecordTools({
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
   }) => void;
+  viewboxTools: ViewboxTools;
+  drawShapesOnCanvas: ({
+    windowTools,
+    ctx,
+  }: {
+    windowTools?: Partial<PixelGridWindowTools>;
+    ctx?: CanvasRenderingContext2D | null;
+  }) => void;
 }): EditRecordTools {
   const sessionRef = useRef<Session>(null);
   const recordRef = useRef<Record>([]);
   const [recordPos, setRecordPos] = useState(0);
-  console.log(recordRef);
   const addToSession = (row: number, col: number, data: any) => {
     let prevData;
     switch (editMode) {
@@ -155,6 +165,9 @@ export default function usePixelGridEditRecordTools({
               }
             }
           }
+          if (sessionRef.current.mode === "colorChange") {
+            viewboxTools.drawViewboxColors();
+          }
         }
         break;
       case "specialShapeChange":
@@ -164,6 +177,7 @@ export default function usePixelGridEditRecordTools({
         ) {
           specialShapesRef.current[sessionRef.current.data.shapeId].points =
             sessionRef.current.data.new;
+          viewboxTools.drawViewboxSpecialShapes();
         }
     }
 
@@ -208,6 +222,9 @@ export default function usePixelGridEditRecordTools({
               }
             }
           }
+          if (session.mode === "colorChange") {
+            viewboxTools.drawViewboxColors();
+          }
           break;
         case "specialShapeChange":
           switch (session.data.type) {
@@ -221,6 +238,8 @@ export default function usePixelGridEditRecordTools({
                 ...specialShapesRef.current.slice(session.data.shapeId + 1),
               ];
           }
+          viewboxTools.drawViewboxSpecialShapes();
+          drawShapesOnCanvas({});
       }
 
       setRecordPos(recordPos - 1);
@@ -259,6 +278,9 @@ export default function usePixelGridEditRecordTools({
               }
             }
           }
+          if (session.mode === "colorChange") {
+            viewboxTools.drawViewboxColors();
+          }
           break;
         case "specialShapeChange":
           switch (session.data.type) {
@@ -276,6 +298,8 @@ export default function usePixelGridEditRecordTools({
                 ...specialShapesRef.current.slice(session.data.shapeId),
               ];
           }
+          viewboxTools.drawViewboxSpecialShapes();
+          drawShapesOnCanvas({});
       }
 
       setRecordPos(recordPos + 1);

@@ -1,10 +1,3 @@
-.expandContainer {
-  position: absolute;
-  left: 50%;
-  top: 110%;
-  pointer-events: none;
-}
-
 .expand {
   position: relative;
   z-index: 2;
