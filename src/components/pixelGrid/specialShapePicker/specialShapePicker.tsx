@@ -1,17 +1,23 @@
 import Image from "next/image";
 import { ActiveShapePalette } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
+import SimpleColorPicker from "../simpleColorPicker/simpleColorPicker";
+import React from "react";
 
 export default function SpecialShapePicker({
   activeShapePalette,
   activeShapeIdx,
   setActiveShapeIdx,
+  shapeColor,
+  setShapeColor,
 }: {
   activeShapePalette: ActiveShapePalette;
   activeShapeIdx: number | null;
   setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  shapeColor: string;
+  setShapeColor: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <div>
+    <div className="flex items-center">
       {activeShapePalette.map(([shapeKey, img], idx) => (
         <button
           key={idx}
@@ -25,6 +31,7 @@ export default function SpecialShapePicker({
           <Image src={img} alt={shapeKey} width={25} height={25} />
         </button>
       ))}
+      <SimpleColorPicker hex={shapeColor} setHex={setShapeColor} />
     </div>
   );
 }

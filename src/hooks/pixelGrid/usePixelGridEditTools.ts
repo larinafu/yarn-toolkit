@@ -21,6 +21,8 @@ export default function usePixelGridEditTools({
   interactionLayerTools,
   editRecordTools,
   activeShapeIdx,
+  stitchColor,
+  shapeColor,
 }: {
   colorCanvasTools: ColorCanvasTools;
   stitchCanvasTools: StitchCanvasTools;
@@ -31,6 +33,8 @@ export default function usePixelGridEditTools({
   interactionLayerTools: PixelGridInteractionLayerTools;
   editRecordTools: EditRecordTools;
   activeShapeIdx: number | null;
+  stitchColor: string;
+  shapeColor: string;
 }): PixelGridEditTools {
   const handleCanvasEdit = (
     e: PointerEvent,
@@ -65,15 +69,18 @@ export default function usePixelGridEditTools({
             row,
             col,
             stitch: activeStitch,
-            color: "#000",
+            color: stitchColor,
           });
-          editRecordTools.addToSession(row, col, activeStitch);
+          editRecordTools.addToSession(row, col, {
+            stitch: activeStitch,
+            stitchColor,
+          });
         }
         break;
       case "specialShapeChange":
         switch (pointerTrigger) {
           case "down":
-            specialShapesTools.addShape(row, col, "line");
+            specialShapesTools.addShape(row, col, shapeColor, "line");
             break;
           case "move":
             if (

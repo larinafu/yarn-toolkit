@@ -88,6 +88,8 @@ export default function usePixelGridStitchCanvasTools({
     windowTools?: Partial<PixelGridWindowTools>;
   }) => {
     const context = ctx || (stitchCanvasContext as CanvasRenderingContext2D);
+    context.strokeStyle = color;
+    context.fillStyle = color;
     const curCanvasWindowTools = {
       ...canvasWindowTools,
       ...windowTools,

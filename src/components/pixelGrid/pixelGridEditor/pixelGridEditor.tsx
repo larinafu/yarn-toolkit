@@ -116,6 +116,8 @@ export default function PixelGridEditor({
     interactionLayerTools,
     editRecordTools,
     activeShapeIdx: editConfigTools.activeShapeIdx,
+    stitchColor: editConfigTools.stitchColor,
+    shapeColor: editConfigTools.shapeColor,
   });
 
   const updateFullCanvas = ({
@@ -174,7 +176,8 @@ export default function PixelGridEditor({
             col,
             stitch: savedCanvasDataRef.current.pixels[row][col]
               .stitch as string,
-            color: "#000",
+            color:
+              savedCanvasDataRef.current.pixels[row][col].stitchColor || "#000",
             ctx: stitchCtx,
             windowTools: curCanvasWindowTools,
           });
@@ -267,9 +270,6 @@ export default function PixelGridEditor({
 
   return (
     <>
-      <Link className="buttonBlank" href="/">
-        <Image src="/leave.svg" width={30} height={30} alt="exit" />
-      </Link>
       <EditingToolbar
         shiftPixelSize={canvasWindowTools.shiftPixelSize}
         windowTools={canvasWindowTools}
@@ -296,6 +296,12 @@ export default function PixelGridEditor({
         setNumberFormat={setNumberFormat}
         specialShapesTools={specialShapesTools}
         swapStitchInPalette={editConfigTools.swapStitchInPalette}
+        stitchColor={editConfigTools.stitchColor}
+        setStitchColor={editConfigTools.setStitchColor}
+        shapeColor={editConfigTools.shapeColor}
+        setShapeColor={editConfigTools.setShapeColor}
+        gridLineColor={editConfigTools.gridLineColor}
+        setGridLineColor={editConfigTools.setGridLineColor}
       />
       <section className="w-screen flex justify-between touch-manipulation select-none">
         <section className={`card m-2 grow`}>
@@ -320,6 +326,7 @@ export default function PixelGridEditor({
               canvasEditTools={canvasEditTools}
               stitchCanvasTools={stitchCanvasTools}
               specialShapesTools={specialShapesTools}
+              shapeColor={editConfigTools.shapeColor}
             />
           </RowColTracker>
         </section>

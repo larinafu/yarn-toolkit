@@ -121,6 +121,10 @@ input[type="password"]:focus {
     animation-name: fade-in;
     animation-duration: 0.2s;
   }
+
+  .shadowBig {
+    box-shadow: var(--shadow);
+  }
 }
 
 @keyframes fade-in {

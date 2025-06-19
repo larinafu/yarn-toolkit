@@ -8,7 +8,7 @@ export type PixelGridSpecialShapesCanvasTools = {
   ctx: CanvasRenderingContext2D | null;
   setCtx: React.Dispatch<React.SetStateAction<CanvasRenderingContext2D | null>>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
-  addShape: (row: number, col: number, shape: "line") => void;
+  addShape: (row: number, col: number, color: string, shape: "line") => void;
   capturePoint: (shapeId: number, pointId: number) => void;
   releasePoint: () => void;
   moveTarPoint: (newPoint: Point) => void;
@@ -30,6 +30,7 @@ export type Point = { row: number; col: number };
 
 export type SpecialShape = {
   shape: "line";
+  color: string;
   points: Point[];
 };
 
@@ -50,7 +51,7 @@ export default function usePixelGridSpecialShapesCanvasTools({
     curLoc: Point;
   } | null>(null);
 
-  const addShape = (row: number, col: number, shape: "line") => {
+  const addShape = (row: number, col: number, color: string, shape: "line") => {
     setTarPoint({
       shapeId: specialShapesRef.current.length,
       pointId: 1,
@@ -58,6 +59,7 @@ export default function usePixelGridSpecialShapesCanvasTools({
     });
     specialShapesRef.current.push({
       shape,
+      color,
       points: [
         { row, col },
         { row, col },
@@ -102,8 +104,8 @@ export default function usePixelGridSpecialShapesCanvasTools({
       tarWindowTools.gridDimensions.height
     );
     tarCtx.lineWidth = 5;
-    tarCtx.strokeStyle = "red";
     for (const shape of specialShapesRef.current) {
+      tarCtx.strokeStyle = shape.color;
       const linePath = [];
       for (const point of shape.points) {
         const { x, y } = interactionLayerTools.getXYCoordsFromPixelPos({

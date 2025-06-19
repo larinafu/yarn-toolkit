@@ -88,8 +88,7 @@ const drawStitchPath = (
   if (svgPathStep[1] === "stroke") {
     ctx.stroke(createFromSvgPath(x, y, w, h, svgPathStep[0]));
   } else {
-    (ctx.fillStyle = "black"),
-      ctx.fill(createFromSvgPath(x, y, w, h, svgPathStep[0]));
+    ctx.fill(createFromSvgPath(x, y, w, h, svgPathStep[0]));
   }
 };
 
@@ -164,6 +163,8 @@ const drawPixelGridColorsAndStitches = ({
       });
       const stitch = cells[row][col].stitch;
       if (stitch) {
+        stitchCtx.strokeStyle = cells[row][col].stitchColor || "#000";
+        stitchCtx.fillStyle = cells[row][col].stitchColor || "#000";
         const svgPathSteps = knitting[stitch].svgPaths;
         if (isSvgPath(svgPathSteps)) {
           drawStitchPath(
@@ -213,8 +214,8 @@ const drawSpecialShapes = ({
   };
   gridDims && specialShapesCtx.clearRect(0, 0, gridDims.width, gridDims.height);
   specialShapesCtx.lineWidth = 5;
-  specialShapesCtx.strokeStyle = "red";
   for (const shape of specialShapes) {
+    specialShapesCtx.strokeStyle = shape.color;
     const linePath = [];
     for (const point of shape.points) {
       linePath.push(

@@ -6,12 +6,20 @@ import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithConta
 type DropdownProps = {
   btnContent: React.ReactNode;
   children: React.ReactNode;
+  isOpenFromContainer?: boolean;
+  setOpenFromContainer?: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
-export default function Dropdown({ btnContent, children }: DropdownProps) {
+export default function Dropdown({
+  btnContent,
+  children,
+  isOpenFromContainer,
+  setOpenFromContainer,
+}: DropdownProps) {
   const [isOpen, setOpen] = useState(false);
   const ref = useRefWithClickawayListener(() => {
     setOpen(false);
+    setOpenFromContainer?.(false);
   }, []);
   const [dropdownPosition, setDropdownPosition] = useState<{
     top: "auto" | number;
@@ -39,12 +47,21 @@ export default function Dropdown({ btnContent, children }: DropdownProps) {
     [isOpen]
   );
 
+  const shouldBeOpen =
+    isOpenFromContainer || (isOpen && isOpenFromContainer === undefined);
+
   return (
     <div ref={ref}>
-      <button onClick={() => setOpen(!isOpen)} className="buttonBlank">
+      <button
+        onClick={() => {
+          setOpen(!isOpen);
+          setOpenFromContainer?.(!isOpenFromContainer);
+        }}
+        className="buttonBlank p-0"
+      >
         {btnContent}
       </button>
-      {isOpen && (
+      {shouldBeOpen && (
         <section
           ref={dropdown.ref}
           className={`fadeInFast absolute z-10`}

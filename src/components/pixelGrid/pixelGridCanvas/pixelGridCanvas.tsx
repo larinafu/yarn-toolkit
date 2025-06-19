@@ -30,6 +30,7 @@ export default function PixelGridCanvas({
   editMode,
   stitchCanvasTools,
   specialShapesTools,
+  shapeColor,
 }: {
   activeShapeIdx: number | null;
   setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
@@ -45,6 +46,7 @@ export default function PixelGridCanvas({
   editMode: EditMode;
   stitchCanvasTools: StitchCanvasTools;
   specialShapesTools: PixelGridSpecialShapesCanvasTools;
+  shapeColor: string;
 }) {
   const pointerEventsRef = useRef(null);
   const isPointerDown = useIsPointerDown();
@@ -99,7 +101,7 @@ export default function PixelGridCanvas({
             row,
             col,
             stitch: savedCanvasData.pixels[row][col].stitch as string,
-            color: "#000",
+            color: savedCanvasData.pixels[row][col].stitchColor || "#000",
           });
         }
       }
@@ -182,7 +184,9 @@ export default function PixelGridCanvas({
                 editMode !== "specialShapeChange" ||
                 activeShapeIdx !== null
               ) {
-                (pointerEventsRef.current as any).releasePointerCapture(e.pointerId);
+                (pointerEventsRef.current as any).releasePointerCapture(
+                  e.pointerId
+                );
                 canvasEditTools.handleCanvasEdit(e, "down");
               }
             }}
@@ -227,7 +231,11 @@ export default function PixelGridCanvas({
 
                   return (
                     <g key={idx}>
-                      <path d={path.join(" ")} stroke="red" strokeWidth={5} />
+                      <path
+                        d={path.join(" ")}
+                        stroke={specialShape.color}
+                        strokeWidth={5}
+                      />
                       {pointsPos.map(({ x, y }, pointIdx) => {
                         return (
                           <g key={pointIdx}>

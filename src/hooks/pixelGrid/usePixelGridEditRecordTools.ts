@@ -5,10 +5,15 @@ import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 import { Point, SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 import { ViewboxTools } from "./useViewboxTools";
 
+type SymbolChangeSessionData = {
+  prev: { stitch: string; stitchColor: string };
+  new: { stitch: string; stitchColor: string };
+};
+
 type Session =
   | null
   | {
-      mode: "colorChange" | "symbolChange";
+      mode: "colorChange";
       data: {
         [row: number]: {
           [col: number]: {
@@ -19,12 +24,21 @@ type Session =
       };
     }
   | {
+      mode: "symbolChange";
+      data: {
+        [row: number]: {
+          [col: number]: SymbolChangeSessionData;
+        };
+      };
+    }
+  | {
       mode: "specialShapeChange";
       data: {
         shapeId: number;
         type: "create" | "update";
         prev: Point[];
         new: Point[];
+        color: string;
       };
     };
 
@@ -108,7 +122,11 @@ export default function usePixelGridEditRecordTools({
         }
         break;
       case "symbolChange":
-        prevData = savedCanvasDataRef.current.pixels[row][col].stitch as string;
+        prevData = {
+          stitch: savedCanvasDataRef.current.pixels[row][col].stitch as string,
+          stitchColor: savedCanvasDataRef.current.pixels[row][col]
+            .stitchColor as string,
+        };
         if (!sessionRef.current || sessionRef.current.mode === "symbolChange") {
           sessionRef.current = sessionRef.current || {
             mode: "symbolChange",
@@ -117,7 +135,7 @@ export default function usePixelGridEditRecordTools({
           sessionRef.current.data[row] = sessionRef.current.data[row] || {};
           sessionRef.current.data[row][col] = {
             prev: prevData,
-            new: data,
+            new: { stitch: data.stitch, stitchColor: data.stitchColor },
           };
         }
         break;
@@ -129,6 +147,7 @@ export default function usePixelGridEditRecordTools({
             shapeId: data.shapeId,
             type: data.type,
             prev: prevData,
+            color: specialShapesRef.current[data.shapeId].color,
             new: [
               ...prevData.slice(0, data.pointId),
               data.newLoc,
@@ -161,7 +180,10 @@ export default function usePixelGridEditRecordTools({
                 case "symbolChange":
                   savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                     parseInt(colIdx)
-                  ].stitch = data.new;
+                  ].stitch = data.new.stitch;
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].stitchColor = data.new.stitchColor;
               }
             }
           }
@@ -211,12 +233,17 @@ export default function usePixelGridEditRecordTools({
                 case "symbolChange":
                   savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                     parseInt(colIdx)
-                  ].stitch = (data as any).prev;
+                  ].stitch = data.prev.stitch;
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].stitchColor = data.prev.stitchColor;
                   updateStitch({
                     row: parseInt(rowIdx),
                     col: parseInt(colIdx),
-                    stitch: (data as any).prev,
-                    color: "#000",
+                    stitch: (data as SymbolChangeSessionData).prev.stitch,
+                    color:
+                      (data as SymbolChangeSessionData).prev.stitchColor ||
+                      "#000",
                   });
                   break;
               }
@@ -268,12 +295,15 @@ export default function usePixelGridEditRecordTools({
                 case "symbolChange":
                   savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                     parseInt(colIdx)
-                  ].stitch = (data as any).new;
+                  ].stitch = (data as any).new.stitch;
+                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                    parseInt(colIdx)
+                  ].stitchColor = (data as any).new.stitchColor;
                   updateStitch({
                     row: parseInt(rowIdx),
                     col: parseInt(colIdx),
-                    stitch: (data as any).new,
-                    color: "#000",
+                    stitch: (data as SymbolChangeSessionData).new.stitch,
+                    color: (data as SymbolChangeSessionData).new.stitchColor,
                   });
               }
             }
@@ -293,6 +323,7 @@ export default function usePixelGridEditRecordTools({
                 ...specialShapesRef.current.slice(0, session.data.shapeId),
                 {
                   shape: "line",
+                  color: session.data.color,
                   points: session.data.new,
                 },
                 ...specialShapesRef.current.slice(session.data.shapeId),

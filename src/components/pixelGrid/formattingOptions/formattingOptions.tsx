@@ -33,10 +33,14 @@ export default function FormattingOptions({
   numberFormat,
   setNumberFormat,
   savedCanvasDataRef,
+  gridLineColor,
+  setGridLineColor,
 }: {
   numberFormat: PixelGridNumberFormat;
   setNumberFormat: React.Dispatch<React.SetStateAction<PixelGridNumberFormat>>;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  gridLineColor: string;
+  setGridLineColor: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
     <>
@@ -52,7 +56,7 @@ export default function FormattingOptions({
         }
       >
         <div className="card p-0">
-          <form>
+          <form className="pb-1 border-b border-b-amaranth">
             <fieldset className="flex">
               {(
                 Object.entries(numberFormattingOptions) as [
@@ -62,7 +66,7 @@ export default function FormattingOptions({
               ).map(([id, option]) => (
                 <div
                   key={id}
-                  className={`rounded-lg p-1 ${
+                  className={`rounded-lg p-1 mt-1 first:ml-1 last:mr-1 ${
                     id === numberFormat ? "bg-amaranth-light" : ""
                   }`}
                   onClick={() => {
@@ -92,6 +96,24 @@ export default function FormattingOptions({
               ))}
             </fieldset>
           </form>
+          <div className="flex items-center p-2">
+            <button
+              className={`buttonBlank ${
+                gridLineColor === "#000000" ? "bg-amaranth-light" : ""
+              }`}
+              onClick={() => setGridLineColor("#000000")}
+            >
+              <div className="size-5 rounded-full bg-black shadowBig"></div>
+            </button>
+            <button
+              className={`buttonBlank ${
+                gridLineColor === "#FFFFFF" ? "bg-amaranth-light" : ""
+              }`}
+              onClick={() => setGridLineColor("#FFFFFF")}
+            >
+              <div className="size-5 rounded-full bg-white shadowBig"></div>
+            </button>
+          </div>
         </div>
       </Dropdown>
     </>

@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { ColorCountTracker } from "./useColorCanvasTools";
 import { knitting } from "@/constants/pixelGrid/stitches";
+import { simpleColorConstants } from "@/constants/colors";
 
 export type ActiveColorPalette = [string, number][];
 export type ActiveStitchPalette = string[];
@@ -22,6 +23,12 @@ type EditingConfigTools = {
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
   setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  stitchColor: string;
+  setStitchColor: React.Dispatch<React.SetStateAction<string>>;
+  shapeColor: string;
+  setShapeColor: React.Dispatch<React.SetStateAction<string>>;
+  gridLineColor: string;
+  setGridLineColor: React.Dispatch<React.SetStateAction<string>>;
 };
 
 const NUM_ACTIVE_COLORS = 6;
@@ -46,6 +53,10 @@ export default function usePixelGridEditingConfigTools({
   const [activeStitchIdx, setActiveStitchIdx] = useState(0);
 
   const [activeShapeIdx, setActiveShapeIdx] = useState<number | null>(null);
+
+  const [stitchColor, setStitchColor] = useState<string>("#000000");
+  const [shapeColor, setShapeColor] = useState<string>("red");
+  const [gridLineColor, setGridLineColor] = useState<string>("#000000");
 
   const [editMode, setEditMode] = useState<EditMode>("colorChange");
 
@@ -79,5 +90,11 @@ export default function usePixelGridEditingConfigTools({
     setEditMode,
     swapColorInPalette,
     swapStitchInPalette,
+    stitchColor,
+    setStitchColor,
+    shapeColor,
+    setShapeColor,
+    gridLineColor,
+    setGridLineColor,
   };
 }

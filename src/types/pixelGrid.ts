@@ -43,6 +43,7 @@ export type CreateData = {
 export type PixelGridCanvasCell = {
   hex: string;
   stitch?: string;
+  stitchColor?: string;
 };
 
 export type PixelGridCanvasCellDimensions = {

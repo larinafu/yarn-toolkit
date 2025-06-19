@@ -3,20 +3,25 @@ import { ActiveStitchPalette } from "@/hooks/pixelGrid/usePixelGridEditingConfig
 import { useState } from "react";
 import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
 import { knitting } from "@/constants/pixelGrid/stitches";
+import SimpleColorPicker from "../simpleColorPicker/simpleColorPicker";
 
 export default function StitchPicker({
   activeStitchPalette,
   activeStitchIdx,
   setActiveStitchIdx,
   swapStitchInPalette,
+  stitchColor,
+  setStitchColor,
 }: {
   activeStitchPalette: ActiveStitchPalette;
   activeStitchIdx: number;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
   swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
+  stitchColor: string;
+  setStitchColor: React.Dispatch<React.SetStateAction<string>>;
 }) {
   return (
-    <div className="flex">
+    <div className="flex items-center">
       {activeStitchPalette.map((stitch, idx) => (
         <StitchOption
           key={idx}
@@ -27,6 +32,7 @@ export default function StitchPicker({
           stitch={stitch}
         />
       ))}
+      <SimpleColorPicker hex={stitchColor} setHex={setStitchColor} />
     </div>
   );
 }

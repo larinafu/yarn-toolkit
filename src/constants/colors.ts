@@ -1,3 +1,10 @@
+export const simpleColorConstants: string[] = [
+  "#ffffff",
+  "#000000",
+  "red",
+  "blue",
+];
+
 export const defaultColorsConstants = [
   {
     black: {
