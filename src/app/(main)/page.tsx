@@ -20,6 +20,13 @@ export default function Home() {
       </div>
       <div className={`${bannerStyle}`}>
         <div className={headerStyle}>
+          <h1>
+            Convert images into color charts.
+          </h1>
+        </div>
+      </div>
+      <div className={`${bannerStyle}`}>
+        <div className={headerStyle}>
           <h1>Resources for knitters and crocheters</h1>
           <Link href="create" className={demoBtnStyle}>
             generate now

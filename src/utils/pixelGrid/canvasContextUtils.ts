@@ -42,7 +42,7 @@ const drawGridLines = ({
     ctx.clearRect(0, 0, gridDimensions.width, gridDimensions.height);
   }
   ctx.beginPath();
-  ctx.lineWidth = lineThickness || 1;
+  ctx.lineWidth = lineThickness || 2;
   ctx.strokeStyle = lineColor || "#000";
   // horizontal
   for (let x = 0; x <= gridDimensions.width; x += cellDimensions.width) {
