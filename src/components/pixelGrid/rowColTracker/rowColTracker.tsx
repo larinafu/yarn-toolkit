@@ -7,18 +7,25 @@ import {
 } from "@/types/pixelGrid";
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
 
+import styles from "./rowColTracker.module.css";
+
 export default function RowColTracker({
   children,
   canvasWindow,
   canvasCellDimensions,
   canvasNumRowsAndCols,
   numberFormat,
+  pixelGridCanvasRefWithRect,
 }: {
   children: React.ReactNode;
   canvasWindow: PixelGridCanvasWindow;
   canvasCellDimensions: PixelGridCanvasDimensions;
   canvasNumRowsAndCols: PixelGridCanvasNumRowsAndCols;
   numberFormat: PixelGridNumberFormat;
+  pixelGridCanvasRefWithRect: {
+    ref: React.RefObject<any>;
+    getDims: () => DOMRect | undefined;
+  };
 }) {
   const topLabels = [];
   const bottomLabels = [];
@@ -75,7 +82,6 @@ export default function RowColTracker({
         className="flex items-center justify-center"
         style={{
           height: canvasCellDimensions.height,
-          width: 10,
           opacity: getOpacity(rowNum, "left"),
         }}
       >
@@ -87,7 +93,6 @@ export default function RowColTracker({
         className="flex items-center justify-center"
         style={{
           height: canvasCellDimensions.height,
-          width: 10,
           opacity: getOpacity(rowNum, "right"),
         }}
       >
@@ -126,14 +131,64 @@ export default function RowColTracker({
   }
 
   return (
-    <section className="flex items-center w-fit m-auto mt-0 mb-0">
-      <section className="m-2">{...leftLabels}</section>
-      <div className="flex flex-col w-fit m-auto mt-0 mb-0">
-        <section className="flex">{...topLabels}</section>
-        {children}
-        <section className="flex">{...bottomLabels}</section>
+    <div className="relative size-full">
+      <div
+        className={`absolute top-0 left-0 grid grid-cols-3 grid-rows-3 gap-0 w-full h-full ${styles.wrapper}`}
+      >
+        <div
+          className={`${styles.content}`}
+          ref={pixelGridCanvasRefWithRect.ref}
+        >
+          {/* {children} */}
+        </div>
+        <div className={styles.leftLabels}>
+          <section className="w-10"></section>
+        </div>
+        <div className={styles.bottomLabels}>
+          <section className="flex h-10"></section>
+        </div>
+        <div className={styles.rightLabels}>
+          <section className="w-10"></section>
+        </div>
+        <div className={styles.topLabels}>
+          <section className="flex h-10"></section>
+        </div>
       </div>
-      <section className="m-2">{...rightLabels}</section>
-    </section>
+
+      <div
+        className={`absolute top-0 left-0 grid grid-cols-3 grid-rows-3 gap-0 ${styles.wrapper}`}
+      >
+        <div className={`${styles.content} touch-none relative`}>{children}</div>
+        <div className={styles.leftLabels}>
+          <section className="w-10">{...leftLabels}</section>
+        </div>
+        <div className={styles.bottomLabels}>
+          <section className="flex h-10">{...bottomLabels}</section>
+        </div>
+        <div className={styles.rightLabels}>
+          <section className="w-10">{...rightLabels}</section>
+        </div>
+        <div className={styles.topLabels}>
+          <section className="flex h-10">{...topLabels}</section>
+        </div>
+      </div>
+    </div>
+    // <div className="relative size-full">
+    //   <div className="absolute top-10 left-10 opacity-0">{children}</div>
+    //   <section className="absolute top-0 left-0 flex items-center size-full">
+    //     <section className="w-10">{...leftLabels}</section>
+    //     <div className="flex flex-col size-full">
+    //       <section className="flex h-10">{...topLabels}</section>
+    //       <div className="grow">
+    //         <div
+    //           className={`touch-none overflow-hidden size-full`}
+    //           ref={pixelGridCanvasRefWithRect.ref}
+    //         ></div>
+    //       </div>
+    //       <section className="flex h-10">{...bottomLabels}</section>
+    //     </div>
+    //     <section className="w-10">{...rightLabels}</section>
+    //   </section>
+    // </div>
   );
 }

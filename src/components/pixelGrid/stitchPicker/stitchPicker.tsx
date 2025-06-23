@@ -22,17 +22,21 @@ export default function StitchPicker({
 }) {
   return (
     <div className="flex items-center">
-      {activeStitchPalette.map((stitch, idx) => (
-        <StitchOption
-          key={idx}
-          idx={idx}
-          selected={activeStitchIdx === idx}
-          setActiveStitchIdx={setActiveStitchIdx}
-          swapStitchInPalette={swapStitchInPalette}
-          stitch={stitch}
-        />
-      ))}
-      <SimpleColorPicker hex={stitchColor} setHex={setStitchColor} />
+      <div className="flex overflow-x-auto">
+        {activeStitchPalette.map((stitch, idx) => (
+          <StitchOption
+            key={idx}
+            idx={idx}
+            selected={activeStitchIdx === idx}
+            setActiveStitchIdx={setActiveStitchIdx}
+            swapStitchInPalette={swapStitchInPalette}
+            stitch={stitch}
+          />
+        ))}
+      </div>
+      <div className="p-1 bg-white right-0 shrink-0">
+        <SimpleColorPicker hex={stitchColor} setHex={setStitchColor} />
+      </div>
     </div>
   );
 }

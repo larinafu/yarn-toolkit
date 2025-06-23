@@ -14,12 +14,12 @@ export default function SimpleColorPicker({
   return (
     <Dropdown
       btnContent={
-        <div className="flex card">
+        <div className="flex border bg-white border-gray-400 p-2 rounded-2xl w-fit">
           <div
             style={{ backgroundColor: hex }}
-            className="size-5 rounded-full mr-1 shadowBig"
+            className="h-5 aspect-square rounded-full mr-1 shadowBig"
           ></div>
-          <Image src="/down-arrow.svg" alt="expand" width={10} height={10} />
+          <Image src="/down-arrow.svg" alt="expand" width={10} height={10} className="" />
         </div>
       }
       isOpenFromContainer={open}

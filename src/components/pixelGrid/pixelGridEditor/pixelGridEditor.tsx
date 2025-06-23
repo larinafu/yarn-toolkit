@@ -26,10 +26,7 @@ import usePixelGridStitchCanvasTools from "@/hooks/pixelGrid/usePixelGridStitchC
 import usePixelGridEditTools from "@/hooks/pixelGrid/usePixelGridEditTools";
 import usePixelGridSpecialShapesCanvasTools from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 import useViewboxTools from "@/hooks/pixelGrid/useViewboxTools";
-import Link from "next/link";
-
-const MAX_WINDOW_WIDTH_VW = 75;
-const MAX_WINDOW_HEIGHT_VH = 75;
+import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
 
 export default function PixelGridEditor({
   savedCanvasData,
@@ -47,13 +44,16 @@ export default function PixelGridEditor({
     savedCanvasData.numberFormat
   );
 
+  const [isHydrated, setHydrated] = useState(false);
+
+  const pixelGridCanvasRefWithRect = useEffectWithContainerDimensions(() => {
+    setHydrated(true);
+  }, []);
+
   const canvasWindowTools = usePixelGridWindowTools({
     canvasCellWidthHeightRatio:
       savedCanvasData.swatch.width / savedCanvasData.swatch.height,
-    maxWindowDimensions: {
-      viewWidth: MAX_WINDOW_WIDTH_VW,
-      viewHeight: MAX_WINDOW_HEIGHT_VH,
-    },
+    pixelGridCanvasRefWithRect,
     canvasNumRowsAndCols: {
       numRows: savedCanvasData.pixels.length,
       numCols: savedCanvasData.pixels[0].length,
@@ -69,12 +69,14 @@ export default function PixelGridEditor({
     savedCanvasDataRef: savedCanvasDataRef,
     interactionLayerTools,
   });
-  const gridLineTools = usePixelGridLineCanvasTools({
-    canvasWindowTools,
-  });
 
   const editConfigTools = usePixelGridEditingConfigTools({
     colorCountTracker: colorCanvasTools.colorCountTracker,
+  });
+
+  const gridLineTools = usePixelGridLineCanvasTools({
+    canvasWindowTools,
+    gridLineColor: editConfigTools.gridLineColor,
   });
 
   const stitchCanvasTools = usePixelGridStitchCanvasTools({
@@ -190,78 +192,89 @@ export default function PixelGridEditor({
     });
   };
 
-  // window resize
+  const resizeObserverRef = useRef<null | ResizeObserver>(null);
+
+  // canvas resize
   useEffect(() => {
-    const colorCanvasRef =
-      colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
-    const stitchCanvasRef =
-      stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
-    const gridLineCanvasRef =
-      gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
-    const specialShapesCanvasRef =
-      specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
-    const colorCtx =
-      colorCanvasTools.ctx ||
-      (colorCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
-    const stitchCtx =
-      stitchCanvasTools.ctx ||
-      (stitchCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
-    const gridLineCtx =
-      gridLineTools.ctx ||
-      (gridLineCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
-    const specialShapesCtx =
-      specialShapesTools.ctx ||
-      (specialShapesCanvasRef.current.getContext(
-        "2d"
-      ) as CanvasRenderingContext2D);
-    const handleResize = () => {
-      const { canvasWindow, gridDimensions } = canvasWindowTools.recalcGridSize(
-        {}
-      );
-      if (
-        !(
-          gridDimensions.width === parseInt(colorCanvasRef.current.style.width)
-        ) ||
-        !(
-          gridDimensions.height ===
-          parseInt(colorCanvasRef.current.style.height)
-        )
-      ) {
-        canvasWindowTools.resizeCanvas(
-          colorCanvasRef,
-          gridDimensions.width,
-          gridDimensions.height
-        );
-        canvasWindowTools.resizeCanvas(
-          gridLineCanvasRef,
-          gridDimensions.width,
-          gridDimensions.height
-        );
-        canvasWindowTools.resizeCanvas(
-          stitchCanvasRef,
-          gridDimensions.width,
-          gridDimensions.height
-        );
-        canvasWindowTools.resizeCanvas(
-          specialShapesCanvasRef,
-          gridDimensions.width,
-          gridDimensions.height
-        );
-        updateFullCanvas({
-          colorCanvasContext: colorCtx,
-          stitchCanvasContext: stitchCtx,
-          specialShapesCanvasContext: specialShapesCtx,
-          windowTools: { canvasWindow, gridDimensions },
-        });
-        gridLineTools.drawCanvasLines({
-          ctx: gridLineCtx,
-          windowTools: { canvasWindow, gridDimensions },
-        });
+    resizeObserverRef.current = new ResizeObserver((entries) => {
+      for (const _ of entries) {
+        const colorCanvasRef =
+          colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
+        const stitchCanvasRef =
+          stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
+        const gridLineCanvasRef =
+          gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
+        const specialShapesCanvasRef =
+          specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
+        const colorCtx =
+          colorCanvasTools.ctx ||
+          (colorCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
+        const stitchCtx =
+          stitchCanvasTools.ctx ||
+          (stitchCanvasRef.current.getContext(
+            "2d"
+          ) as CanvasRenderingContext2D);
+        const gridLineCtx =
+          gridLineTools.ctx ||
+          (gridLineCanvasRef.current.getContext(
+            "2d"
+          ) as CanvasRenderingContext2D);
+        const specialShapesCtx =
+          specialShapesTools.ctx ||
+          (specialShapesCanvasRef.current.getContext(
+            "2d"
+          ) as CanvasRenderingContext2D);
+        const { canvasWindow, gridDimensions } =
+          canvasWindowTools.recalcGridSize({});
+        if (
+          !(
+            gridDimensions.width ===
+            parseInt(colorCanvasRef.current.style.width)
+          ) ||
+          !(
+            gridDimensions.height ===
+            parseInt(colorCanvasRef.current.style.height)
+          )
+        ) {
+          canvasWindowTools.resizeCanvas(
+            colorCanvasRef,
+            gridDimensions.width,
+            gridDimensions.height
+          );
+          canvasWindowTools.resizeCanvas(
+            gridLineCanvasRef,
+            gridDimensions.width,
+            gridDimensions.height
+          );
+          canvasWindowTools.resizeCanvas(
+            stitchCanvasRef,
+            gridDimensions.width,
+            gridDimensions.height
+          );
+          canvasWindowTools.resizeCanvas(
+            specialShapesCanvasRef,
+            gridDimensions.width,
+            gridDimensions.height
+          );
+          updateFullCanvas({
+            colorCanvasContext: colorCtx,
+            stitchCanvasContext: stitchCtx,
+            specialShapesCanvasContext: specialShapesCtx,
+            windowTools: { canvasWindow, gridDimensions },
+          });
+          gridLineTools.drawCanvasLines({
+            ctx: gridLineCtx,
+            windowTools: { canvasWindow, gridDimensions },
+          });
+        }
       }
-    };
-    window.addEventListener("resize", handleResize);
+    });
+    resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
     return () => {
-      window.removeEventListener("resize", handleResize);
+      pixelGridCanvasRefWithRect.ref.current &&
+        resizeObserverRef.current?.unobserve(
+          pixelGridCanvasRefWithRect.ref.current
+        );
     };
   }, [
     canvasWindowTools.canvasCellDimensions.width,
@@ -269,47 +282,50 @@ export default function PixelGridEditor({
   ]);
 
   return (
-    <>
-      <EditingToolbar
-        shiftPixelSize={canvasWindowTools.shiftPixelSize}
-        windowTools={canvasWindowTools}
-        colorCanvasTools={colorCanvasTools}
-        gridLineTools={gridLineTools}
-        activeColorPalette={editConfigTools.activeColorPalette}
-        activeColorIdx={editConfigTools.activeColorIdx}
-        setActiveColorIdx={editConfigTools.setActiveColorIdx}
-        setActiveShapeIdx={editConfigTools.setActiveShapeIdx}
-        setActiveStitchIdx={editConfigTools.setActiveStitchIdx}
-        activeShapePalette={editConfigTools.activeShapePalette}
-        activeStitchPalette={editConfigTools.activeStitchPalette}
-        swapColorInPalette={editConfigTools.swapColorInPalette}
-        activeShapeIdx={editConfigTools.activeShapeIdx}
-        activeStitchIdx={editConfigTools.activeStitchIdx}
-        editMode={editConfigTools.editMode}
-        setEditMode={editConfigTools.setEditMode}
-        updateFullCanvas={updateFullCanvas}
-        stitchCanvasTools={stitchCanvasTools}
-        editRecordTools={editRecordTools}
-        savedCanvasDataRef={savedCanvasDataRef}
-        specialShapesRef={specialShapesTools.specialShapesRef}
-        numberFormat={numberFormat}
-        setNumberFormat={setNumberFormat}
-        specialShapesTools={specialShapesTools}
-        swapStitchInPalette={editConfigTools.swapStitchInPalette}
-        stitchColor={editConfigTools.stitchColor}
-        setStitchColor={editConfigTools.setStitchColor}
-        shapeColor={editConfigTools.shapeColor}
-        setShapeColor={editConfigTools.setShapeColor}
-        gridLineColor={editConfigTools.gridLineColor}
-        setGridLineColor={editConfigTools.setGridLineColor}
-      />
-      <section className="w-screen flex justify-between touch-manipulation select-none">
-        <section className={`card m-2 grow`}>
+    <div className="relative flex flex-col h-dvh w-dvw">
+      <div className="w-screen flex">
+        <EditingToolbar
+          shiftPixelSize={canvasWindowTools.shiftPixelSize}
+          windowTools={canvasWindowTools}
+          colorCanvasTools={colorCanvasTools}
+          gridLineTools={gridLineTools}
+          activeColorPalette={editConfigTools.activeColorPalette}
+          activeColorIdx={editConfigTools.activeColorIdx}
+          setActiveColorIdx={editConfigTools.setActiveColorIdx}
+          setActiveShapeIdx={editConfigTools.setActiveShapeIdx}
+          setActiveStitchIdx={editConfigTools.setActiveStitchIdx}
+          activeShapePalette={editConfigTools.activeShapePalette}
+          activeStitchPalette={editConfigTools.activeStitchPalette}
+          swapColorInPalette={editConfigTools.swapColorInPalette}
+          activeShapeIdx={editConfigTools.activeShapeIdx}
+          activeStitchIdx={editConfigTools.activeStitchIdx}
+          editMode={editConfigTools.editMode}
+          setEditMode={editConfigTools.setEditMode}
+          updateFullCanvas={updateFullCanvas}
+          stitchCanvasTools={stitchCanvasTools}
+          editRecordTools={editRecordTools}
+          savedCanvasDataRef={savedCanvasDataRef}
+          specialShapesRef={specialShapesTools.specialShapesRef}
+          numberFormat={numberFormat}
+          setNumberFormat={setNumberFormat}
+          specialShapesTools={specialShapesTools}
+          swapStitchInPalette={editConfigTools.swapStitchInPalette}
+          stitchColor={editConfigTools.stitchColor}
+          setStitchColor={editConfigTools.setStitchColor}
+          shapeColor={editConfigTools.shapeColor}
+          setShapeColor={editConfigTools.setShapeColor}
+          gridLineColor={editConfigTools.gridLineColor}
+          setGridLineColor={editConfigTools.setGridLineColor}
+        />
+      </div>
+      <section className="relative w-screen grow flex justify-between touch-manipulation select-none">
+        <section className={`card m-2 w-full`}>
           <RowColTracker
             canvasWindow={canvasWindowTools.canvasWindow}
             canvasCellDimensions={canvasWindowTools.canvasCellDimensions}
             canvasNumRowsAndCols={canvasWindowTools.canvasNumRowsAndCols}
             numberFormat={numberFormat}
+            pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
           >
             <PixelGridCanvas
               activeShapeIdx={editConfigTools.activeShapeIdx}
@@ -327,18 +343,45 @@ export default function PixelGridEditor({
               stitchCanvasTools={stitchCanvasTools}
               specialShapesTools={specialShapesTools}
               shapeColor={editConfigTools.shapeColor}
+              pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
             />
           </RowColTracker>
         </section>
-        <div className="w-1/5">
-          <ImageViewbox
-            savedCanvasDataRef={savedCanvasDataRef}
-            canvasWindowTools={canvasWindowTools}
-            updateFullCanvas={updateFullCanvas}
-            viewboxTools={viewboxTools}
-          />
+        <div className="absolute pointer-events-none w-fit top-2 right-0 flex">
+          <div
+            className="flex items-center"
+            style={{
+              height: viewboxTools.viewboxDims.height,
+            }}
+          >
+            <button
+              onClick={() => viewboxTools.setOpen(!viewboxTools.isOpen)}
+              className="pointer-events-auto buttonBlank bg-gray-300 rounded-tr-none rounded-br-none h-10"
+            >
+              <Image
+                src={`/${
+                  viewboxTools.isOpen ? "right" : "left"
+                }-line-arrow.svg`}
+                alt="hide"
+                width={10}
+                height={10}
+              />
+            </button>
+          </div>
+          <div
+            className={`card pointer-events-auto bg-gray-300 shadow-none ${
+              viewboxTools.isOpen ? "p-1" : "size-0 overflow-hidden p-0"
+            }`}
+          >
+            <ImageViewbox
+              savedCanvasDataRef={savedCanvasDataRef}
+              canvasWindowTools={canvasWindowTools}
+              updateFullCanvas={updateFullCanvas}
+              viewboxTools={viewboxTools}
+            />
+          </div>
         </div>
       </section>
-    </>
+    </div>
   );
 }

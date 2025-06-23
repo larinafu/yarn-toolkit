@@ -178,15 +178,72 @@ export default function EditingToolbar({
     shapeColor,
   ]);
   return (
-    <header className="flex items-center">
-      <Link className="card block size-fit rounded-full m-2" href="/">
-        <Image src="/leave.svg" width={30} height={30} alt="exit" />
-      </Link>
-      <div className={`card grow max-w-full m-2 w-fit p-0 flex justify-center`}>
-        <div className="grow overflow-x-auto">
-          <div className="flex align-center">
+    <header className="card grow m-2 p-0 flex justify-center overflow-auto">
+      <div className="grow overflow-x-auto">
+        <div className="flex align-center">
+          <Link
+            className="block bg-amaranth p-2 size-fit rounded-2xl m-2"
+            href="/"
+          >
+            <Image src="/logo.jpg" width={30} height={30} alt="exit" />
+          </Link>
+
+          <section className="flex justify-center m-auto mt-0 mb-0">
+            {editModeIcons.map((editModeIcon) => (
+              <button
+                key={editModeIcon.mode}
+                className={`buttonBlank p-0.5 relative m-0.5 ${
+                  editModeIcon.mode === editMode
+                    ? "bg-amaranth-light rounded-xs hover:bg-amaranth-light hover:rounded-xs"
+                    : ""
+                }`}
+                onClick={() => {
+                  setEditMode(editModeIcon.mode);
+                  if (editModeIcon.mode !== "specialShapeChange") {
+                    specialShapesTools.drawShapesOnCanvas({});
+                  }
+                }}
+              >
+                <Image
+                  src={editModeIcon.icon}
+                  alt={editModeIcon.mode}
+                  width={20}
+                  height={20}
+                />
+                <div
+                  className="w-full h-1 mt-0.5 shadow rounded-2xl"
+                  style={{
+                    backgroundColor: editModeIcon.color,
+                  }}
+                ></div>
+              </button>
+            ))}
+          </section>
+          <section className="flex items-center shrink-0">
+            <FormattingOptions
+              numberFormat={numberFormat}
+              setNumberFormat={setNumberFormat}
+              savedCanvasDataRef={savedCanvasDataRef}
+              gridLineColor={gridLineColor}
+              setGridLineColor={setGridLineColor}
+              gridLineTools={gridLineTools}
+            />
+            <PixelGridDownloadPreview
+              savedCanvasDataRef={savedCanvasDataRef}
+              specialShapesRef={specialShapesRef}
+              canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
+              canvasCellWidthHeightRatio={
+                savedCanvasDataRef.current.swatch.width /
+                savedCanvasDataRef.current.swatch.height
+              }
+              gridLineColor={gridLineColor}
+            />
+          </section>
+        </div>
+        <section className="border-t-amaranth border-t-1 flex justify-around items-center">
+          <div className="w-fit">
             <button
-              className="buttonBlank pd-xxs"
+              className="buttonBlank p-0 m-1"
               onClick={() => {
                 editRecordTools.undo();
               }}
@@ -203,7 +260,7 @@ export default function EditingToolbar({
               />
             </button>
             <button
-              className="buttonBlank p-0.5"
+              className="buttonBlank p-0 m-1"
               onClick={() => {
                 editRecordTools.redo();
               }}
@@ -219,164 +276,113 @@ export default function EditingToolbar({
                 priority
               />
             </button>
-            <section className="flex justify-center m-auto mt-0 mb-0">
-              {editModeIcons.map((editModeIcon) => (
-                <button
-                  key={editModeIcon.mode}
-                  className={`buttonBlank p-0.5 relative m-0.5 ${
-                    editModeIcon.mode === editMode
-                      ? "bg-amaranth-light rounded-xs hover:bg-amaranth-light hover:rounded-xs"
-                      : ""
-                  }`}
-                  onClick={() => {
-                    setEditMode(editModeIcon.mode);
-                    if (editModeIcon.mode !== "specialShapeChange") {
-                      specialShapesTools.drawShapesOnCanvas({});
-                    }
-                  }}
-                >
-                  <Image
-                    src={editModeIcon.icon}
-                    alt={editModeIcon.mode}
-                    width={20}
-                    height={20}
-                  />
-                  <div
-                    className="w-full h-1 mt-0.5 shadow rounded-2xl"
-                    style={{
-                      backgroundColor: editModeIcon.color,
-                    }}
-                  ></div>
-                </button>
-              ))}
-            </section>
-            <section className="flex justify-center items-center">
-              <button
-                className="buttonBlank ml-2 mr-2"
-                onClick={() => {
-                  const { canvasWindow, canvasCellDimensions, gridDimensions } =
-                    shiftPixelSize("down");
-                  canvasSizingUtils.resizeCanvas({
-                    ref: colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: specialShapesTools.ref as React.RefObject<HTMLCanvasElement>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  updateFullCanvas({
-                    windowTools: {
-                      canvasCellDimensions,
-                      canvasWindow,
-                      gridDimensions,
-                    },
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: gridLineTools.ref as React.RefObject<HTMLCanvasElement>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  gridLineTools.drawCanvasLines({
-                    windowTools: {
-                      canvasCellDimensions,
-                      canvasWindow,
-                      gridDimensions,
-                    },
-                  });
-                }}
-                disabled={!windowTools.canZoomOut}
-              >
-                <Image
-                  src={"/zoom-out.svg"}
-                  alt="zoom out"
-                  height={20}
-                  width={20}
-                />
-              </button>
-              <button
-                className="buttonBlank ml-2 mr-2"
-                onClick={() => {
-                  const { canvasWindow, canvasCellDimensions, gridDimensions } =
-                    shiftPixelSize("up");
-                  canvasSizingUtils.resizeCanvas({
-                    ref: colorCanvasTools.ref as React.RefObject<any>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: stitchCanvasTools.ref as React.RefObject<any>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: specialShapesTools.ref as React.RefObject<any>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: specialShapesTools.ref as React.RefObject<any>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  updateFullCanvas({
-                    windowTools: {
-                      canvasCellDimensions,
-                      canvasWindow,
-                      gridDimensions,
-                    },
-                  });
-                  canvasSizingUtils.resizeCanvas({
-                    ref: gridLineTools.ref as React.RefObject<HTMLCanvasElement>,
-                    gridWidth: gridDimensions.width,
-                    gridHeight: gridDimensions.height,
-                  });
-                  gridLineTools.drawCanvasLines({
-                    windowTools: {
-                      canvasCellDimensions,
-                      canvasWindow,
-                      gridDimensions,
-                    },
-                  });
-                }}
-                disabled={!windowTools.canZoomIn}
-              >
-                <Image
-                  src={"/zoom-in.svg"}
-                  alt="zoom in"
-                  height={20}
-                  width={20}
-                />
-              </button>
-            </section>
           </div>
-          <section className="border-t-amaranth border-t-1 flex justify-center overflow-x-auto">
-            {activePicker}
+          <div className="overflow-x-auto">{activePicker}</div>
+          <section className="">
+            <button
+              className="buttonBlank p-0 m-1"
+              onClick={() => {
+                const { canvasWindow, canvasCellDimensions, gridDimensions } =
+                  shiftPixelSize("down");
+                canvasSizingUtils.resizeCanvas({
+                  ref: colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: stitchCanvasTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                updateFullCanvas({
+                  windowTools: {
+                    canvasCellDimensions,
+                    canvasWindow,
+                    gridDimensions,
+                  },
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: gridLineTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                gridLineTools.drawCanvasLines({
+                  windowTools: {
+                    canvasCellDimensions,
+                    canvasWindow,
+                    gridDimensions,
+                  },
+                });
+              }}
+              disabled={!windowTools.canZoomOut}
+            >
+              <Image
+                src={"/zoom-out.svg"}
+                alt="zoom out"
+                height={20}
+                width={20}
+              />
+            </button>
+            <button
+              className="buttonBlank p-0 m-1"
+              onClick={() => {
+                const { canvasWindow, canvasCellDimensions, gridDimensions } =
+                  shiftPixelSize("up");
+                canvasSizingUtils.resizeCanvas({
+                  ref: colorCanvasTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: stitchCanvasTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: specialShapesTools.ref as React.RefObject<any>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                updateFullCanvas({
+                  windowTools: {
+                    canvasCellDimensions,
+                    canvasWindow,
+                    gridDimensions,
+                  },
+                });
+                canvasSizingUtils.resizeCanvas({
+                  ref: gridLineTools.ref as React.RefObject<HTMLCanvasElement>,
+                  gridWidth: gridDimensions.width,
+                  gridHeight: gridDimensions.height,
+                });
+                gridLineTools.drawCanvasLines({
+                  windowTools: {
+                    canvasCellDimensions,
+                    canvasWindow,
+                    gridDimensions,
+                  },
+                });
+              }}
+              disabled={!windowTools.canZoomIn}
+            >
+              <Image
+                src={"/zoom-in.svg"}
+                alt="zoom in"
+                height={20}
+                width={20}
+              />
+            </button>
           </section>
-        </div>
-        <section className="flex shrink-0">
-          <FormattingOptions
-            numberFormat={numberFormat}
-            setNumberFormat={setNumberFormat}
-            savedCanvasDataRef={savedCanvasDataRef}
-            gridLineColor={gridLineColor}
-            setGridLineColor={setGridLineColor}
-          />
-          <PixelGridDownloadPreview
-            savedCanvasDataRef={savedCanvasDataRef}
-            specialShapesRef={specialShapesRef}
-            canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
-            canvasCellWidthHeightRatio={
-              savedCanvasDataRef.current.swatch.width /
-              savedCanvasDataRef.current.swatch.height
-            }
-          />
         </section>
       </div>
     </header>

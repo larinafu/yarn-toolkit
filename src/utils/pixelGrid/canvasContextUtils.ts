@@ -377,6 +377,7 @@ const drawFullCanvasPreview = ({
   maxPxHeight,
   savedCanvasData,
   specialShapes,
+  gridLineColor,
   ref,
   ctx,
 }:
@@ -387,6 +388,7 @@ const drawFullCanvasPreview = ({
       specialShapes: SpecialShape[];
       ref: React.RefObject<any>;
       ctx: CanvasRenderingContext2D;
+      gridLineColor?: string;
     }
   | {
       maxPxWidth: number;
@@ -395,6 +397,7 @@ const drawFullCanvasPreview = ({
       specialShapes: SpecialShape[];
       ref?: never;
       ctx: OffscreenCanvasRenderingContext2D;
+      gridLineColor?: string;
     }) => {
   const offset = {
     width: Math.round(maxPxWidth * 0.05),
@@ -431,6 +434,7 @@ const drawFullCanvasPreview = ({
     noErase: true,
     offset,
     ctx,
+    lineColor: gridLineColor,
   });
   drawGridNumbers({
     ctx,

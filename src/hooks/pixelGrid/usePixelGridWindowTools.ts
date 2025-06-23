@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 import {
   PixelGridCanvasCellDimensions,
@@ -65,8 +65,8 @@ const getVisibleRowsAndCols = ({
 }) => {
   // window limits
   const [maxWindowWidthPx, maxWindowHeightPx] = [
-    vwToPx(maxWindowDimensions.viewWidth),
-    vhToPx(maxWindowDimensions.viewHeight),
+    maxWindowDimensions.viewWidth,
+    maxWindowDimensions.viewHeight,
   ];
   return {
     visibleRows: Math.min(
@@ -83,12 +83,19 @@ const getVisibleRowsAndCols = ({
 export default function usePixelGridWindowTools({
   canvasCellWidthHeightRatio,
   canvasNumRowsAndCols,
-  maxWindowDimensions,
+  pixelGridCanvasRefWithRect,
 }: {
   canvasCellWidthHeightRatio: number;
   canvasNumRowsAndCols: PixelGridCanvasNumRowsAndCols;
-  maxWindowDimensions: MaxWindowDimensions;
+  pixelGridCanvasRefWithRect: {
+    ref: React.RefObject<any>;
+    getDims: () => DOMRect | undefined;
+  };
 }): PixelGridWindowTools {
+  const maxWindowDimensions = {
+    viewWidth: pixelGridCanvasRefWithRect.getDims()?.width || 0,
+    viewHeight: pixelGridCanvasRefWithRect.getDims()?.height || 0,
+  };
   const isHeightDetermined = canvasCellWidthHeightRatio < 1;
   const pixelSizeShift: PixelGridCanvasDimensions = {
     width: isHeightDetermined
@@ -119,6 +126,22 @@ export default function usePixelGridWindowTools({
       maxWindowDimensions,
     }),
   });
+
+  useEffect(() => {
+    setCanvasWindow({
+      startRow: 0,
+      startCol: 0,
+      ...getVisibleRowsAndCols({
+        canvasCellDimensions,
+        canvasNumRowsAndCols,
+        maxWindowDimensions: {
+          viewWidth: pixelGridCanvasRefWithRect.getDims()?.width || 0,
+          viewHeight: pixelGridCanvasRefWithRect.getDims()?.height || 0,
+        },
+      }),
+    });
+  }, []);
+
   const getRowPos = (row: number) => row - canvasWindow.startRow;
   const getColPos = (col: number) => col - canvasWindow.startCol;
 
@@ -128,7 +151,10 @@ export default function usePixelGridWindowTools({
     const { visibleRows, visibleCols } = getVisibleRowsAndCols({
       canvasCellDimensions,
       canvasNumRowsAndCols,
-      maxWindowDimensions,
+      maxWindowDimensions: {
+        viewWidth: pixelGridCanvasRefWithRect.getDims()?.width || 0,
+        viewHeight: pixelGridCanvasRefWithRect.getDims()?.height || 0,
+      },
     });
     return {
       width: visibleCols * canvasCellDimensions.width,
@@ -204,7 +230,10 @@ export default function usePixelGridWindowTools({
     const newVisibleRowsAndCols = getVisibleRowsAndCols({
       canvasCellDimensions: curCanvasCellDimensions,
       canvasNumRowsAndCols: curCanvasNumRowsAndCols,
-      maxWindowDimensions,
+      maxWindowDimensions: {
+        viewWidth: pixelGridCanvasRefWithRect.getDims()?.width || 0,
+        viewHeight: pixelGridCanvasRefWithRect.getDims()?.height || 0,
+      },
     });
     let [newRowStart, newColStart] = [
       canvasWindow.startRow,

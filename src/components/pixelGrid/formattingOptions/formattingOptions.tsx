@@ -6,6 +6,7 @@ import {
   PixelGridCanvasSavedData,
   PixelGridNumberFormat,
 } from "@/types/pixelGrid";
+import { PixelGridLineCanvasTools } from "@/hooks/pixelGrid/usePixelGridLineCanvasTools";
 
 const numberFormattingOptions: {
   [key in PixelGridNumberFormat]: { displayText: string; img: string };
@@ -35,12 +36,14 @@ export default function FormattingOptions({
   savedCanvasDataRef,
   gridLineColor,
   setGridLineColor,
+  gridLineTools,
 }: {
   numberFormat: PixelGridNumberFormat;
   setNumberFormat: React.Dispatch<React.SetStateAction<PixelGridNumberFormat>>;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   gridLineColor: string;
   setGridLineColor: React.Dispatch<React.SetStateAction<string>>;
+  gridLineTools: PixelGridLineCanvasTools;
 }) {
   return (
     <>
@@ -49,9 +52,9 @@ export default function FormattingOptions({
           <Image
             src={"/gridNumberFormat/numbers-between.svg"}
             alt="grid"
-            height={80}
-            width={80}
-            className="card pd-0"
+            height={50}
+            width={50}
+            className={`block border border-gray-400 rounded-xl pd-0`}
           />
         }
       >
@@ -101,7 +104,10 @@ export default function FormattingOptions({
               className={`buttonBlank ${
                 gridLineColor === "#000000" ? "bg-amaranth-light" : ""
               }`}
-              onClick={() => setGridLineColor("#000000")}
+              onClick={() => {
+                setGridLineColor("#000000");
+                gridLineTools.drawCanvasLines({ lineColor: "#000000" });
+              }}
             >
               <div className="size-5 rounded-full bg-black shadowBig"></div>
             </button>
@@ -109,7 +115,10 @@ export default function FormattingOptions({
               className={`buttonBlank ${
                 gridLineColor === "#FFFFFF" ? "bg-amaranth-light" : ""
               }`}
-              onClick={() => setGridLineColor("#FFFFFF")}
+              onClick={() => {
+                setGridLineColor("#FFFFFF");
+                gridLineTools.drawCanvasLines({ lineColor: "#FFFFFF" });
+              }}
             >
               <div className="size-5 rounded-full bg-white shadowBig"></div>
             </button>

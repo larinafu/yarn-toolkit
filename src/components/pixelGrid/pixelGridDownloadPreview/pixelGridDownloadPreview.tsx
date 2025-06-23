@@ -16,26 +16,32 @@ import SpinnerSmall from "@/components/general/spinnerSmall/spinnerSmall";
 const PixelGridPreviewDisplay = ({
   savedCanvasDataRef,
   specialShapesRef,
+  gridLineColor,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
+  gridLineColor: string;
 }) => {
   const previewRef = useRef<any>(null);
   const container = useEffectWithContainerDimensions((rect) => {
     if (previewRef.current && rect) {
       const ctx = previewRef.current.getContext("2d");
       canvasContextUtils.drawFullCanvasPreview({
-        maxPxWidth: rect.width,
-        maxPxHeight: rect.height,
+        maxPxWidth: 2000,
+        maxPxHeight: 2000,
         savedCanvasData: savedCanvasDataRef.current,
         specialShapes: specialShapesRef.current,
         ref: previewRef,
         ctx,
+        gridLineColor,
       });
     }
   });
   return (
-    <div ref={container.ref} className="grow">
+    <div
+      ref={container.ref}
+      className="bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5"
+    >
       <canvas ref={previewRef}></canvas>
     </div>
   );
@@ -48,11 +54,13 @@ export default function PixelGridDownloadPreview({
   specialShapesRef,
   canvasNumRowsAndCols,
   canvasCellWidthHeightRatio,
+  gridLineColor,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
   canvasNumRowsAndCols: PixelGridCanvasNumRowsAndCols;
   canvasCellWidthHeightRatio: number;
+  gridLineColor: string;
 }) {
   const ModalTools = useModalTools();
   const [sizeSelection, setSizeSelection] = useState<sizer>("s");
@@ -121,72 +129,80 @@ export default function PixelGridDownloadPreview({
   return (
     <>
       <ModalTools.btn>
-        <div className="card">
-          <Image src="/eye.svg" alt="preview pattern" height={25} width={25} />
+        <div className="">
+          <Image
+            src="/download.svg"
+            alt="preview pattern"
+            height={25}
+            width={25}
+          />
         </div>
       </ModalTools.btn>
       <ModalTools.modal className="size-4/5">
-        <h2 className="text-3xl text-center">Download as PNG</h2>
-        <div className="flex h-4/5 w-full">
-          <PixelGridPreviewDisplay
-            savedCanvasDataRef={savedCanvasDataRef}
-            specialShapesRef={specialShapesRef}
-          />
-          <form>
-            <fieldset>
-              <legend className="text-3xl">Select an image size:</legend>
-              {(Object.entries(sizesInfo) as [sizer, any][]).map(
-                ([size, sizeInfo]) => (
-                  <div
-                    key={size}
-                    onClick={async () => {
-                      setSizeSelection(size);
-                      setBlob(null);
-                      generateBlob.throttle(
-                        sizeInfo.dimensions.width,
-                        sizeInfo.dimensions.height
-                      );
-                    }}
-                    className={`text-2xl p-2 rounded-lg last:mb-5 ${
-                      size === sizeSelection && "bg-amaranth-light"
-                    }`}
-                  >
-                    <input
-                      type="radio"
-                      id={size}
-                      name={size}
-                      value={size}
-                      checked={size === sizeSelection}
-                      onChange={async () => {
+        <div className="p-1 size-full flex flex-col">
+          <h2 className="text-2xl lg:text-3xl text-center">Download as PNG</h2>
+          <div className="flex flex-col lg:flex-row overflow-auto">
+            <PixelGridPreviewDisplay
+              savedCanvasDataRef={savedCanvasDataRef}
+              specialShapesRef={specialShapesRef}
+              gridLineColor={gridLineColor}
+            />
+            <form className="h-fit mt-auto mb-auto lg:ml-4">
+              <fieldset>
+                <legend className="text-2xl lg:text-3xl">Select an image size:</legend>
+                {(Object.entries(sizesInfo) as [sizer, any][]).map(
+                  ([size, sizeInfo]) => (
+                    <div
+                      key={size}
+                      onClick={async () => {
                         setSizeSelection(size);
-                        setTimeout(async () => {
-                          const blob = await generateImage(
-                            sizeInfo.dimensions.width,
-                            sizeInfo.dimensions.height
-                          );
-                          setBlob(URL.createObjectURL(blob));
-                        }, 2000);
+                        setBlob(null);
+                        generateBlob.throttle(
+                          sizeInfo.dimensions.width,
+                          sizeInfo.dimensions.height
+                        );
                       }}
-                      className="absolute opacity-0"
-                    />
-                    <label htmlFor={size}>
-                      {sizeInfo.display} - {sizeInfo.dimensions.width}x
-                      {sizeInfo.dimensions.height}px
-                    </label>
-                  </div>
-                )
+                      className={`text-xl lg:text:2xl p-2 rounded-lg last:mb-2 ${
+                        size === sizeSelection && "bg-amaranth-light"
+                      }`}
+                    >
+                      <input
+                        type="radio"
+                        id={size}
+                        name={size}
+                        value={size}
+                        checked={size === sizeSelection}
+                        onChange={async () => {
+                          setSizeSelection(size);
+                          setTimeout(async () => {
+                            const blob = await generateImage(
+                              sizeInfo.dimensions.width,
+                              sizeInfo.dimensions.height
+                            );
+                            setBlob(URL.createObjectURL(blob));
+                          }, 2000);
+                        }}
+                        className="absolute opacity-0"
+                      />
+                      <label htmlFor={size}>
+                        {sizeInfo.display} - {sizeInfo.dimensions.width}x
+                        {sizeInfo.dimensions.height}px
+                      </label>
+                    </div>
+                  )
+                )}
+              </fieldset>
+              {blob ? (
+                <a href={blob} className="button block w-fit" download={"pattern"}>
+                  download image
+                </a>
+              ) : (
+                <div className="button flex w-fit">
+                  <p className="mr-5">generating PNG</p> <SpinnerSmall />
+                </div>
               )}
-            </fieldset>
-            {blob ? (
-              <a href={blob} className="button" download={"pattern"}>
-                download image
-              </a>
-            ) : (
-              <div className="button flex w-fit">
-                <p className="mr-5">generating PNG</p> <SpinnerSmall />
-              </div>
-            )}
-          </form>
+            </form>
+          </div>
         </div>
       </ModalTools.modal>
     </>

@@ -9,17 +9,21 @@ export type PixelGridLineCanvasTools = {
   drawCanvasLines: ({
     ctx,
     windowTools,
+    lineColor,
   }: {
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
+    lineColor?: string;
   }) => void;
   ref: React.RefObject<HTMLCanvasElement | null>;
 };
 
 export default function usePixelGridLineCanvasTools({
   canvasWindowTools,
+  gridLineColor,
 }: {
   canvasWindowTools: PixelGridWindowTools;
+  gridLineColor: string;
 }): PixelGridLineCanvasTools {
   const lineCanvasRef = useRef(null);
   const [lineCanvasContext, setLineCanvasContext] =
@@ -27,10 +31,13 @@ export default function usePixelGridLineCanvasTools({
   const drawCanvasLines = ({
     ctx,
     windowTools,
+    lineColor,
   }: {
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
+    lineColor?: string;
   }) => {
+    const curLineColor = lineColor || gridLineColor;
     const targetContext =
       (ctx as CanvasRenderingContext2D) || lineCanvasContext;
     const targetWindowTools = {
@@ -41,6 +48,7 @@ export default function usePixelGridLineCanvasTools({
       cellDimensions: targetWindowTools.canvasCellDimensions,
       gridDimensions: targetWindowTools.gridDimensions,
       ctx: targetContext,
+      lineColor: curLineColor,
     });
   };
 

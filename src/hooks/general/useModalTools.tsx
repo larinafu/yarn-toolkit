@@ -43,9 +43,16 @@ type ModalProps = {
   innerRef: React.RefObject<any>;
   onExit: () => void;
   className?: string;
+  closeBtn?: boolean;
 };
 
-const Modal = ({ children, innerRef, onExit, className }: ModalProps) => {
+const Modal = ({
+  children,
+  innerRef,
+  onExit,
+  className,
+  closeBtn,
+}: ModalProps) => {
   useEffect(() => {
     document.body.style.overflow = "hidden";
     return () => {
@@ -53,15 +60,17 @@ const Modal = ({ children, innerRef, onExit, className }: ModalProps) => {
     };
   }, []);
   return (
-    <div className="fixed z-10 top-0 left-0 w-screen h-screen flex items-center justify-center bg-gray-50/50">
+    <div className="fixed z-10 top-0 left-0 w-dvw h-dvh flex items-center justify-center bg-gray-50/50">
       <section
         className={`card max-w-4/5 max-h-4/5 ${className}`}
         ref={innerRef}
       >
         {children}{" "}
-        <button onClick={onExit} className="block mt-0 mr-0 mb-auto ml-0">
-          close
-        </button>
+        {closeBtn && (
+          <button onClick={onExit} className="block mt-0 mr-0 mb-auto ml-0">
+            close
+          </button>
+        )}
       </section>
     </div>
   );

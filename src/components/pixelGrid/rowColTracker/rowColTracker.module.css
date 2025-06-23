@@ -1,0 +1,30 @@
+.wrapper {
+    grid-template-columns: auto 1fr auto;
+    grid-template-rows: auto 1fr auto;
+}
+
+.content {
+  grid-column: 2;
+  grid-row: 2;
+  height: 1fr;
+}
+
+.leftLabels {
+  grid-column: 1;
+  grid-row: 2;
+}
+
+.bottomLabels {
+  grid-column: 2;
+  grid-row: 3;
+}
+
+.rightLabels {
+  grid-column: 3;
+  grid-row: 2;
+}
+
+.topLabels {
+  grid-column: 2;
+  grid-row: 1;
+}

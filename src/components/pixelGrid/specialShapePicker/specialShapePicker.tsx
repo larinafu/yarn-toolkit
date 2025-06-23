@@ -31,6 +31,9 @@ export default function SpecialShapePicker({
           <Image src={img} alt={shapeKey} width={25} height={25} />
         </button>
       ))}
+      <button className="buttonBlank">
+        <Image src={"/eraser.svg"} alt="erase" width={25} height={25} />
+      </button>
       <SimpleColorPicker hex={shapeColor} setHex={setShapeColor} />
     </div>
   );

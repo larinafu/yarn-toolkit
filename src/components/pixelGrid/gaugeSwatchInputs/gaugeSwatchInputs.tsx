@@ -5,6 +5,7 @@ import {
   isInputANumber,
   isValidSwatch,
 } from "@/utils/general/inputValidationUtils";
+import Image from "next/image";
 
 const MARGIN = 5;
 const MIN_NUM_ROWS_OR_COLS = 4;
@@ -131,34 +132,107 @@ export default function GaugeSwatchInputs({
       <div className="m-auto w-fit">
         <div className={styles.cellRatioPreviewContainer}>
           <div />
-          <label className="m-auto">
-            <input
-              type="text"
-              inputMode="numeric"
-              id="cell_width"
-              name="cell_width"
-              value={swatchInputs.width}
-              onChange={(e) => {
-                handleGaugeInputChange(e.target.value, swatchInputs.height);
-              }}
-              className={cellRatioInputStyle}
-              disabled={isSizeChangeLoading}
-            />
-          </label>
-          <label className="m-auto">
-            <input
-              type="text"
-              inputMode="numeric"
-              id="cell_height"
-              name="cell_height"
-              value={swatchInputs.height}
-              className={cellRatioInputStyle}
-              onChange={(e) => {
-                handleGaugeInputChange(swatchInputs.width, e.target.value);
-              }}
-              disabled={isSizeChangeLoading}
-            />
-          </label>
+          <div className="flex m-auto">
+            <button
+              disabled={swatchInputs.width === "1"}
+              className="buttonBlank fill-amaranth"
+              onClick={() =>
+                handleGaugeInputChange(
+                  (parseInt(swatchInputs.width) - 1).toString(),
+                  swatchInputs.height
+                )
+              }
+            >
+              <Image
+                src={"/down-arrow.svg"}
+                alt="down"
+                width={20}
+                height={20}
+                className="fill-amaranth"
+              />
+            </button>
+            <label>
+              <input
+                type="text"
+                inputMode="numeric"
+                id="cell_width"
+                name="cell_width"
+                value={swatchInputs.width}
+                onChange={(e) => {
+                  handleGaugeInputChange(e.target.value, swatchInputs.height);
+                }}
+                className={cellRatioInputStyle}
+                disabled={isSizeChangeLoading}
+              />
+            </label>
+            <button
+              className="buttonBlank fill-amaranth"
+              onClick={() =>
+                handleGaugeInputChange(
+                  (parseInt(swatchInputs.width) + 1).toString(),
+                  swatchInputs.height
+                )
+              }
+            >
+              <Image
+                src={"/up-arrow.svg"}
+                alt="up"
+                width={20}
+                height={20}
+                className="fill-amaranth"
+              />
+            </button>
+          </div>
+          <div className="flex flex-col m-auto">
+            <button
+              className="buttonBlank fill-amaranth"
+              onClick={() =>
+                handleGaugeInputChange(
+                  swatchInputs.width,
+                  (parseInt(swatchInputs.height) + 1).toString()
+                )
+              }
+            >
+              <Image
+                src={"/up-arrow.svg"}
+                alt="up"
+                width={20}
+                height={20}
+                className="fill-amaranth"
+              />
+            </button>
+            <label>
+              <input
+                type="text"
+                inputMode="numeric"
+                id="cell_height"
+                name="cell_height"
+                value={swatchInputs.height}
+                className={cellRatioInputStyle}
+                onChange={(e) => {
+                  handleGaugeInputChange(swatchInputs.width, e.target.value);
+                }}
+                disabled={isSizeChangeLoading}
+              />
+            </label>
+            <button
+              className="buttonBlank"
+              onClick={() =>
+                handleGaugeInputChange(
+                  swatchInputs.width,
+                  (parseInt(swatchInputs.height) - 1).toString()
+                )
+              }
+              disabled={swatchInputs.height === "1"}
+            >
+              <Image
+                src={"/down-arrow.svg"}
+                alt="down"
+                width={20}
+                height={20}
+              />
+            </button>
+          </div>
           <svg
             width={size + MARGIN * 2}
             height={size + MARGIN * 2}

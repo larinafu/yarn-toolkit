@@ -11,6 +11,7 @@ import {
   isValidProjectSize,
 } from "@/utils/general/inputValidationUtils";
 import { AspectRatio, PatternSize, PatternSizeInputs } from "@/types/pixelGrid";
+import Image from "next/image";
 
 const X_SIZE = 20;
 const X_PADDING = 4;
@@ -247,34 +248,100 @@ export default function ProjectSizeInputs({
           {generateVertLinesAndNums()}
         </svg>
         <div className="flex flex-col items-center">
-          <input
-            type="text"
-            inputMode="numeric"
-            id="num_rows"
-            name="num_rows"
-            value={patternSizeInputs.numRows}
-            onChange={(e) =>
-              handlePatternSizeInputChange({ numRows: e.target.value })
-            }
-            disabled={isGaugeChangeLoading}
-            className="w-10 aspect-square text-center"
-          />
+          <div className="flex">
+            <button
+              className="buttonBlank"
+              onClick={() =>
+                handlePatternSizeInputChange({
+                  numRows:
+                    typeof patternSizeInputs.numRows === "number"
+                      ? (patternSizeInputs.numRows - 1).toString()
+                      : "10",
+                })
+              }
+            >
+              <Image
+                src={"/down-arrow.svg"}
+                alt="down"
+                width={20}
+                height={20}
+              />
+            </button>
+            <input
+              type="text"
+              inputMode="numeric"
+              id="num_rows"
+              name="num_rows"
+              value={patternSizeInputs.numRows}
+              onChange={(e) =>
+                handlePatternSizeInputChange({ numRows: e.target.value })
+              }
+              disabled={isGaugeChangeLoading}
+              className="w-10 aspect-square text-center"
+            />
+            <button
+              className="buttonBlank"
+              onClick={() =>
+                handlePatternSizeInputChange({
+                  numRows:
+                    typeof patternSizeInputs.numRows === "number"
+                      ? (patternSizeInputs.numRows + 1).toString()
+                      : "10",
+                })
+              }
+            >
+              <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
+            </button>
+          </div>
           <label htmlFor="num_rows">rows</label>
         </div>
         <span />
         <div className="flex flex-col items-center">
-          <input
-            type="text"
-            inputMode="numeric"
-            id="num_cols"
-            name="num_cols"
-            value={patternSizeInputs.numCols}
-            onChange={(e) =>
-              handlePatternSizeInputChange({ numCols: e.target.value })
-            }
-            disabled={isGaugeChangeLoading}
-            className="w-10 aspect-square text-center"
-          />
+          <div className="flex">
+            <button
+              className="buttonBlank"
+              onClick={() =>
+                handlePatternSizeInputChange({
+                  numCols:
+                    typeof patternSizeInputs.numCols === "number"
+                      ? (patternSizeInputs.numCols - 1).toString()
+                      : "10",
+                })
+              }
+            >
+              <Image
+                src={"/down-arrow.svg"}
+                alt="down"
+                width={20}
+                height={20}
+              />
+            </button>
+            <input
+              type="text"
+              inputMode="numeric"
+              id="num_cols"
+              name="num_cols"
+              value={patternSizeInputs.numCols}
+              onChange={(e) =>
+                handlePatternSizeInputChange({ numCols: e.target.value })
+              }
+              disabled={isGaugeChangeLoading}
+              className="w-10 aspect-square text-center"
+            />
+            <button
+              className="buttonBlank"
+              onClick={() =>
+                handlePatternSizeInputChange({
+                  numCols:
+                    typeof patternSizeInputs.numCols === "number"
+                      ? (patternSizeInputs.numCols + 1).toString()
+                      : "10",
+                })
+              }
+            >
+              <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
+            </button>
+          </div>
           <label htmlFor="num_cols">columns</label>
         </div>
       </div>

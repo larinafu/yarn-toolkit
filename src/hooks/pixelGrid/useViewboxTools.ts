@@ -14,6 +14,7 @@ import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 
 const MAX_PREVIEW_WIDTH_VW = 20;
 const MAX_PREVIEW_HEIGHT_VH = 100;
+const MIN_DIM_PX = 200;
 
 type ViewboxDims = PixelGridCanvasCellDimensions;
 type ViewboxCellDims = PixelGridCanvasCellDimensions;
@@ -64,6 +65,8 @@ export type ViewboxTools = {
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
   drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => void;
+  isOpen: boolean;
+  setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const getViewboxSizing = ({
@@ -77,8 +80,8 @@ const getViewboxSizing = ({
   viewboxCellDims: ViewboxCellDims;
 } => {
   const [maxPreviewWidthPx, maxPreviewHeightPx] = [
-    vwToPx(MAX_PREVIEW_WIDTH_VW),
-    vhToPx(MAX_PREVIEW_HEIGHT_VH),
+    Math.max(MIN_DIM_PX, vwToPx(MAX_PREVIEW_WIDTH_VW)),
+    Math.max(MIN_DIM_PX, vhToPx(MAX_PREVIEW_HEIGHT_VH)),
   ];
   // width limited
   let prvwPixelWidth = maxPreviewWidthPx / canvasNumRowsAndCols.numCols;
@@ -124,8 +127,8 @@ const getViewboxPosition = ({
     canvasSizingUtils.getMaxCanvasDimensions({
       canvasNumRowsAndCols,
       canvasCellWidthHeightRatio: widthHeightRatio,
-      maxPxWidth: vwToPx(MAX_PREVIEW_WIDTH_VW),
-      maxPxHeight: vhToPx(MAX_PREVIEW_HEIGHT_VH),
+      maxPxWidth: Math.max(MIN_DIM_PX, vwToPx(MAX_PREVIEW_WIDTH_VW)),
+      maxPxHeight: Math.max(MIN_DIM_PX, vhToPx(MAX_PREVIEW_HEIGHT_VH)),
     });
   return {
     viewableBoxXPos: pixelGridCanvasWindow.startCol * viewboxCellDims.width,
@@ -166,6 +169,7 @@ export default function useViewboxTools({
     firstVisibleRow: number;
     firstVisibleCol: number;
   } | null>(null);
+  const [isOpen, setOpen] = useState(true);
   const { viewboxDims, viewboxCellDims } = getViewboxSizing({
     canvasNumRowsAndCols: pixelGridCanvasWindowTools.canvasNumRowsAndCols,
     canvasCellWidthHeightRatio: widthHeightRatio,
@@ -241,6 +245,8 @@ export default function useViewboxTools({
     ctx: viewboxContext,
     specialShapesRef: viewboxSpecialShapesRef,
     specialShapesCtx: viewboxSpecialShapesContext,
+    isOpen,
+    setOpen,
     setSpecialShapesCtx: setViewboxSpecialShapesContext,
     drawViewboxColors: (ctx?: CanvasRenderingContext2D) =>
       canvasContextUtils.drawPixelGridColors({

@@ -71,8 +71,8 @@ export default function ImageViewbox({
   }, []);
 
   return (
-    <section className="m-auto mt-0 mb-0 relative touch-none">
-      <canvas ref={viewboxTools.ref} className="absolute top-0 left-0"></canvas>
+    <section className="m-auto mt-0 mb-0 w-fit relative touch-none">
+      <canvas ref={viewboxTools.ref}></canvas>
       <canvas
         ref={viewboxTools.specialShapesRef}
         className="absolute top-0 left-0"

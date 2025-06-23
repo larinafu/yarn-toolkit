@@ -57,7 +57,7 @@ export default function Dropdown({
           setOpen(!isOpen);
           setOpenFromContainer?.(!isOpenFromContainer);
         }}
-        className="buttonBlank p-0"
+        className="buttonBlank block p-0"
       >
         {btnContent}
       </button>
