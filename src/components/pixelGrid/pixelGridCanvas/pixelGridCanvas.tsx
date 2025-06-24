@@ -208,6 +208,8 @@ export default function PixelGridCanvas({
           }
         }}
         onPointerDown={(e) => {
+          console.log(e.target);
+          console.log(e.currentTarget);
           setPointerDownFromCanvas(true);
           if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
             (pointerEventsRef.current as any).releasePointerCapture(
