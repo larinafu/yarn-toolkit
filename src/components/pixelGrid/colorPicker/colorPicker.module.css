@@ -1,11 +1,3 @@
-.expand {
-  position: relative;
-  z-index: 2;
-  overflow-y: scroll;
-  left: -50%;
-  pointer-events: auto;
-}
-
 .mainColor:hover .plus,
 .mainColor:active .plus {
   display: block;

@@ -283,7 +283,7 @@ export default function PixelGridEditor({
 
   return (
     <div className="relative flex flex-col h-dvh w-dvw">
-      <div className="w-screen flex">
+      <div className="relative w-screen flex">
         <EditingToolbar
           shiftPixelSize={canvasWindowTools.shiftPixelSize}
           windowTools={canvasWindowTools}
@@ -347,7 +347,7 @@ export default function PixelGridEditor({
             />
           </RowColTracker>
         </section>
-        <div className="absolute pointer-events-none w-fit top-2 right-0 flex">
+        <div className="absolute z-30 w-fit top-2 right-0 flex">
           <div
             className="flex items-center"
             style={{

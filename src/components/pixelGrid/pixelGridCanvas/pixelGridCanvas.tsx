@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 
-import styles from "./pixelGridCanvas.module.css";
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
 import { ColorCanvasTools } from "@/hooks/pixelGrid/useColorCanvasTools";
@@ -10,10 +9,7 @@ import { StitchCanvasTools } from "@/hooks/pixelGrid/usePixelGridStitchCanvasToo
 import { PixelGridEditTools } from "@/hooks/pixelGrid/usePixelGridEditTools";
 import { useIsPointerDown } from "@/hooks/general/useIsPointerDown";
 import { EditMode } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
-import {
-  PixelGridSpecialShapesCanvasTools,
-  Point,
-} from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import { PixelGridSpecialShapesCanvasTools } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 
 export default function PixelGridCanvas({
   curPixel,
@@ -206,7 +202,7 @@ export default function PixelGridCanvas({
         height={canvasWindowTools.gridDimensions.height}
         onPointerMove={(e: any) => {
           handlePointerMove(e);
-          if (isPointerDownFromCanvas || editMode === "specialShapeChange") {
+          if (isPointerDownFromCanvas) {
             canvasEditTools.handleCanvasEdit(e, "move");
           }
         }}
@@ -221,15 +217,19 @@ export default function PixelGridCanvas({
         }}
         onPointerLeave={(e) => {
           setCurPixel(null);
-          if (isPointerDownFromCanvas && editMode !== "specialShapeChange") {
+          if (isPointerDownFromCanvas) {
             canvasEditTools.handleCompleteCanvasEdit();
+            specialShapesTools.releasePoint();
+            setActiveShapeIdx(null);
           }
         }}
         onPointerUp={() => {
           if (
             isPointerDownFromCanvas &&
-            (editMode !== "specialShapeChange" || activeShapeIdx !== null)
+            (editMode !== "specialShapeChange" || specialShapesTools.tarPoint)
           ) {
+            specialShapesTools.releasePoint();
+            setActiveShapeIdx(null);
             canvasEditTools.handleCompleteCanvasEdit();
           }
         }}
@@ -238,8 +238,6 @@ export default function PixelGridCanvas({
         {editMode === "specialShapeChange" &&
           specialShapesTools.specialShapesRef.current.map(
             (specialShape, idx) => {
-              if (specialShapesTools.tarPoint?.shapeId === idx) {
-              }
               const pointsPos = [];
               const path = [];
               for (const [pointIdx, point] of specialShape.points.entries()) {
@@ -264,6 +262,9 @@ export default function PixelGridCanvas({
                     d={path.join(" ")}
                     stroke={specialShape.color}
                     strokeWidth={5}
+                    style={{
+                      pointerEvents: "none",
+                    }}
                   />
                   {pointsPos.map(({ x, y }, pointIdx) => {
                     return (
@@ -281,21 +282,21 @@ export default function PixelGridCanvas({
                           height={canvasWindowTools.canvasCellDimensions.height}
                           fillOpacity={0}
                           onPointerDown={() => {
-                            if (activeShapeIdx === null) {
-                              specialShapesTools.capturePoint(idx, pointIdx);
-                            }
+                            setPointerDownFromCanvas(true);
+                            specialShapesTools.capturePoint(idx, pointIdx);
                           }}
-                          onPointerUp={(e) => {
-                            e.stopPropagation();
-                            canvasEditTools.handleCompleteCanvasEdit();
+                          onPointerUp={() => {
                             specialShapesTools.releasePoint();
                             setActiveShapeIdx(null);
-                            setPointerDownFromCanvas(false);
                           }}
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
-                          className="z-20"
+                          className={`z-20 ${
+                            specialShapesTools.tarPoint?.shapeId === idx
+                              ? "pointer-events-none"
+                              : ""
+                          }`}
                         ></rect>
                       </g>
                     );

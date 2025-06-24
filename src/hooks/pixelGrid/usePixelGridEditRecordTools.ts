@@ -140,7 +140,7 @@ export default function usePixelGridEditRecordTools({
         }
         break;
       case "specialShapeChange":
-        prevData = specialShapesRef.current[data.shapeId].points;
+        prevData = specialShapesRef.current?.[data.shapeId].points;
         sessionRef.current = {
           mode: "specialShapeChange",
           data: {

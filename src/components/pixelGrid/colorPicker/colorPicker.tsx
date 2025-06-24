@@ -75,27 +75,25 @@ const ColorOption = ({
         )}
       </button>
       {openExpand && (
-        <div className="absolute pointer-events-none">
-          <section className={`card ${styles.expand} fadeInFast`}>
-            {defaultColorsConstants.map((colorRow, idx) => (
-              <div key={idx} className="flex">
-                {Object.values(colorRow).map((expandedColorHex) => (
-                  <button
-                    key={expandedColorHex.hex}
-                    className="size-6 m-1 border border-gray-500"
-                    onClick={() => {
-                      swapColorInPalette(colorIdx, expandedColorHex.hex);
-                      setOpenExpand(false);
-                    }}
-                    style={{
-                      backgroundColor: expandedColorHex.hex,
-                    }}
-                  ></button>
-                ))}
-              </div>
-            ))}
-          </section>
-        </div>
+        <section className="absolute card overflow-auto z-20 left-0 right-0 m-auto w-fit fadeInFast">
+          {defaultColorsConstants.map((colorRow, idx) => (
+            <div key={idx} className="flex">
+              {Object.values(colorRow).map((expandedColorHex) => (
+                <button
+                  key={expandedColorHex.hex}
+                  className="size-6 m-1 border border-gray-500"
+                  onClick={() => {
+                    swapColorInPalette(colorIdx, expandedColorHex.hex);
+                    setOpenExpand(false);
+                  }}
+                  style={{
+                    backgroundColor: expandedColorHex.hex,
+                  }}
+                ></button>
+              ))}
+            </div>
+          ))}
+        </section>
       )}
     </div>
   );

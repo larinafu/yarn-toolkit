@@ -81,8 +81,15 @@ export default function usePixelGridEditTools({
         switch (pointerTrigger) {
           case "down":
             specialShapesTools.addShape(row, col, shapeColor, "line");
+            editRecordTools.addToSession(row, col, {
+              shapeId: specialShapesTools.specialShapesRef.current.length - 1,
+              pointId: 1,
+              type: activeShapeIdx === null ? "update" : "create",
+              newLoc: { row, col },
+            });
             break;
           case "move":
+            specialShapesTools.moveTarPoint({ row, col });
             if (
               specialShapesTools.tarPoint &&
               !(
@@ -90,7 +97,6 @@ export default function usePixelGridEditTools({
                 specialShapesTools.tarPoint.curLoc.col === col
               )
             ) {
-              specialShapesTools.moveTarPoint({ row, col });
               editRecordTools.addToSession(row, col, {
                 shapeId: specialShapesTools.tarPoint.shapeId,
                 pointId: specialShapesTools.tarPoint.pointId,

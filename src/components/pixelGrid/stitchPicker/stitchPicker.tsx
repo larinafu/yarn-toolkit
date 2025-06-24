@@ -77,30 +77,28 @@ const StitchOption = ({
         <Image src={knitting[stitch].svg} alt={stitch} width={25} height={25} />
       </button>
       {openExpand && (
-        <div className="absolute pointer-events-none:">
-          <section
-            className={`card relative w-sm z-20 overflow-y-scroll left-[-50%] pointer-events-auto fadeInFast`}
-          >
-            {Object.entries(knitting).map(([stitchKey, stitch]) => (
-              <button
-                key={stitchKey}
-                className="buttonBlank p-1 size-10 m-1 border border-gray-500"
-                onClick={() => {
-                  swapStitchInPalette(idx, stitchKey);
-                  setOpenExpand(false);
-                }}
-              >
-                <Image
-                  src={stitch.svg}
-                  alt={stitchKey}
-                  width={20}
-                  height={20}
-                  className="w-full h-full"
-                />
-              </button>
-            ))}
-          </section>
-        </div>
+        <section
+          className={`absolute card overflow-auto z-20 left-0 right-0 m-auto w-xs sm:w-sm fadeInFast`}
+        >
+          {Object.entries(knitting).map(([stitchKey, stitch]) => (
+            <button
+              key={stitchKey}
+              className="buttonBlank p-1 size-10 m-1 border border-gray-500"
+              onClick={() => {
+                swapStitchInPalette(idx, stitchKey);
+                setOpenExpand(false);
+              }}
+            >
+              <Image
+                src={stitch.svg}
+                alt={stitchKey}
+                width={20}
+                height={20}
+                className="w-full h-full"
+              />
+            </button>
+          ))}
+        </section>
       )}
     </div>
   );
