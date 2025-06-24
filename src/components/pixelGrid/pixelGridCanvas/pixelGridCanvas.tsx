@@ -257,7 +257,14 @@ export default function PixelGridCanvas({
               }
 
               return (
-                <g key={idx}>
+                <g
+                  key={idx}
+                  className={`${
+                    specialShapesTools.tarPoint?.shapeId === idx
+                      ? "pointer-events-none"
+                      : ""
+                  }`}
+                >
                   <path
                     d={path.join(" ")}
                     stroke={specialShape.color}
@@ -292,11 +299,7 @@ export default function PixelGridCanvas({
                           onClick={(e) => {
                             e.stopPropagation();
                           }}
-                          className={`z-20 ${
-                            specialShapesTools.tarPoint?.shapeId === idx
-                              ? "pointer-events-none"
-                              : ""
-                          }`}
+                          className={`z-20`}
                         ></rect>
                       </g>
                     );
