@@ -208,8 +208,6 @@ export default function PixelGridCanvas({
           }
         }}
         onPointerDown={(e) => {
-          console.log(e.target);
-          console.log(e.currentTarget);
           setPointerDownFromCanvas(true);
           if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
             (pointerEventsRef.current as any).releasePointerCapture(
@@ -263,7 +261,7 @@ export default function PixelGridCanvas({
                 <g
                   key={idx}
                   className={`${
-                    specialShapesTools.tarPoint?.shapeId === idx
+                    specialShapesTools.tarPoint || activeShapeIdx !== null
                       ? "pointer-events-none"
                       : ""
                   }`}
@@ -287,6 +285,7 @@ export default function PixelGridCanvas({
                         cellDims={canvasWindowTools.canvasCellDimensions}
                         specialShapesTools={specialShapesTools}
                         setPointerDownFromCanvas={setPointerDownFromCanvas}
+                        activeShapeIdx={activeShapeIdx}
                         setActiveShapeIdx={setActiveShapeIdx}
                       />
                     );

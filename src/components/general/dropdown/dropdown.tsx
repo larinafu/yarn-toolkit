@@ -64,7 +64,7 @@ export default function Dropdown({
       {shouldBeOpen && (
         <section
           ref={dropdown.ref}
-          className={`fadeInFast absolute z-10`}
+          className={`fadeInFast absolute z-40`}
           style={{
             ...dropdownPosition,
           }}

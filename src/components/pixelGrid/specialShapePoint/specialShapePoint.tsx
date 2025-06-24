@@ -10,6 +10,7 @@ export default function SpecialShapePoint({
   cellDims,
   specialShapesTools,
   setPointerDownFromCanvas,
+  activeShapeIdx,
   setActiveShapeIdx,
 }: {
   shapeIdx: number;
@@ -19,6 +20,7 @@ export default function SpecialShapePoint({
   cellDims: PixelGridCanvasCellDimensions;
   specialShapesTools: PixelGridSpecialShapesCanvasTools;
   setPointerDownFromCanvas: React.Dispatch<React.SetStateAction<boolean>>;
+  activeShapeIdx: number | null;
   setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
 }) {
   const pointRef = useRef<any>(null);
@@ -34,8 +36,10 @@ export default function SpecialShapePoint({
         ref={pointRef}
         onPointerDown={(e) => {
           pointRef.current?.releasePointerCapture(e.pointerId);
-          setPointerDownFromCanvas(true);
-          specialShapesTools.capturePoint(shapeIdx, pointIdx);
+          if (activeShapeIdx === null) {
+            setPointerDownFromCanvas(true);
+            specialShapesTools.capturePoint(shapeIdx, pointIdx);
+          }
         }}
         onPointerUp={() => {
           specialShapesTools.releasePoint();
