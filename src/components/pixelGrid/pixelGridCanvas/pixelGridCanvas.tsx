@@ -10,6 +10,7 @@ import { PixelGridEditTools } from "@/hooks/pixelGrid/usePixelGridEditTools";
 import { useIsPointerDown } from "@/hooks/general/useIsPointerDown";
 import { EditMode } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
 import { PixelGridSpecialShapesCanvasTools } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import SpecialShapePoint from "../specialShapePoint/specialShapePoint";
 
 export default function PixelGridCanvas({
   curPixel,
@@ -275,33 +276,17 @@ export default function PixelGridCanvas({
                   />
                   {pointsPos.map(({ x, y }, pointIdx) => {
                     return (
-                      <g key={pointIdx}>
-                        <circle cx={x} cy={y} r={5}></circle>
-                        <rect
-                          x={
-                            x - canvasWindowTools.canvasCellDimensions.width / 2
-                          }
-                          y={
-                            y -
-                            canvasWindowTools.canvasCellDimensions.height / 2
-                          }
-                          width={canvasWindowTools.canvasCellDimensions.width}
-                          height={canvasWindowTools.canvasCellDimensions.height}
-                          fillOpacity={0}
-                          onPointerDown={() => {
-                            setPointerDownFromCanvas(true);
-                            specialShapesTools.capturePoint(idx, pointIdx);
-                          }}
-                          onPointerUp={() => {
-                            specialShapesTools.releasePoint();
-                            setActiveShapeIdx(null);
-                          }}
-                          onClick={(e) => {
-                            e.stopPropagation();
-                          }}
-                          className={`z-20`}
-                        ></rect>
-                      </g>
+                      <SpecialShapePoint
+                        key={pointIdx}
+                        x={x}
+                        y={y}
+                        pointIdx={pointIdx}
+                        shapeIdx={idx}
+                        cellDims={canvasWindowTools.canvasCellDimensions}
+                        specialShapesTools={specialShapesTools}
+                        setPointerDownFromCanvas={setPointerDownFromCanvas}
+                        setActiveShapeIdx={setActiveShapeIdx}
+                      />
                     );
                   })}
                 </g>
