@@ -197,7 +197,9 @@ export default function PixelGridEditor({
 
   // canvas resize
   useEffect(() => {
+    console.log("in effect");
     resizeObserverRef.current = new ResizeObserver((entries) => {
+      console.log("in resizer fxn");
       for (const _ of entries) {
         const colorCanvasRef =
           colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
@@ -207,77 +209,88 @@ export default function PixelGridEditor({
           gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
         const specialShapesCanvasRef =
           specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
-        const colorCtx =
-          colorCanvasTools.ctx ||
-          (colorCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
-        const stitchCtx =
-          stitchCanvasTools.ctx ||
-          (stitchCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const gridLineCtx =
-          gridLineTools.ctx ||
-          (gridLineCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const specialShapesCtx =
-          specialShapesTools.ctx ||
-          (specialShapesCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const { canvasWindow, gridDimensions } =
-          canvasWindowTools.recalcGridSize({});
         if (
-          !(
-            gridDimensions.width ===
-            parseInt(colorCanvasRef.current.style.width)
-          ) ||
-          !(
-            gridDimensions.height ===
-            parseInt(colorCanvasRef.current.style.height)
-          )
+          colorCanvasRef.current &&
+          stitchCanvasRef.current &&
+          gridLineCanvasRef.current &&
+          specialShapesCanvasRef.current
         ) {
-          canvasWindowTools.resizeCanvas(
-            colorCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            gridLineCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            stitchCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            specialShapesCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          updateFullCanvas({
-            colorCanvasContext: colorCtx,
-            stitchCanvasContext: stitchCtx,
-            specialShapesCanvasContext: specialShapesCtx,
-            windowTools: { canvasWindow, gridDimensions },
-          });
-          gridLineTools.drawCanvasLines({
-            ctx: gridLineCtx,
-            windowTools: { canvasWindow, gridDimensions },
-          });
+          const colorCtx =
+            colorCanvasTools.ctx ||
+            (colorCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const stitchCtx =
+            stitchCanvasTools.ctx ||
+            (stitchCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const gridLineCtx =
+            gridLineTools.ctx ||
+            (gridLineCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const specialShapesCtx =
+            specialShapesTools.ctx ||
+            (specialShapesCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const { canvasWindow, gridDimensions } =
+            canvasWindowTools.recalcGridSize({});
+          if (
+            !(
+              gridDimensions.width ===
+              parseInt(colorCanvasRef.current?.style.width)
+            ) ||
+            !(
+              gridDimensions.height ===
+              parseInt(colorCanvasRef.current?.style.height)
+            )
+          ) {
+            canvasWindowTools.resizeCanvas(
+              colorCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              gridLineCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              stitchCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              specialShapesCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            updateFullCanvas({
+              colorCanvasContext: colorCtx,
+              stitchCanvasContext: stitchCtx,
+              specialShapesCanvasContext: specialShapesCtx,
+              windowTools: { canvasWindow, gridDimensions },
+            });
+            gridLineTools.drawCanvasLines({
+              ctx: gridLineCtx,
+              windowTools: { canvasWindow, gridDimensions },
+            });
+          }
         }
       }
     });
-    resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
+    if (pixelGridCanvasRefWithRect.ref.current) {
+      resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
+    }
     return () => {
-      pixelGridCanvasRefWithRect.ref.current &&
-        resizeObserverRef.current?.unobserve(
-          pixelGridCanvasRefWithRect.ref.current
-        );
+      if (pixelGridCanvasRefWithRect.ref.current) {
+        resizeObserverRef.current?.disconnect();
+      }
     };
   }, [
+    pixelGridCanvasRefWithRect.ref.current,
     canvasWindowTools.canvasCellDimensions.width,
     canvasWindowTools.canvasCellDimensions.height,
   ]);

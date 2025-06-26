@@ -2,10 +2,11 @@ import Image from "next/image";
 import useModalTools from "@/hooks/general/useModalTools";
 import {
   PixelGridCanvasCellDimensions,
+  PixelGridCanvasDimensions,
   PixelGridCanvasNumRowsAndCols,
   PixelGridCanvasSavedData,
 } from "@/types/pixelGrid";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
 import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
@@ -17,31 +18,28 @@ const PixelGridPreviewDisplay = ({
   savedCanvasDataRef,
   specialShapesRef,
   gridLineColor,
+  gridDims,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
   gridLineColor: string;
+  gridDims: PixelGridCanvasDimensions;
 }) => {
   const previewRef = useRef<any>(null);
-  const container = useEffectWithContainerDimensions((rect) => {
-    if (previewRef.current && rect) {
-      const ctx = previewRef.current.getContext("2d");
-      canvasContextUtils.drawFullCanvasPreview({
-        maxPxWidth: 2000,
-        maxPxHeight: 2000,
-        savedCanvasData: savedCanvasDataRef.current,
-        specialShapes: specialShapesRef.current,
-        ref: previewRef,
-        ctx,
-        gridLineColor,
-      });
-    }
-  });
+  useEffect(() => {
+    const ctx = previewRef.current.getContext("2d");
+    canvasContextUtils.drawFullCanvasPreview({
+      maxPxWidth: gridDims.width,
+      maxPxHeight: gridDims.height,
+      savedCanvasData: savedCanvasDataRef.current,
+      specialShapes: specialShapesRef.current,
+      ref: previewRef,
+      ctx,
+      gridLineColor,
+    });
+  }, [gridDims.width, gridDims.height]);
   return (
-    <div
-      ref={container.ref}
-      className="bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5"
-    >
+    <div className="bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5">
       <canvas ref={previewRef}></canvas>
     </div>
   );
@@ -126,10 +124,17 @@ export default function PixelGridDownloadPreview({
     setBlob(URL.createObjectURL(blob));
   });
 
+  useEffect(() => {
+    generateBlob.throttle(
+      sizesInfo[sizeSelection].dimensions.width,
+      sizesInfo[sizeSelection].dimensions.height
+    );
+  }, []);
+
   return (
     <>
       <ModalTools.btn>
-        <div className="">
+        <div className="m-2">
           <Image
             src="/download.svg"
             alt="preview pattern"
@@ -141,15 +146,21 @@ export default function PixelGridDownloadPreview({
       <ModalTools.modal className="size-4/5">
         <div className="p-1 size-full flex flex-col">
           <h2 className="text-2xl lg:text-3xl text-center">Download as PNG</h2>
-          <div className="flex flex-col lg:flex-row overflow-auto">
+          <div className="flex flex-col lg:flex-row overflow-auto h-full">
             <PixelGridPreviewDisplay
               savedCanvasDataRef={savedCanvasDataRef}
               specialShapesRef={specialShapesRef}
               gridLineColor={gridLineColor}
+              gridDims={{
+                width: sizesInfo[sizeSelection].dimensions.width,
+                height: sizesInfo[sizeSelection].dimensions.height,
+              }}
             />
             <form className="h-fit mt-auto mb-auto lg:ml-4">
               <fieldset>
-                <legend className="text-2xl lg:text-3xl">Select an image size:</legend>
+                <legend className="text-2xl lg:text-3xl">
+                  Select an image size:
+                </legend>
                 {(Object.entries(sizesInfo) as [sizer, any][]).map(
                   ([size, sizeInfo]) => (
                     <div
@@ -172,17 +183,8 @@ export default function PixelGridDownloadPreview({
                         name={size}
                         value={size}
                         checked={size === sizeSelection}
-                        onChange={async () => {
-                          setSizeSelection(size);
-                          setTimeout(async () => {
-                            const blob = await generateImage(
-                              sizeInfo.dimensions.width,
-                              sizeInfo.dimensions.height
-                            );
-                            setBlob(URL.createObjectURL(blob));
-                          }, 2000);
-                        }}
                         className="absolute opacity-0"
+                        readOnly
                       />
                       <label htmlFor={size}>
                         {sizeInfo.display} - {sizeInfo.dimensions.width}x
@@ -193,7 +195,11 @@ export default function PixelGridDownloadPreview({
                 )}
               </fieldset>
               {blob ? (
-                <a href={blob} className="button block w-fit" download={"pattern"}>
+                <a
+                  href={blob}
+                  className="button block w-fit"
+                  download={"pattern"}
+                >
                   download image
                 </a>
               ) : (
