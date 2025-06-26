@@ -104,6 +104,7 @@ export default function PixelGridEditor({
     updateStitch: stitchCanvasTools.updateStitch,
     viewboxTools,
     drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
+    setChangedShapes: specialShapesTools.setChangedShapes,
   });
 
   const canvasEditTools = usePixelGridEditTools({

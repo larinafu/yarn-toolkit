@@ -11,6 +11,7 @@ import { useIsPointerDown } from "@/hooks/general/useIsPointerDown";
 import { EditMode } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
 import { PixelGridSpecialShapesCanvasTools } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 import SpecialShapePoint from "../specialShapePoint/specialShapePoint";
+import SpecialShapeLine from "../specialShapeLine/specialShapeLine";
 
 export default function PixelGridCanvas({
   curPixel,
@@ -30,8 +31,10 @@ export default function PixelGridCanvas({
   shapeColor,
   pixelGridCanvasRefWithRect,
 }: {
-  activeShapeIdx: number | null;
-  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  activeShapeIdx: number | "erase" | null;
+  setActiveShapeIdx: React.Dispatch<
+    React.SetStateAction<number | "erase" | null>
+  >;
   curPixel: any;
   setCurPixel: any;
   curRow: number;
@@ -203,17 +206,22 @@ export default function PixelGridCanvas({
         height={canvasWindowTools.gridDimensions.height}
         onPointerMove={(e: any) => {
           handlePointerMove(e);
-          if (isPointerDownFromCanvas) {
+          if (isPointerDownFromCanvas && typeof activeShapeIdx !== "string") {
             canvasEditTools.handleCanvasEdit(e, "move");
           }
         }}
         onPointerDown={(e) => {
           setPointerDownFromCanvas(true);
-          if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
+          if (
+            editMode !== "specialShapeChange" ||
+            typeof activeShapeIdx !== null
+          ) {
             (pointerEventsRef.current as any).releasePointerCapture(
               e.pointerId
             );
-            canvasEditTools.handleCanvasEdit(e, "down");
+            if (typeof activeShapeIdx === "number") {
+              canvasEditTools.handleCanvasEdit(e, "down");
+            }
           }
         }}
         onPointerLeave={(e) => {
@@ -224,10 +232,12 @@ export default function PixelGridCanvas({
             setActiveShapeIdx(null);
           }
         }}
-        onPointerUp={() => {
+        onPointerUp={(e) => {
           if (
             isPointerDownFromCanvas &&
-            (editMode !== "specialShapeChange" || specialShapesTools.tarPoint)
+            (editMode !== "specialShapeChange" ||
+              specialShapesTools.tarPoint ||
+              activeShapeIdx === "erase")
           ) {
             specialShapesTools.releasePoint();
             setActiveShapeIdx(null);
@@ -245,7 +255,8 @@ export default function PixelGridCanvas({
                 let tarPoint;
                 if (
                   specialShapesTools.tarPoint?.shapeId === idx &&
-                  specialShapesTools.tarPoint.pointId === pointIdx
+                  specialShapesTools.tarPoint.pointId === pointIdx &&
+                  specialShapesTools.tarPoint.curLoc
                 ) {
                   tarPoint = specialShapesTools.tarPoint.curLoc;
                 } else {
@@ -258,21 +269,15 @@ export default function PixelGridCanvas({
               }
 
               return (
-                <g
-                  key={idx}
-                  className={`${
-                    specialShapesTools.tarPoint || activeShapeIdx !== null
-                      ? "pointer-events-none"
-                      : ""
-                  }`}
-                >
-                  <path
+                <g key={idx}>
+                  <SpecialShapeLine
                     d={path.join(" ")}
                     stroke={specialShape.color}
                     strokeWidth={5}
-                    style={{
-                      pointerEvents: "none",
-                    }}
+                    activeShapeIdx={activeShapeIdx}
+                    canvasEditTools={canvasEditTools}
+                    shapeIdx={idx}
+                    isPointerDownFromCanvas={isPointerDownFromCanvas}
                   />
                   {pointsPos.map(({ x, y }, pointIdx) => {
                     return (

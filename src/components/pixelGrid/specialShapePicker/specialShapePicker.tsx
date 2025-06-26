@@ -11,8 +11,10 @@ export default function SpecialShapePicker({
   setShapeColor,
 }: {
   activeShapePalette: ActiveShapePalette;
-  activeShapeIdx: number | null;
-  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  activeShapeIdx: number | "erase" | null;
+  setActiveShapeIdx: React.Dispatch<
+    React.SetStateAction<number | "erase" | null>
+  >;
   shapeColor: string;
   setShapeColor: React.Dispatch<React.SetStateAction<string>>;
 }) {
@@ -31,7 +33,14 @@ export default function SpecialShapePicker({
           <Image src={img} alt={shapeKey} width={25} height={25} />
         </button>
       ))}
-      <button className="buttonBlank">
+      <button
+        className={`buttonBlank p-2 m-2 rounded-sm size-10 ${
+          activeShapeIdx === "erase"
+            ? "bg-amaranth-light active:border-amaranth"
+            : "border-gray-100 active:border-gray-100"
+        }`}
+        onClick={() => setActiveShapeIdx("erase")}
+      >
         <Image src={"/eraser.svg"} alt="erase" width={25} height={25} />
       </button>
       <SimpleColorPicker hex={shapeColor} setHex={setShapeColor} />

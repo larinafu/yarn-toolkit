@@ -81,12 +81,12 @@ export default function EditingToolbar({
   activeColorPalette: ActiveColorPalette;
   activeShapePalette: ActiveShapePalette;
   activeStitchPalette: ActiveStitchPalette;
-  activeShapeIdx: number | null;
+  activeShapeIdx: number | "erase" | null;
   activeStitchIdx: number;
   swapColorInPalette: (colorIdx: number, hex: string) => void;
   activeColorIdx: number;
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
-  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | "erase" | null>>;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
   editMode: EditMode;
   setEditMode: React.Dispatch<React.SetStateAction<EditMode>>;

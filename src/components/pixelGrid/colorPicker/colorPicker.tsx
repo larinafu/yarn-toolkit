@@ -75,7 +75,7 @@ const ColorOption = ({
         )}
       </button>
       {openExpand && (
-        <section className="absolute card overflow-auto z-20 left-0 right-0 m-auto w-fit fadeInFast">
+        <section className="absolute card overflow-auto z-40 left-0 right-0 m-auto w-fit fadeInFast">
           {defaultColorsConstants.map((colorRow, idx) => (
             <div key={idx} className="flex">
               {Object.values(colorRow).map((expandedColorHex) => (

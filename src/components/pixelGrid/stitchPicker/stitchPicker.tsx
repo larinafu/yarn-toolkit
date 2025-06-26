@@ -78,7 +78,7 @@ const StitchOption = ({
       </button>
       {openExpand && (
         <section
-          className={`absolute card overflow-auto z-20 left-0 right-0 m-auto w-xs sm:w-sm fadeInFast`}
+          className={`absolute card overflow-auto z-40 left-0 right-0 m-auto w-xs sm:w-sm fadeInFast`}
         >
           {Object.entries(knitting).map(([stitchKey, stitch]) => (
             <button

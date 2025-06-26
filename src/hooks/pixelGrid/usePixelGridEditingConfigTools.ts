@@ -18,11 +18,13 @@ type EditingConfigTools = {
   swapColorInPalette: (colorIdx: number, hex: string) => void;
   swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
   activeColorIdx: number;
-  activeShapeIdx: number | null;
+  activeShapeIdx: number | "erase" | null;
   activeStitchIdx: number;
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
-  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | null>>;
+  setActiveShapeIdx: React.Dispatch<
+    React.SetStateAction<number | "erase" | null>
+  >;
   stitchColor: string;
   setStitchColor: React.Dispatch<React.SetStateAction<string>>;
   shapeColor: string;
@@ -52,7 +54,9 @@ export default function usePixelGridEditingConfigTools({
   const [activeColorIdx, setActiveColorIdx] = useState(0);
   const [activeStitchIdx, setActiveStitchIdx] = useState(0);
 
-  const [activeShapeIdx, setActiveShapeIdx] = useState<number | null>(null);
+  const [activeShapeIdx, setActiveShapeIdx] = useState<number | "erase" | null>(
+    null
+  );
 
   const [stitchColor, setStitchColor] = useState<string>("#000000");
   const [shapeColor, setShapeColor] = useState<string>("red");
