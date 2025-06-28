@@ -363,7 +363,11 @@ export default function PixelGridEditor({
             />
           </RowColTracker>
         </section>
-        <div className="absolute z-30 w-fit top-2 right-0 flex pointer-events-none">
+        <div
+          className={`absolute z-30 w-fit top-2 right-0 flex pointer-events-${
+            isPointerDownFromCanvas ? "none" : "auto"
+          }`}
+        >
           <div
             className="flex items-center"
             style={{
