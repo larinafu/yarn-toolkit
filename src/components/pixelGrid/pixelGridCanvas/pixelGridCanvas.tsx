@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
@@ -30,6 +30,8 @@ export default function PixelGridCanvas({
   specialShapesTools,
   shapeColor,
   pixelGridCanvasRefWithRect,
+  isPointerDownFromCanvas,
+  setPointerDownFromCanvas,
 }: {
   activeShapeIdx: number | "erase" | null;
   setActiveShapeIdx: React.Dispatch<
@@ -52,9 +54,10 @@ export default function PixelGridCanvas({
     ref: React.RefObject<any>;
     getDims: () => DOMRect | undefined;
   };
+  isPointerDownFromCanvas: boolean;
+  setPointerDownFromCanvas: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
-  const pointerEventsRef = useRef(null);
-  const [isPointerDownFromCanvas, setPointerDownFromCanvas] = useState(false);
+  const pointerEventsRef = useRef<any>(null);
   useIsPointerDown({
     handlePointerUp: () => {
       setPointerDownFromCanvas(false);
@@ -188,6 +191,12 @@ export default function PixelGridCanvas({
 
   const canvasLayerStyle = "absolute top-0 left-0";
 
+  const didPointerActuallyLeave = (e: any) =>
+    e.nativeEvent.offsetX <= 0 ||
+    e.nativeEvent.offsetY <= 0 ||
+    e.nativeEvent.offsetX >= canvasWindowTools.gridDimensions.width ||
+    e.nativeEvent.offsetY >= canvasWindowTools.gridDimensions.height;
+
   return (
     <div className="touch-none">
       <canvas ref={colorCanvasTools.ref}></canvas>
@@ -212,27 +221,25 @@ export default function PixelGridCanvas({
         }}
         onPointerDown={(e) => {
           setPointerDownFromCanvas(true);
-          if (
-            editMode !== "specialShapeChange" ||
-            typeof activeShapeIdx !== null
-          ) {
+          if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
             (pointerEventsRef.current as any).releasePointerCapture(
               e.pointerId
             );
-            if (typeof activeShapeIdx === "number") {
-              canvasEditTools.handleCanvasEdit(e, "down");
-            }
+            canvasEditTools.handleCanvasEdit(e, "down");
           }
         }}
         onPointerLeave={(e) => {
-          setCurPixel(null);
-          if (isPointerDownFromCanvas) {
-            canvasEditTools.handleCompleteCanvasEdit();
-            specialShapesTools.releasePoint();
-            setActiveShapeIdx(null);
+          if (didPointerActuallyLeave(e)) {
+            setCurPixel(null);
+            if (isPointerDownFromCanvas) {
+              canvasEditTools.handleCompleteCanvasEdit();
+              specialShapesTools.releasePoint();
+              setActiveShapeIdx(null);
+            }
           }
         }}
         onPointerUp={(e) => {
+          setCurPixel(null);
           if (
             isPointerDownFromCanvas &&
             (editMode !== "specialShapeChange" ||

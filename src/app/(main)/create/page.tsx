@@ -10,7 +10,7 @@ import InitCustomization from "@/components/pixelGrid/initCustomization/initCust
 
 type BaseOption = "image" | "scratch";
 
-const cardHeaderStyle = "text-xl lg:text-4xl";
+const cardHeaderStyle = "text-xl lg:text-4xl mt-2";
 const cardSubheaderStyle = "text-m lg:text-xl m-4";
 
 export default function Create() {
@@ -31,8 +31,10 @@ export default function Create() {
 
   return (
     <div className={`fadeIn`}>
-      <h1 className="mt-2 mb-2 text-center text-5xl">Create New Pattern</h1>
-      <p className="text-center mb-6 text-4xl">
+      <h1 className="mt-2 mb-2 text-center text-4xl md:text-5xl">
+        Create New Pattern
+      </h1>
+      <p className="text-center mb-6 text-2xl md:text-3xl">
         How would you like to start your pattern?
       </p>
       <section className="flex justify-evenly">
@@ -47,7 +49,13 @@ export default function Create() {
           <p className={cardSubheaderStyle}>
             We&apos;ll match the initial colors on your grid to fit your image
           </p>
-          <Image src="/image.svg" alt="image" width={100} height={100} />
+          <Image
+            src="/image.svg"
+            alt="image"
+            width={100}
+            height={100}
+            className="m-2 size-1/3"
+          />
         </div>
         <div
           className={`card m-2 hover:cursor-pointer ${
@@ -65,6 +73,7 @@ export default function Create() {
             alt="grid denoting blank pattern"
             width={100}
             height={100}
+            className="m-2 size-1/3"
           />
         </div>
       </section>

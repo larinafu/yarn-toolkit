@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { ColorCountTracker } from "./useColorCanvasTools";
-import { knitting } from "@/constants/pixelGrid/stitches";
-import { simpleColorConstants } from "@/constants/colors";
+import { defaultInitialColors } from "@/constants/colors";
 
 export type ActiveColorPalette = [string, number][];
 export type ActiveStitchPalette = string[];
@@ -43,6 +42,8 @@ export default function usePixelGridEditingConfigTools({
   const [activeColorPalette, setActiveColorPalette] = useState(
     Object.entries(colorCountTracker)
       .sort((c1, c2) => c2[1] - c1[1])
+      .slice(0, NUM_ACTIVE_COLORS)
+      .concat(defaultInitialColors)
       .slice(0, NUM_ACTIVE_COLORS)
   );
 

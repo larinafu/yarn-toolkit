@@ -50,6 +50,8 @@ export default function PixelGridEditor({
     setHydrated(true);
   }, []);
 
+  const [isPointerDownFromCanvas, setPointerDownFromCanvas] = useState(false);
+
   const canvasWindowTools = usePixelGridWindowTools({
     canvasCellWidthHeightRatio:
       savedCanvasData.swatch.width / savedCanvasData.swatch.height,
@@ -197,9 +199,7 @@ export default function PixelGridEditor({
 
   // canvas resize
   useEffect(() => {
-    console.log("in effect");
     resizeObserverRef.current = new ResizeObserver((entries) => {
-      console.log("in resizer fxn");
       for (const _ of entries) {
         const colorCanvasRef =
           colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
@@ -358,10 +358,12 @@ export default function PixelGridEditor({
               specialShapesTools={specialShapesTools}
               shapeColor={editConfigTools.shapeColor}
               pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
+              isPointerDownFromCanvas={isPointerDownFromCanvas}
+              setPointerDownFromCanvas={setPointerDownFromCanvas}
             />
           </RowColTracker>
         </section>
-        <div className="absolute z-30 w-fit top-2 right-0 flex">
+        <div className="absolute z-30 w-fit top-2 right-0 flex pointer-events-none">
           <div
             className="flex items-center"
             style={{
@@ -370,7 +372,9 @@ export default function PixelGridEditor({
           >
             <button
               onClick={() => viewboxTools.setOpen(!viewboxTools.isOpen)}
-              className="pointer-events-auto buttonBlank bg-gray-300 rounded-tr-none rounded-br-none h-10"
+              className={`pointer-events-${
+                isPointerDownFromCanvas ? "none" : "auto"
+              } buttonBlank bg-gray-300 rounded-tr-none rounded-br-none h-10`}
             >
               <Image
                 src={`/${
@@ -383,7 +387,9 @@ export default function PixelGridEditor({
             </button>
           </div>
           <div
-            className={`card pointer-events-auto bg-gray-300 shadow-none ${
+            className={`card pointer-events-${
+              isPointerDownFromCanvas ? "none" : "auto"
+            } bg-gray-300 shadow-none ${
               viewboxTools.isOpen ? "p-1" : "size-0 overflow-hidden p-0"
             }`}
           >

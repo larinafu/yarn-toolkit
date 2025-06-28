@@ -28,7 +28,7 @@ export default function SpecialShapePicker({
               ? "border-amaranth hover:border-amaranth active:border-amaranth"
               : "border-gray-100 hover:border-gray-100 active:border-gray-100"
           }`}
-          onClick={() => setActiveShapeIdx(idx)}
+          onClick={() => setActiveShapeIdx(activeShapeIdx === idx ? null : idx)}
         >
           <Image src={img} alt={shapeKey} width={25} height={25} />
         </button>
@@ -39,7 +39,9 @@ export default function SpecialShapePicker({
             ? "bg-amaranth-light active:border-amaranth"
             : "border-gray-100 active:border-gray-100"
         }`}
-        onClick={() => setActiveShapeIdx("erase")}
+        onClick={() =>
+          setActiveShapeIdx(activeShapeIdx === "erase" ? null : "erase")
+        }
       >
         <Image src={"/eraser.svg"} alt="erase" width={25} height={25} />
       </button>

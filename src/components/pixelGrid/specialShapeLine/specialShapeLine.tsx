@@ -26,7 +26,7 @@ export default function SpecialShapeLine({
       stroke={stroke}
       strokeWidth={strokeWidth}
       style={{
-        pointerEvents: activeShapeIdx === "erase" ? "visibleStroke" : "none",
+        pointerEvents: activeShapeIdx === "erase" ? "stroke" : "none",
       }}
       onPointerDown={(e) => {
         pathRef.current?.releasePointerCapture(e.pointerId);
@@ -35,6 +35,7 @@ export default function SpecialShapeLine({
         });
       }}
       onPointerMove={(e) => {
+        pathRef.current.releasePointerCapture(e.pointerId);
         if (isPointerDownFromCanvas) {
           canvasEditTools.handleCanvasEdit(e, "move", {
             shapeId: shapeIdx,

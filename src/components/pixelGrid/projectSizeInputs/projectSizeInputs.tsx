@@ -190,6 +190,7 @@ export default function ProjectSizeInputs({
 
   return (
     <>
+      <h3 className="text-center text-sm sm:text-xl">set your pattern size</h3>
       <div className={styles.container}>
         <svg
           width={GRID_ICON_SIZE}

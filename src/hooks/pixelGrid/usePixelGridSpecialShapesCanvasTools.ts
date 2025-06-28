@@ -55,6 +55,8 @@ export default function usePixelGridSpecialShapesCanvasTools({
 
   const [changedShapes, setChangedShapes] = useState<number[]>([]);
 
+  const specialShapesRefLength = specialShapesRef.current.length;
+
   const addShape = (row: number, col: number, color: string, shape: "line") => {
     setTarPoint({
       shapeId: specialShapesRef.current.length,
@@ -72,17 +74,21 @@ export default function usePixelGridSpecialShapesCanvasTools({
   };
 
   const removeShape = (idx: number) => {
-    specialShapesRef.current.splice(idx, 1);
+    specialShapesRef.current = [
+      ...specialShapesRef.current.slice(0, idx),
+      ...specialShapesRef.current.slice(idx + 1),
+    ];
     setChangedShapes([...changedShapes, idx]);
   };
 
   const captureShape = (shapeId: number, pointId?: number) => {
     setTarPoint({
       shapeId,
-      pointId: pointId || null,
-      curLoc: pointId
-        ? specialShapesRef.current[shapeId].points[pointId]
-        : null,
+      pointId: pointId !== undefined ? pointId : null,
+      curLoc:
+        pointId !== undefined
+          ? specialShapesRef.current[shapeId].points[pointId]
+          : null,
     });
   };
 

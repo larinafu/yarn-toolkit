@@ -4,65 +4,6 @@ import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 
 export type BaseCanvasData = { hex: string }[][];
 
-const getPreviewSizeWidthLimited = (
-  limit: number,
-  widthHeightRatio: number,
-  numRows: number,
-  numCols: number
-) => {
-  const pixelsPerCol = limit / numCols;
-  const pixelsPerRow = pixelsPerCol * widthHeightRatio;
-  const previewHeight = pixelsPerRow * numRows;
-  return {
-    previewWidth: limit,
-    previewHeight,
-    pixelsPerCol,
-    pixelsPerRow,
-  };
-};
-
-const getPreviewSizeHeightLimited = (
-  limit: number,
-  widthHeightRatio: number,
-  numRows: number,
-  numCols: number
-) => {
-  const pixelsPerRow = limit / numRows;
-  const pixelsPerCol = pixelsPerRow / widthHeightRatio;
-  const previewWidth = pixelsPerCol * numCols;
-  return {
-    previewWidth,
-    previewHeight: limit,
-    pixelsPerCol,
-    pixelsPerRow,
-  };
-};
-
-const getInitialPatternSize = (
-  widthHeightRatio: number,
-  numRows: number,
-  numCols: number
-) => {
-  const [maxPreviewWidth, maxPreviewHeight] = [500, 500];
-  // width limited
-  const patternSizeWidthLimited = getPreviewSizeWidthLimited(
-    maxPreviewWidth,
-    widthHeightRatio,
-    numRows,
-    numCols
-  );
-  if (patternSizeWidthLimited.previewHeight <= maxPreviewHeight) {
-    return patternSizeWidthLimited;
-  }
-  // height limited
-  return getPreviewSizeHeightLimited(
-    maxPreviewHeight,
-    widthHeightRatio,
-    numRows,
-    numCols
-  );
-};
-
 export default function InitPixelGridPreview({
   savedCanvasData,
   canvasRef,
@@ -90,11 +31,10 @@ export default function InitPixelGridPreview({
   );
 
   return (
-    <section
-      ref={containerDimTools.ref}
-      className={`card h-100 md:h-dvh m-2 mr-4`}
-    >
-      <canvas ref={canvasRef}></canvas>
-    </section>
+    <div className="flex h-full">
+      <section ref={containerDimTools.ref} className={`card grow m-2 mr-4 overflow-auto`}>
+        <canvas ref={canvasRef}></canvas>
+      </section>
+    </div>
   );
 }

@@ -300,7 +300,11 @@ export default function usePixelGridEditRecordTools({
               break;
             case "erase":
               for (const [shapeId, shape] of session.data.prev.reverse()) {
-                specialShapesRef.current.splice(shapeId, 0, shape);
+                specialShapesRef.current = [
+                  ...specialShapesRef.current.slice(0, shapeId),
+                  shape,
+                  ...specialShapesRef.current.slice(shapeId),
+                ];
               }
           }
           viewboxTools.drawViewboxSpecialShapes();
@@ -369,7 +373,10 @@ export default function usePixelGridEditRecordTools({
               break;
             case "erase":
               for (const [shapeId, _] of session.data.prev.reverse()) {
-                specialShapesRef.current.splice(shapeId, 1);
+                specialShapesRef.current = [
+                  ...specialShapesRef.current.slice(0, shapeId),
+                  ...specialShapesRef.current.slice(shapeId + 1),
+                ];
               }
           }
           viewboxTools.drawViewboxSpecialShapes();

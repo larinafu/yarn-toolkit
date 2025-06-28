@@ -86,7 +86,9 @@ export default function EditingToolbar({
   swapColorInPalette: (colorIdx: number, hex: string) => void;
   activeColorIdx: number;
   setActiveColorIdx: React.Dispatch<React.SetStateAction<number>>;
-  setActiveShapeIdx: React.Dispatch<React.SetStateAction<number | "erase" | null>>;
+  setActiveShapeIdx: React.Dispatch<
+    React.SetStateAction<number | "erase" | null>
+  >;
   setActiveStitchIdx: React.Dispatch<React.SetStateAction<number>>;
   editMode: EditMode;
   setEditMode: React.Dispatch<React.SetStateAction<EditMode>>;
@@ -322,7 +324,11 @@ export default function EditingToolbar({
               disabled={!windowTools.canZoomOut}
             >
               <Image
-                src={"/zoom-out.svg"}
+                src={`/${
+                  windowTools.canZoomOut
+                    ? "zoom-out.svg"
+                    : "zoom-out-disabled.svg"
+                }`}
                 alt="zoom out"
                 height={20}
                 width={20}
@@ -376,7 +382,9 @@ export default function EditingToolbar({
               disabled={!windowTools.canZoomIn}
             >
               <Image
-                src={"/zoom-in.svg"}
+                src={`/${
+                  windowTools.canZoomIn ? "zoom-in.svg" : "zoom-in-disabled.svg"
+                }`}
                 alt="zoom in"
                 height={20}
                 width={20}

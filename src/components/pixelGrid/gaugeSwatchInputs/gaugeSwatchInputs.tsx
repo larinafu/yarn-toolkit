@@ -126,16 +126,17 @@ export default function GaugeSwatchInputs({
     }`;
   return (
     <>
-      <div className={`info-yellow p-2 text-center m-auto mb-2`}>
+      <div className={`text-center h-3/12`}>
+        <h3 className="text-center text-lg md:text-xl">set your cell size</h3>
         <strong>This value cannot be changed later on!</strong>
       </div>
-      <div className="m-auto w-fit">
-        <div className={styles.cellRatioPreviewContainer}>
+      <div className="flex justify-center h-1/2">
+        <div className={`${styles.cellRatioPreviewContainer} h-full`}>
           <div />
           <div className="flex m-auto">
             <button
               disabled={swatchInputs.width === "1"}
-              className="buttonBlank fill-amaranth"
+              className="buttonBlank p-0"
               onClick={() =>
                 handleGaugeInputChange(
                   (parseInt(swatchInputs.width) - 1).toString(),
@@ -148,7 +149,7 @@ export default function GaugeSwatchInputs({
                 alt="down"
                 width={20}
                 height={20}
-                className="fill-amaranth"
+                className="mr-1"
               />
             </button>
             <label>
@@ -166,7 +167,7 @@ export default function GaugeSwatchInputs({
               />
             </label>
             <button
-              className="buttonBlank fill-amaranth"
+              className="buttonBlank p-0"
               onClick={() =>
                 handleGaugeInputChange(
                   (parseInt(swatchInputs.width) + 1).toString(),
@@ -179,13 +180,13 @@ export default function GaugeSwatchInputs({
                 alt="up"
                 width={20}
                 height={20}
-                className="fill-amaranth"
+                className="ml-1"
               />
             </button>
           </div>
-          <div className="flex flex-col m-auto">
+          <div className="flex flex-col items-center m-auto">
             <button
-              className="buttonBlank fill-amaranth"
+              className="buttonBlank p-0 size-fit"
               onClick={() =>
                 handleGaugeInputChange(
                   swatchInputs.width,
@@ -216,7 +217,7 @@ export default function GaugeSwatchInputs({
               />
             </label>
             <button
-              className="buttonBlank"
+              className="buttonBlank p-0 size-fit"
               onClick={() =>
                 handleGaugeInputChange(
                   swatchInputs.width,
@@ -236,7 +237,8 @@ export default function GaugeSwatchInputs({
           <svg
             width={size + MARGIN * 2}
             height={size + MARGIN * 2}
-            className="stroke-amaranth"
+            viewBox={`0 0 ${size + MARGIN * 2} ${size + MARGIN * 2}`}
+            className="stroke-amaranth size-full"
           >
             <rect
               x={MARGIN}
@@ -253,9 +255,9 @@ export default function GaugeSwatchInputs({
         </div>
       </div>
       <div
-        className={`${
+        className={`h-3/12 ${
           isValidSwatchDisplay.isValid ? "info-green" : "info-red"
-        } p-2 text-center mt-2 ml-auto mr-auto`}
+        } text-center ml-auto mr-auto`}
       >
         <strong>ratio: {getAspectRatio()}</strong>
         {isValidSwatchDisplay.error && <p>{isValidSwatchDisplay.error}</p>}

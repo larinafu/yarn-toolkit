@@ -39,7 +39,7 @@ const PixelGridPreviewDisplay = ({
     });
   }, [gridDims.width, gridDims.height]);
   return (
-    <div className="bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5">
+    <div className="grow bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5">
       <canvas ref={previewRef}></canvas>
     </div>
   );
@@ -72,13 +72,13 @@ export default function PixelGridDownloadPreview({
   } = {
     s: {
       display: "small",
-      maxPxWidth: 250,
-      maxPxHeight: 250,
+      maxPxWidth: 500,
+      maxPxHeight: 500,
       dimensions: canvasSizingUtils.getMaxCanvasDimensions({
         canvasNumRowsAndCols,
         canvasCellWidthHeightRatio,
-        maxPxWidth: 250,
-        maxPxHeight: 250,
+        maxPxWidth: 500,
+        maxPxHeight: 500,
       }).gridDims,
     },
     m: {

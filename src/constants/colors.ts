@@ -343,3 +343,46 @@ export const defaultColorsConstants = [
     },
   },
 ];
+
+export const defaultInitialColors: [string, number][] = [
+  [
+    (defaultColorsConstants[1]["red"] as { hex: string; isDark: boolean }).hex,
+    0,
+  ],
+  [
+    (
+      defaultColorsConstants[1]["orange"] as {
+        hex: string;
+        isDark: boolean;
+      }
+    ).hex,
+    0,
+  ],
+  [
+    (
+      defaultColorsConstants[1]["yellow"] as {
+        hex: string;
+        isDark: boolean;
+      }
+    ).hex,
+    0,
+  ],
+  [
+    (
+      defaultColorsConstants[1]["green"] as {
+        hex: string;
+        isDark: boolean;
+      }
+    ).hex,
+    0,
+  ],
+  [
+    (
+      defaultColorsConstants[1]["blue"] as {
+        hex: string;
+        isDark: boolean;
+      }
+    ).hex,
+    0,
+  ],
+];

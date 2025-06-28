@@ -27,8 +27,8 @@ export default function SpecialShapePoint({
 }) {
   const pointRef = useRef<any>(null);
   return (
-    <g>
-      <circle cx={x} cy={y} r={5}></circle>
+    <>
+      <circle cx={x} cy={y} r={5} className="pointer-events-none"></circle>
       <rect
         x={x - cellDims.width / 2}
         y={y - cellDims.height / 2}
@@ -36,21 +36,15 @@ export default function SpecialShapePoint({
         height={cellDims.height}
         fillOpacity={0}
         ref={pointRef}
-        onPointerDown={(e) => {
-          pointRef.current?.releasePointerCapture(e.pointerId);
+        onPointerDown={() => {
           if (activeShapeIdx === null) {
             specialShapesTools.captureShape(shapeIdx, pointIdx);
           }
         }}
-        onPointerUp={() => {
-          specialShapesTools.releasePoint();
-          setActiveShapeIdx(null);
-        }}
-        onClick={(e) => {
-          e.stopPropagation();
-        }}
-        className={`z-20`}
+        className={`z-20 ${
+          activeShapeIdx !== null ? "pointer-events-none" : ""
+        }`}
       ></rect>
-    </g>
+    </>
   );
 }
