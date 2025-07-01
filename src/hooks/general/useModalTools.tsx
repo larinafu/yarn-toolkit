@@ -60,7 +60,7 @@ const Modal = ({
     };
   }, []);
   return (
-    <div className="fixed z-10 top-0 left-0 w-dvw h-dvh flex items-center justify-center bg-gray-50/50">
+    <div className="fixed z-40 top-0 left-0 w-dvw h-dvh flex items-center justify-center bg-gray-50/50">
       <section
         className={`card max-w-4/5 max-h-4/5 ${className}`}
         ref={innerRef}

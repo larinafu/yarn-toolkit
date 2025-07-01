@@ -50,6 +50,8 @@ export default function PixelGridEditor({
     setHydrated(true);
   }, []);
 
+  const [isPointerDownFromCanvas, setPointerDownFromCanvas] = useState(false);
+
   const canvasWindowTools = usePixelGridWindowTools({
     canvasCellWidthHeightRatio:
       savedCanvasData.swatch.width / savedCanvasData.swatch.height,
@@ -104,6 +106,7 @@ export default function PixelGridEditor({
     updateStitch: stitchCanvasTools.updateStitch,
     viewboxTools,
     drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
+    setChangedShapes: specialShapesTools.setChangedShapes,
   });
 
   const canvasEditTools = usePixelGridEditTools({
@@ -206,84 +209,95 @@ export default function PixelGridEditor({
           gridLineTools.ref as React.RefObject<HTMLCanvasElement>;
         const specialShapesCanvasRef =
           specialShapesTools.ref as React.RefObject<HTMLCanvasElement>;
-        const colorCtx =
-          colorCanvasTools.ctx ||
-          (colorCanvasRef.current.getContext("2d") as CanvasRenderingContext2D);
-        const stitchCtx =
-          stitchCanvasTools.ctx ||
-          (stitchCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const gridLineCtx =
-          gridLineTools.ctx ||
-          (gridLineCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const specialShapesCtx =
-          specialShapesTools.ctx ||
-          (specialShapesCanvasRef.current.getContext(
-            "2d"
-          ) as CanvasRenderingContext2D);
-        const { canvasWindow, gridDimensions } =
-          canvasWindowTools.recalcGridSize({});
         if (
-          !(
-            gridDimensions.width ===
-            parseInt(colorCanvasRef.current.style.width)
-          ) ||
-          !(
-            gridDimensions.height ===
-            parseInt(colorCanvasRef.current.style.height)
-          )
+          colorCanvasRef.current &&
+          stitchCanvasRef.current &&
+          gridLineCanvasRef.current &&
+          specialShapesCanvasRef.current
         ) {
-          canvasWindowTools.resizeCanvas(
-            colorCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            gridLineCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            stitchCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          canvasWindowTools.resizeCanvas(
-            specialShapesCanvasRef,
-            gridDimensions.width,
-            gridDimensions.height
-          );
-          updateFullCanvas({
-            colorCanvasContext: colorCtx,
-            stitchCanvasContext: stitchCtx,
-            specialShapesCanvasContext: specialShapesCtx,
-            windowTools: { canvasWindow, gridDimensions },
-          });
-          gridLineTools.drawCanvasLines({
-            ctx: gridLineCtx,
-            windowTools: { canvasWindow, gridDimensions },
-          });
+          const colorCtx =
+            colorCanvasTools.ctx ||
+            (colorCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const stitchCtx =
+            stitchCanvasTools.ctx ||
+            (stitchCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const gridLineCtx =
+            gridLineTools.ctx ||
+            (gridLineCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const specialShapesCtx =
+            specialShapesTools.ctx ||
+            (specialShapesCanvasRef.current.getContext(
+              "2d"
+            ) as CanvasRenderingContext2D);
+          const { canvasWindow, gridDimensions } =
+            canvasWindowTools.recalcGridSize({});
+          if (
+            !(
+              gridDimensions.width ===
+              parseInt(colorCanvasRef.current?.style.width)
+            ) ||
+            !(
+              gridDimensions.height ===
+              parseInt(colorCanvasRef.current?.style.height)
+            )
+          ) {
+            canvasWindowTools.resizeCanvas(
+              colorCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              gridLineCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              stitchCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            canvasWindowTools.resizeCanvas(
+              specialShapesCanvasRef,
+              gridDimensions.width,
+              gridDimensions.height
+            );
+            updateFullCanvas({
+              colorCanvasContext: colorCtx,
+              stitchCanvasContext: stitchCtx,
+              specialShapesCanvasContext: specialShapesCtx,
+              windowTools: { canvasWindow, gridDimensions },
+            });
+            gridLineTools.drawCanvasLines({
+              ctx: gridLineCtx,
+              windowTools: { canvasWindow, gridDimensions },
+            });
+          }
         }
       }
     });
-    resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
+    if (pixelGridCanvasRefWithRect.ref.current) {
+      resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
+    }
     return () => {
-      pixelGridCanvasRefWithRect.ref.current &&
-        resizeObserverRef.current?.unobserve(
-          pixelGridCanvasRefWithRect.ref.current
-        );
+      if (pixelGridCanvasRefWithRect.ref.current) {
+        resizeObserverRef.current?.disconnect();
+      }
     };
   }, [
+    pixelGridCanvasRefWithRect.ref.current,
     canvasWindowTools.canvasCellDimensions.width,
     canvasWindowTools.canvasCellDimensions.height,
   ]);
 
   return (
     <div className="relative flex flex-col h-dvh w-dvw">
-      <div className="w-screen flex">
+      <div className="relative w-screen flex">
         <EditingToolbar
           shiftPixelSize={canvasWindowTools.shiftPixelSize}
           windowTools={canvasWindowTools}
@@ -344,10 +358,16 @@ export default function PixelGridEditor({
               specialShapesTools={specialShapesTools}
               shapeColor={editConfigTools.shapeColor}
               pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
+              isPointerDownFromCanvas={isPointerDownFromCanvas}
+              setPointerDownFromCanvas={setPointerDownFromCanvas}
             />
           </RowColTracker>
         </section>
-        <div className="absolute pointer-events-none w-fit top-2 right-0 flex">
+        <div
+          className={`absolute z-30 w-fit top-2 right-0 flex pointer-events-${
+            isPointerDownFromCanvas ? "none" : "auto"
+          }`}
+        >
           <div
             className="flex items-center"
             style={{
@@ -356,7 +376,9 @@ export default function PixelGridEditor({
           >
             <button
               onClick={() => viewboxTools.setOpen(!viewboxTools.isOpen)}
-              className="pointer-events-auto buttonBlank bg-gray-300 rounded-tr-none rounded-br-none h-10"
+              className={`pointer-events-${
+                isPointerDownFromCanvas ? "none" : "auto"
+              } buttonBlank bg-gray-300 rounded-tr-none rounded-br-none h-10`}
             >
               <Image
                 src={`/${
@@ -369,7 +391,9 @@ export default function PixelGridEditor({
             </button>
           </div>
           <div
-            className={`card pointer-events-auto bg-gray-300 shadow-none ${
+            className={`card pointer-events-${
+              isPointerDownFromCanvas ? "none" : "auto"
+            } bg-gray-300 shadow-none ${
               viewboxTools.isOpen ? "p-1" : "size-0 overflow-hidden p-0"
             }`}
           >

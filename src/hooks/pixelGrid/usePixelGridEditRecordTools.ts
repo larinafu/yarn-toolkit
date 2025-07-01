@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { EditMode } from "./usePixelGridEditingConfigTools";
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
@@ -40,6 +40,14 @@ type Session =
         new: Point[];
         color: string;
       };
+    }
+  | {
+      mode: "specialShapeChange";
+      data: {
+        type: "erase";
+        prev: [number, SpecialShape][];
+        new: null;
+      };
     };
 
 type Record = Session[];
@@ -64,6 +72,7 @@ export default function usePixelGridEditRecordTools({
   updateStitch,
   viewboxTools,
   drawShapesOnCanvas,
+  setChangedShapes,
 }: {
   editMode: EditMode;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
@@ -100,6 +109,7 @@ export default function usePixelGridEditRecordTools({
     windowTools?: Partial<PixelGridWindowTools>;
     ctx?: CanvasRenderingContext2D | null;
   }) => void;
+  setChangedShapes: React.Dispatch<React.SetStateAction<number[]>>;
 }): EditRecordTools {
   const sessionRef = useRef<Session>(null);
   const recordRef = useRef<Record>([]);
@@ -140,76 +150,99 @@ export default function usePixelGridEditRecordTools({
         }
         break;
       case "specialShapeChange":
-        prevData = specialShapesRef.current[data.shapeId].points;
-        sessionRef.current = {
-          mode: "specialShapeChange",
-          data: {
-            shapeId: data.shapeId,
-            type: data.type,
-            prev: prevData,
-            color: specialShapesRef.current[data.shapeId].color,
-            new: [
-              ...prevData.slice(0, data.pointId),
-              data.newLoc,
-              ...prevData.slice(data.pointId + 1),
-            ],
-          },
-        };
+        if (data.type === "erase") {
+          prevData = data.shape;
+          if (
+            !sessionRef.current ||
+            sessionRef.current.mode === "specialShapeChange"
+          ) {
+            sessionRef.current = sessionRef.current || {
+              mode: "specialShapeChange",
+              data: {
+                type: "erase",
+                prev: [],
+                new: null,
+              },
+            };
+            (sessionRef.current.data.prev as [number, SpecialShape][]).push([
+              data.shapeId,
+              prevData,
+            ]);
+          }
+        } else {
+          prevData = specialShapesRef.current?.[data.shapeId].points;
+          sessionRef.current = {
+            mode: "specialShapeChange",
+            data: {
+              shapeId: data.shapeId,
+              type: data.type,
+              prev: prevData,
+              color: specialShapesRef.current[data.shapeId].color,
+              new: [
+                ...prevData.slice(0, data.pointId),
+                data.newLoc,
+                ...prevData.slice(data.pointId + 1),
+              ],
+            },
+          };
+        }
     }
   };
 
   const saveSession = () => {
-    switch (editMode) {
-      case "colorChange":
-      case "symbolChange":
-        if (
-          sessionRef.current &&
-          (sessionRef.current.mode === "colorChange" ||
-            sessionRef.current.mode === "symbolChange")
-        ) {
-          for (const [rowIdx, cols] of Object.entries(
-            sessionRef.current.data
-          )) {
-            for (const [colIdx, data] of Object.entries(cols)) {
-              switch (sessionRef.current.mode) {
-                case "colorChange":
-                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                    parseInt(colIdx)
-                  ].hex = data.new;
-                  break;
-                case "symbolChange":
-                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                    parseInt(colIdx)
-                  ].stitch = data.new.stitch;
-                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                    parseInt(colIdx)
-                  ].stitchColor = data.new.stitchColor;
+    if (sessionRef.current) {
+      switch (editMode) {
+        case "colorChange":
+        case "symbolChange":
+          if (
+            sessionRef.current.mode === "colorChange" ||
+            sessionRef.current.mode === "symbolChange"
+          ) {
+            for (const [rowIdx, cols] of Object.entries(
+              sessionRef.current.data
+            )) {
+              for (const [colIdx, data] of Object.entries(cols)) {
+                switch (sessionRef.current.mode) {
+                  case "colorChange":
+                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                      parseInt(colIdx)
+                    ].hex = data.new;
+                    break;
+                  case "symbolChange":
+                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                      parseInt(colIdx)
+                    ].stitch = data.new.stitch;
+                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                      parseInt(colIdx)
+                    ].stitchColor = data.new.stitchColor;
+                }
               }
             }
+            if (sessionRef.current.mode === "colorChange") {
+              viewboxTools.drawViewboxColors();
+            }
           }
-          if (sessionRef.current.mode === "colorChange") {
-            viewboxTools.drawViewboxColors();
+          break;
+        case "specialShapeChange":
+          if (sessionRef.current.mode === "specialShapeChange") {
+            if (sessionRef.current.data.type === "erase") {
+              viewboxTools.drawViewboxSpecialShapes();
+              setChangedShapes([]);
+            } else {
+              specialShapesRef.current[sessionRef.current.data.shapeId].points =
+                sessionRef.current.data.new;
+              viewboxTools.drawViewboxSpecialShapes();
+            }
           }
-        }
-        break;
-      case "specialShapeChange":
-        if (
-          sessionRef.current &&
-          sessionRef.current.mode === "specialShapeChange"
-        ) {
-          specialShapesRef.current[sessionRef.current.data.shapeId].points =
-            sessionRef.current.data.new;
-          viewboxTools.drawViewboxSpecialShapes();
-        }
+      }
+      recordRef.current = recordRef.current.slice(0, recordPos);
+      if (recordRef.current.length === RECORD_CACHE_SIZE) {
+        recordRef.current = recordRef.current.slice(1, recordPos);
+      }
+      recordRef.current.push(sessionRef.current);
+      setRecordPos(recordRef.current.length);
+      sessionRef.current = null;
     }
-
-    recordRef.current = recordRef.current.slice(0, recordPos);
-    if (recordRef.current.length === RECORD_CACHE_SIZE) {
-      recordRef.current = recordRef.current.slice(1, recordPos);
-    }
-    recordRef.current.push(sessionRef.current);
-    setRecordPos(recordRef.current.length);
-    sessionRef.current = null;
   };
   const undo = () => {
     const session: Session = recordRef.current[recordPos - 1];
@@ -264,6 +297,15 @@ export default function usePixelGridEditRecordTools({
                 ...specialShapesRef.current.slice(0, session.data.shapeId),
                 ...specialShapesRef.current.slice(session.data.shapeId + 1),
               ];
+              break;
+            case "erase":
+              for (const [shapeId, shape] of session.data.prev.reverse()) {
+                specialShapesRef.current = [
+                  ...specialShapesRef.current.slice(0, shapeId),
+                  shape,
+                  ...specialShapesRef.current.slice(shapeId),
+                ];
+              }
           }
           viewboxTools.drawViewboxSpecialShapes();
           drawShapesOnCanvas({});
@@ -328,6 +370,14 @@ export default function usePixelGridEditRecordTools({
                 },
                 ...specialShapesRef.current.slice(session.data.shapeId),
               ];
+              break;
+            case "erase":
+              for (const [shapeId, _] of session.data.prev.reverse()) {
+                specialShapesRef.current = [
+                  ...specialShapesRef.current.slice(0, shapeId),
+                  ...specialShapesRef.current.slice(shapeId + 1),
+                ];
+              }
           }
           viewboxTools.drawViewboxSpecialShapes();
           drawShapesOnCanvas({});

@@ -1,0 +1,10 @@
+<svg stroke="#a93f55" fill="none" xmlns="http://www.w3.org/2000/svg"
+    shape-rendering="geometricPrecision"
+    text-rendering="geometricPrecision" image-rendering="optimizeQuality"
+    viewBox="0 0 100 100"
+    stroke-width="3"
+    stroke-linecap="round"
+    stroke-linejoin="round">
+    <path
+        d="M 6 65 C 24 69 57 68 57 51 C 56 36 41 37 40 50 C 39 70 61 69 69 68 C 75 67 77 67 90 64 L 80 61 M 90 64 L 82 71" />
+</svg>

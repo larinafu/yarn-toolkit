@@ -13,12 +13,9 @@ export default function Navbar() {
           <p>toolkit</p>
         </Link>
       </div>
-      <div className={`${styles.center} flex`}>
+      <div className={`${styles.center} flex bg-white rounded-2xl pl-2 pr-2 text-amaranth`}>
         <Link href="create">
-          <p>create</p>
-        </Link>
-        <Link href="blog" className="ml-5">
-          <p>blog</p>
+          <p>create now</p>
         </Link>
       </div>
     </nav>

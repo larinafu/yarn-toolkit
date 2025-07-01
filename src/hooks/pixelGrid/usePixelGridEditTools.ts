@@ -7,7 +7,11 @@ import { EditRecordTools } from "./usePixelGridEditRecordTools";
 import { PixelGridSpecialShapesCanvasTools } from "./usePixelGridSpecialShapesCanvasTools";
 
 export type PixelGridEditTools = {
-  handleCanvasEdit: (e: any, pointerTrigger: "move" | "down") => void;
+  handleCanvasEdit: (
+    e: any,
+    pointerTrigger: "move" | "down",
+    data?: any
+  ) => void;
   handleCompleteCanvasEdit: () => void;
 };
 
@@ -32,13 +36,16 @@ export default function usePixelGridEditTools({
   activeStitch: string;
   interactionLayerTools: PixelGridInteractionLayerTools;
   editRecordTools: EditRecordTools;
-  activeShapeIdx: number | null;
+  activeShapeIdx: number | "erase" | null;
   stitchColor: string;
   shapeColor: string;
 }): PixelGridEditTools {
+  const specialShapesRefLength =
+    specialShapesTools.specialShapesRef.current.length;
   const handleCanvasEdit = (
     e: PointerEvent,
-    pointerTrigger: "move" | "down"
+    pointerTrigger: "move" | "down",
+    data?: any
   ) => {
     const { row, col } = interactionLayerTools.getPixelPosFromPointerCoords(
       e,
@@ -78,26 +85,51 @@ export default function usePixelGridEditTools({
         }
         break;
       case "specialShapeChange":
-        switch (pointerTrigger) {
-          case "down":
-            specialShapesTools.addShape(row, col, shapeColor, "line");
-            break;
-          case "move":
-            if (
-              specialShapesTools.tarPoint &&
-              !(
-                specialShapesTools.tarPoint.curLoc.row === row &&
-                specialShapesTools.tarPoint.curLoc.col === col
-              )
-            ) {
-              specialShapesTools.moveTarPoint({ row, col });
+        if (activeShapeIdx !== "erase") {
+          switch (pointerTrigger) {
+            case "down":
+              specialShapesTools.addShape(row, col, shapeColor, "line");
               editRecordTools.addToSession(row, col, {
-                shapeId: specialShapesTools.tarPoint.shapeId,
-                pointId: specialShapesTools.tarPoint.pointId,
+                shapeId: specialShapesTools.specialShapesRef.current.length - 1,
+                pointId: 1,
                 type: activeShapeIdx === null ? "update" : "create",
                 newLoc: { row, col },
               });
+              break;
+            case "move":
+              if (
+                specialShapesTools.tarPoint &&
+                !(
+                  specialShapesTools.tarPoint.curLoc &&
+                  specialShapesTools.tarPoint.curLoc.row === row &&
+                  specialShapesTools.tarPoint.curLoc.col === col
+                )
+              ) {
+                specialShapesTools.moveTarPoint({ row, col });
+                editRecordTools.addToSession(row, col, {
+                  shapeId: specialShapesTools.tarPoint.shapeId,
+                  pointId: specialShapesTools.tarPoint.pointId,
+                  type: activeShapeIdx === null ? "update" : "create",
+                  newLoc: { row, col },
+                });
+              }
+          }
+        } else {
+          if (data) {
+            if (
+              specialShapesTools.specialShapesRef.current.length ===
+              specialShapesRefLength
+            ) {
+              const shape =
+                specialShapesTools.specialShapesRef.current[data.shapeId];
+              specialShapesTools.removeShape(data.shapeId);
+              editRecordTools.addToSession(row, col, {
+                type: "erase",
+                shapeId: data.shapeId,
+                shape,
+              });
             }
+          }
         }
     }
   };
