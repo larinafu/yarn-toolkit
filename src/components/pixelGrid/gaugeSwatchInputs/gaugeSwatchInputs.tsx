@@ -10,7 +10,7 @@ import Image from "next/image";
 const MARGIN = 5;
 const MIN_NUM_ROWS_OR_COLS = 4;
 
-const cellRatioInputStyle = "w-10 aspect-square text-center mr-auto";
+const cellRatioInputStyle = "w-full max-w-10 text-center mr-auto text-[100%]";
 
 export default function GaugeSwatchInputs({
   size,
@@ -133,16 +133,17 @@ export default function GaugeSwatchInputs({
       <div className="flex justify-center h-1/2">
         <div className={`${styles.cellRatioPreviewContainer} h-full`}>
           <div />
-          <div className="flex m-auto">
+          <div className="flex mb-1 sm:justify-center">
             <button
               disabled={swatchInputs.width === "1"}
               className="buttonBlank p-0"
-              onClick={() =>
+              onClick={(e) => {
+                e.preventDefault();
                 handleGaugeInputChange(
                   (parseInt(swatchInputs.width) - 1).toString(),
                   swatchInputs.height
-                )
-              }
+                );
+              }}
             >
               <Image
                 src={"/down-arrow.svg"}
@@ -168,12 +169,13 @@ export default function GaugeSwatchInputs({
             </label>
             <button
               className="buttonBlank p-0"
-              onClick={() =>
+              onClick={(e) => {
+                e.preventDefault();
                 handleGaugeInputChange(
                   (parseInt(swatchInputs.width) + 1).toString(),
                   swatchInputs.height
-                )
-              }
+                );
+              }}
             >
               <Image
                 src={"/up-arrow.svg"}
@@ -184,15 +186,16 @@ export default function GaugeSwatchInputs({
               />
             </button>
           </div>
-          <div className="flex flex-col items-center m-auto">
+          <div className="flex flex-col items-center m-auto mr-1">
             <button
               className="buttonBlank p-0 size-fit"
-              onClick={() =>
+              onClick={(e) => {
+                e.preventDefault();
                 handleGaugeInputChange(
                   swatchInputs.width,
                   (parseInt(swatchInputs.height) + 1).toString()
-                )
-              }
+                );
+              }}
             >
               <Image
                 src={"/up-arrow.svg"}
@@ -218,12 +221,13 @@ export default function GaugeSwatchInputs({
             </label>
             <button
               className="buttonBlank p-0 size-fit"
-              onClick={() =>
+              onClick={(e) => {
+                e.preventDefault();
                 handleGaugeInputChange(
                   swatchInputs.width,
                   (parseInt(swatchInputs.height) - 1).toString()
-                )
-              }
+                );
+              }}
               disabled={swatchInputs.height === "1"}
             >
               <Image
@@ -238,7 +242,7 @@ export default function GaugeSwatchInputs({
             width={size + MARGIN * 2}
             height={size + MARGIN * 2}
             viewBox={`0 0 ${size + MARGIN * 2} ${size + MARGIN * 2}`}
-            className="stroke-amaranth size-full"
+            className="stroke-amaranth h-full w-auto"
           >
             <rect
               x={MARGIN}

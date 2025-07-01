@@ -203,7 +203,7 @@ export default function InitCustomization({
         </p>
       </div>
       <div className="grow flex flex-col sm:flex-row overflow-auto">
-        <div className="flex flex-row h-full overflow-auto sm:flex-col sm:w-3/12 min-w-xs">
+        <div className="flex flex-row h-full overflow-auto sm:flex-col sm:w-3/12 min-w-xs pr-2 pl-2">
           <section className="card m-2 shrink-0">
             <GaugeSwatchInputs
               size={150}

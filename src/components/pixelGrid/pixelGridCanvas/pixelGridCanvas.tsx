@@ -220,12 +220,14 @@ export default function PixelGridCanvas({
           }
         }}
         onPointerDown={(e) => {
-          setPointerDownFromCanvas(true);
-          if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
-            (pointerEventsRef.current as any).releasePointerCapture(
-              e.pointerId
-            );
-            canvasEditTools.handleCanvasEdit(e, "down");
+          if (e.isPrimary) {
+            setPointerDownFromCanvas(true);
+            if (editMode !== "specialShapeChange" || activeShapeIdx !== null) {
+              (pointerEventsRef.current as any).releasePointerCapture(
+                e.pointerId
+              );
+              canvasEditTools.handleCanvasEdit(e, "down");
+            }
           }
         }}
         onPointerLeave={(e) => {

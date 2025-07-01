@@ -1,5 +1,6 @@
 export const simpleColorConstants: string[] = [
   "#ffffff",
+  "gray",
   "#000000",
   "red",
   "blue",

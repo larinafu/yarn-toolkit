@@ -10,8 +10,8 @@ import InitCustomization from "@/components/pixelGrid/initCustomization/initCust
 
 type BaseOption = "image" | "scratch";
 
-const cardHeaderStyle = "text-xl lg:text-4xl mt-2";
-const cardSubheaderStyle = "text-m lg:text-xl m-4";
+const cardHeaderStyle = "text-xl sm:text-4xl mt-2";
+const cardSubheaderStyle = "text-m sm:text-xl md:text-3xl m-4";
 
 export default function Create() {
   const [baseOption, setBaseOption] = useState<BaseOption | null>(null);

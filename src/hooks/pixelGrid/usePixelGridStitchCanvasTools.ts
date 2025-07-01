@@ -49,6 +49,7 @@ export default function usePixelGridStitchCanvasTools({
     context: CanvasRenderingContext2D,
     windowTools: PixelGridWindowTools
   ) => {
+    context.lineWidth = 2;
     if (svgPathStep[1] === "stroke") {
       context.stroke(
         createFromSvgPath(

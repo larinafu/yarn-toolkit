@@ -190,8 +190,10 @@ export default function ProjectSizeInputs({
 
   return (
     <>
-      <h3 className="text-center text-sm sm:text-xl">set your pattern size</h3>
-      <div className={styles.container}>
+      <h3 className="text-center h-1/6 text-lg md:text-xl">
+        set your pattern size
+      </h3>
+      <div className={`${styles.container} h-2/3`}>
         <svg
           width={GRID_ICON_SIZE}
           height={GRID_ICON_SIZE}
@@ -249,17 +251,18 @@ export default function ProjectSizeInputs({
           {generateVertLinesAndNums()}
         </svg>
         <div className="flex flex-col items-center">
-          <div className="flex">
+          <div className="flex h-3/4 pt-0.5">
             <button
-              className="buttonBlank"
-              onClick={() =>
+              className="buttonBlank p-0"
+              onClick={(e) => {
+                e.preventDefault();
                 handlePatternSizeInputChange({
                   numRows:
                     typeof patternSizeInputs.numRows === "number"
                       ? (patternSizeInputs.numRows - 1).toString()
                       : "10",
-                })
-              }
+                });
+              }}
             >
               <Image
                 src={"/down-arrow.svg"}
@@ -278,37 +281,41 @@ export default function ProjectSizeInputs({
                 handlePatternSizeInputChange({ numRows: e.target.value })
               }
               disabled={isGaugeChangeLoading}
-              className="w-10 aspect-square text-center"
+              className="max-w-10 text-center"
             />
             <button
-              className="buttonBlank"
-              onClick={() =>
+              className="buttonBlank p-0"
+              onClick={(e) => {
+                e.preventDefault();
                 handlePatternSizeInputChange({
                   numRows:
                     typeof patternSizeInputs.numRows === "number"
                       ? (patternSizeInputs.numRows + 1).toString()
                       : "10",
-                })
-              }
+                });
+              }}
             >
               <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
             </button>
           </div>
-          <label htmlFor="num_rows">rows</label>
+          <label htmlFor="num_rows" className="h-1/4">
+            rows
+          </label>
         </div>
         <span />
         <div className="flex flex-col items-center">
-          <div className="flex">
+          <div className="flex h-3/4 pt-0.5">
             <button
-              className="buttonBlank"
-              onClick={() =>
+              className="buttonBlank p-0"
+              onClick={(e) => {
+                e.preventDefault();
                 handlePatternSizeInputChange({
                   numCols:
                     typeof patternSizeInputs.numCols === "number"
                       ? (patternSizeInputs.numCols - 1).toString()
                       : "10",
-                })
-              }
+                });
+              }}
             >
               <Image
                 src={"/down-arrow.svg"}
@@ -327,27 +334,30 @@ export default function ProjectSizeInputs({
                 handlePatternSizeInputChange({ numCols: e.target.value })
               }
               disabled={isGaugeChangeLoading}
-              className="w-10 aspect-square text-center"
+              className="max-w-10 text-center"
             />
             <button
-              className="buttonBlank"
-              onClick={() =>
+              className="buttonBlank p-0"
+              onClick={(e) => {
+                e.preventDefault();
                 handlePatternSizeInputChange({
                   numCols:
                     typeof patternSizeInputs.numCols === "number"
                       ? (patternSizeInputs.numCols + 1).toString()
                       : "10",
-                })
-              }
+                });
+              }}
             >
               <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
             </button>
           </div>
-          <label htmlFor="num_cols">columns</label>
+          <label htmlFor="num_cols" className="h-1/4">
+            columns
+          </label>
         </div>
       </div>
       {isValidPatternSizeDisplay.error && (
-        <div className={`info-red p-2 mt-2 text-center`}>
+        <div className={`text-red-400 text-center h-1/6`}>
           <strong>
             <p>{isValidPatternSizeDisplay.error}</p>
           </strong>
