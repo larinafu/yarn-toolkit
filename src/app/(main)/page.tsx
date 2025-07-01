@@ -56,27 +56,27 @@ export default function Home() {
           <h1 className="m-4">
             Instantly generate color charts from uploaded images.
           </h1>
-          <div className="p-4 flex flex-col sm:flex-row justify-center items-center">
+          <div className="p-4 flex flex-col lg:flex-row justify-center items-center">
             <Image
               src={"/photos/earth.jpg"}
               width={400}
               height={400}
               alt="earth"
-              className="border border-black size-full sm:size-1/4"
+              className="border border-black size-3/4 lg:size-1/4"
             />
             <Image
               src={"/curve-right-arrow.svg"}
               width={100}
               height={100}
               alt="arrow"
-              className="rotate-90 sm:rotate-0 size-1/3 sm:size-1/6"
+              className="rotate-90 lg:rotate-0 size-1/3 lg:size-1/6"
             />
             <Image
               src="/photos/earth-pixelated.png"
               width={400}
               height={400}
               alt="pixelated earth"
-              className="size-full sm:size-1/4"
+              className="size-3/4 lg:size-1/4"
             />
           </div>
         </div>
