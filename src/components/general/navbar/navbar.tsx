@@ -6,7 +6,7 @@ import styles from "./navbar.module.css";
 export default function Navbar() {
   return (
     <nav className="sticky z-50 top-0 bg-amaranth p-2 text-white flex justify-between items-center text-xl">
-      <div className="text-4xl">
+      <div className="lg:text-4xl">
         <Link href="/" className="flex items-center">
           <p>yarn</p>
           <Image src={"/logo.jpg"} width={40} height={40} alt="logo" />{" "}
