@@ -1,10 +1,10 @@
 <svg stroke="#a93f55" fill="none" xmlns="http://www.w3.org/2000/svg"
     shape-rendering="geometricPrecision"
     text-rendering="geometricPrecision" image-rendering="optimizeQuality"
-    viewBox="0 0 100 40"
+    viewBox="0 0 40 100"
     stroke-width="3"
     stroke-linecap="round"
     stroke-linejoin="round">
     <path
-        d="M 6 28 C 24 32 57 31 57 14 C 56 -1 41 0 40 13 C 39 33 61 32 69 31 C 75 30 77 30 90 27 L 80 24 M 90 27 L 82 34" />
+        d="M 12 6 C 8 24 9 57 26 57 C 41 56 40 41 27 40 C 7 39 8 61 9 69 C 10 75 10 77 13 90 L 16 80 M 13 90 L 6 82" />
 </svg>

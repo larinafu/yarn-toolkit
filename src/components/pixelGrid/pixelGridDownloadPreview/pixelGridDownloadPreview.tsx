@@ -60,7 +60,6 @@ export default function PixelGridDownloadPreview({
   canvasCellWidthHeightRatio: number;
   gridLineColor: string;
 }) {
-  const ModalTools = useModalTools();
   const [sizeSelection, setSizeSelection] = useState<sizer>("s");
   const sizesInfo: {
     [size in sizer]: {
@@ -124,12 +123,16 @@ export default function PixelGridDownloadPreview({
     setBlob(URL.createObjectURL(blob));
   });
 
-  useEffect(() => {
-    generateBlob.throttle(
-      sizesInfo[sizeSelection].dimensions.width,
-      sizesInfo[sizeSelection].dimensions.height
-    );
-  }, []);
+  const ModalTools = useModalTools((isOpen) => {
+    if (isOpen) {
+      console.log("open now");
+      setBlob(null);
+      generateBlob.throttle(
+        sizesInfo[sizeSelection].dimensions.width,
+        sizesInfo[sizeSelection].dimensions.height
+      );
+    }
+  });
 
   return (
     <>
