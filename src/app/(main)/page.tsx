@@ -17,7 +17,7 @@ export default function Home() {
   return (
     <>
       <div className={`p-2`}>
-        <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-8xl">
+        <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-7xl">
           Create knitting charts for free.
         </h1>
         <div className="relative">
@@ -51,10 +51,10 @@ export default function Home() {
         </div>
       </div>
       <div
-        className={`p-2 flex flex-col lg:flex-row justify-evenly items-center bg-amaranth-light`}
+        className={`p-2 flex flex-col lg:flex-row justify-evenly items-center bg-amaranth-light lg:h-200`}
       >
-        <h1 className="m-4 lg:w-1/3 text-5xl md:text-6xl lg:text-8xl">
-          Effortlessly edit across all devices
+        <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl lg:ml-20">
+          Effortlessly edit across all devices.
         </h1>
         <div className="flex justify-center">
           <div className="relative m-4">
@@ -111,8 +111,8 @@ export default function Home() {
             className="sm:w-1/2 lg:w-1/3"
           />
         </div>
-        <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-8xl">
-          Instantly generate color charts from uploaded images.
+        <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl">
+          Convert images to color charts.
         </h1>
       </div>
       <Link
