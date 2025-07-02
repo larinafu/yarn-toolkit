@@ -1,3 +1,4 @@
+import { PixelGridEditTools } from "@/hooks/pixelGrid/usePixelGridEditTools";
 import { PixelGridSpecialShapesCanvasTools } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 import { PixelGridCanvasCellDimensions } from "@/types/pixelGrid";
 import React, { useRef } from "react";
@@ -8,6 +9,7 @@ export default function SpecialShapePoint({
   x,
   y,
   cellDims,
+  canvasEditTools,
   specialShapesTools,
   setPointerDownFromCanvas,
   activeShapeIdx,
@@ -18,6 +20,7 @@ export default function SpecialShapePoint({
   x: number;
   y: number;
   cellDims: PixelGridCanvasCellDimensions;
+  canvasEditTools: PixelGridEditTools;
   specialShapesTools: PixelGridSpecialShapesCanvasTools;
   setPointerDownFromCanvas: React.Dispatch<React.SetStateAction<boolean>>;
   activeShapeIdx: number | "erase" | null;
@@ -36,13 +39,26 @@ export default function SpecialShapePoint({
         height={cellDims.height}
         fillOpacity={0}
         ref={pointRef}
-        onPointerDown={() => {
+        onPointerDown={(e) => {
           if (activeShapeIdx === null) {
             specialShapesTools.captureShape(shapeIdx, pointIdx);
+          } else if (activeShapeIdx === "erase") {
+            canvasEditTools.handleCanvasEdit(e, "down", {
+              shapeId: shapeIdx,
+            });
+          }
+        }}
+        onPointerMove={(e) => {
+          if (activeShapeIdx === "erase") {
+            canvasEditTools.handleCanvasEdit(e, "down", {
+              shapeId: shapeIdx,
+            });
           }
         }}
         className={`z-20 ${
-          activeShapeIdx !== null ? "pointer-events-none" : ""
+          activeShapeIdx !== null && activeShapeIdx !== "erase"
+            ? "pointer-events-none"
+            : ""
         }`}
       ></rect>
     </>

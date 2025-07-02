@@ -3,8 +3,10 @@ import LoadingBackground from "@/components/general/loadingBackground/loadingBac
 import PixelGridEditor from "@/components/pixelGrid/pixelGridEditor/pixelGridEditor";
 import { SAVED_CANVAS_DATA_LOC } from "@/constants/pixelGrid/sessionStorage";
 import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 
 export default function Project() {
+  const router = useRouter();
   const [savedCanvasData, setSavedCanvasData] = useState(null);
   useEffect(() => {
     const savedCanvasData = window.sessionStorage.getItem(
@@ -12,6 +14,8 @@ export default function Project() {
     );
     if (savedCanvasData) {
       setSavedCanvasData(JSON.parse(savedCanvasData));
+    } else {
+      router.push("/create");
     }
   }, []);
   return savedCanvasData ? (

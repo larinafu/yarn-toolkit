@@ -5,7 +5,7 @@ import styles from "./navbar.module.css";
 
 export default function Navbar() {
   return (
-    <nav className="bg-amaranth p-2 text-white flex justify-between items-center text-xl">
+    <nav className="sticky z-50 top-0 bg-amaranth p-2 text-white flex justify-between items-center text-xl">
       <div>
         <Link href="/" className="flex items-center">
           <p>yarn</p>

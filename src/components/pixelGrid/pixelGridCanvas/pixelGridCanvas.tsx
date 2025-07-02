@@ -301,6 +301,7 @@ export default function PixelGridCanvas({
                         setPointerDownFromCanvas={setPointerDownFromCanvas}
                         activeShapeIdx={activeShapeIdx}
                         setActiveShapeIdx={setActiveShapeIdx}
+                        canvasEditTools={canvasEditTools}
                       />
                     );
                   })}

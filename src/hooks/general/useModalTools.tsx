@@ -2,10 +2,17 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 
 import { useRefWithClickawayListener } from "./useRefWithClickawayListener";
 
-export default function useModalTools(): { modal: any; btn: any } {
+export default function useModalTools(onOpen?: (isOpen: boolean) => void): {
+  modal: any;
+  btn: any;
+} {
   const [isOpen, setOpen] = useState(false);
   const modalRef = useRefWithClickawayListener(() => {
     setOpen(false);
+  }, [isOpen]);
+
+  useEffect(() => {
+    onOpen?.(isOpen);
   }, [isOpen]);
 
   const modal = useCallback(
