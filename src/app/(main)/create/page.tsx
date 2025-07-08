@@ -1,4 +1,4 @@
-import { Metadata } from "next";
+import type { Metadata } from "next";
 import Create from "./create";
 
 export const metadata: Metadata = {

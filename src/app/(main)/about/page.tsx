@@ -26,7 +26,7 @@ export default function Page({}) {
           spent making. We aim to remove the barriers of repetitive manual
           charting and confusing symbol placement, making the journey from idea
           to finished project as smooth, intuitive, and enjoyable as possible.
-          With Yarn Toolkit, you're not just designing—you're crafting with
+          With Yarn Toolkit, you&apos;re not just designing—you're crafting with
           confidence and freedom.
         </p>
         <div className="h-1/2 m-auto">
@@ -39,8 +39,8 @@ export default function Page({}) {
           spent making. We aim to remove the barriers of repetitive manual
           charting and confusing symbol placement, making the journey from idea
           to finished project as smooth, intuitive, and enjoyable as possible.
-          With Yarn Toolkit, you're not just designing—you're crafting with
-          confidence and freedom.
+          With Yarn Toolkit, you&apos;re not just designing—you&apos;re crafting
+          with confidence and freedom.
         </p>
       </section>
       <section>
@@ -71,9 +71,9 @@ export default function Page({}) {
         <p className="text-2xl mb-10">
           As the platform evolves, Yarn Toolkit plans to expand its offerings to
           include support for other crafts like crochet and cross-stitch.
-          Whether you're designing for yourself, teaching others, or publishing
-          professional patterns, Yarn Toolkit is here to help you create without
-          compromise.
+          Whether you&apos;re designing for yourself, teaching others, or
+          publishing professional patterns, Yarn Toolkit is here to help you
+          create without compromise.
         </p>
       </section>
     </div>
