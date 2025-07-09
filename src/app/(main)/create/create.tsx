@@ -7,14 +7,13 @@ import styles from "./page.module.css";
 import CreateWithImage from "@/components/pixelGrid/createWithImage/createWithImage";
 import useScrollIntoView from "@/hooks/general/useScrollIntoView";
 import InitCustomization from "@/components/pixelGrid/initCustomization/initCustomization";
-
-type BaseOption = "image" | "scratch";
+import { BaseOption } from "@/types/pixelGrid";
 
 const cardHeaderStyle = "text-xl sm:text-4xl mt-2";
 const cardSubheaderStyle = "text-m sm:text-xl md:text-3xl m-4";
 
-export default function Create() {
-  const [baseOption, setBaseOption] = useState<BaseOption | null>(null);
+export default function Create({ source }: { source?: BaseOption }) {
+  const [baseOption, setBaseOption] = useState<BaseOption | undefined>(source);
   const baseOptionRef = useRef(null);
   const handleBaseChoice = (option: BaseOption) => {
     setBaseOption(option);
@@ -60,8 +59,8 @@ export default function Create() {
         <div
           className={`card m-2 hover:cursor-pointer ${
             styles.card
-          } ${addSelectedBorder("scratch")}`}
-          onClick={() => handleBaseChoice("scratch")}
+          } ${addSelectedBorder("blank")}`}
+          onClick={() => handleBaseChoice("blank")}
           tabIndex={0}
         >
           <h3 className={cardHeaderStyle}>Start from scratch</h3>
@@ -82,7 +81,7 @@ export default function Create() {
           {baseOption === "image" ? (
             <CreateWithImage />
           ) : (
-            baseOption === "scratch" && <InitCustomization />
+            baseOption === "blank" && <InitCustomization />
           )}
         </section>
       )}

@@ -1,3 +1,5 @@
+export type BaseOption = "image" | "blank";
+
 export type Swatch = {
   width: number;
   height: number;
