@@ -26,8 +26,8 @@ export default function Page({}) {
           spent making. We aim to remove the barriers of repetitive manual
           charting and confusing symbol placement, making the journey from idea
           to finished project as smooth, intuitive, and enjoyable as possible.
-          With Yarn Toolkit, you&apos;re not just designing—you're crafting with
-          confidence and freedom.
+          With Yarn Toolkit, you&apos;re not just designing—you&apos;re crafting
+          with confidence and freedom.
         </p>
         <div className="h-1/2 m-auto">
           <ScreenDemo />
