@@ -76,15 +76,14 @@ export default function Create({ source }: { source?: BaseOption }) {
           />
         </div>
       </section>
-      {baseOption && (
-        <section ref={baseOptionRef}>
-          {baseOption === "image" ? (
-            <CreateWithImage />
-          ) : (
-            baseOption === "blank" && <InitCustomization />
-          )}
-        </section>
-      )}
+      {baseOption &&
+        (baseOption === "image" ? (
+          <CreateWithImage />
+        ) : (
+          <section ref={baseOptionRef}>
+            <InitCustomization />
+          </section>
+        ))}
     </div>
   );
 }

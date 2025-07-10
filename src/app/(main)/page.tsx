@@ -19,7 +19,7 @@ export default function Home() {
     <>
       <div className={`p-2`}>
         <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-7xl">
-          Create knitting charts for free.
+          <Link href={"/create?source=blank"}>Create knitting charts for free.</Link>
         </h1>
         <div className="relative">
           <Image
@@ -95,7 +95,7 @@ export default function Home() {
           />
         </div>
         <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl">
-          Convert images to color charts.
+          <Link href={"/create?source=image"}>Convert images to color charts.</Link>
         </h1>
       </div>
       <Link
