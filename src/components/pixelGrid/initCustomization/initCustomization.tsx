@@ -193,7 +193,7 @@ export default function InitCustomization({
   };
 
   return (
-    <section className="fadeIn h-dvh flex flex-col">
+    <section className="fadeIn h-dvh flex flex-col pt-10">
       <div>
         <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
           Almost there...
