@@ -196,7 +196,7 @@ export default function InitCustomization({
     <section className="fadeIn h-dvh flex flex-col pt-10">
       <div>
         <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
-          Almost there...
+          Chart Preview
         </h2>
         <p className="text-center text-2xl md:text-3xl mb-6">
           We need a few more details to generate your starting pattern.
@@ -258,7 +258,7 @@ export default function InitCustomization({
             </div>
           </div>
         ) : (
-          <p>Create new pattern!</p>
+          <p>Go to chart maker!</p>
         )}
       </button>
     </section>

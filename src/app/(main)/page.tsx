@@ -102,7 +102,7 @@ export default function Home() {
         href="create"
         className="block sticky bottom-2 right-0 ml-auto button text-4xl md:text-5xl rounded-3xl w-fit m-5 z-30"
       >
-        create now
+        create pattern
       </Link>
     </>
   );
