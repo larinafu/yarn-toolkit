@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+    xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
+    stroke="#a93f55" fill="#a93f55" style="enable-background:new 0 0 100 100" xml:space="preserve">
+    <style>
+        .font {
+            font-family: sans-serif;
+          }
+    </style>
+    <rect
+              x="4"
+              y="4"
+              width="92"
+              height="92"
+              fill="transparent"
+              stroke-width="3"
+              rx="3"
+              ry="3"
+            >
+        </rect>
+        <text
+        y="15.5"
+        x="50"
+        text-anchor="middle"
+        dominant-baseline="middle"
+      >
+        1
+      </text>
+      <text
+        y="38.5"
+        x="50"
+        text-anchor="middle"
+        dominant-baseline="middle"
+      >
+        2
+      </text>
+      <text
+        y="61.5"
+        x="50"
+        text-anchor="middle"
+        dominant-baseline="middle"
+      >
+        3
+      </text>
+      <text
+        y="84.5"
+        x="50"
+        text-anchor="middle"
+        dominant-baseline="middle"
+      >
+        4
+      </text>
+        <line
+        y1="27"
+        x1="4"
+        y2="27"
+        x2="96"
+        stroke-width="3"
+      />
+      <line
+        y1="50"
+        x1="4"
+        y2="50"
+        x2="96"
+        stroke-width="3"
+      />
+      <line
+        y1="73"
+        x1="4"
+        y2="73"
+        x2="96"
+        stroke-width="3"
+      />
+        </svg>

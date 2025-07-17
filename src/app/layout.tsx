@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   applicationName: "Yarn Toolkit",
   title: {
     template: "%s | Yarn Toolkit",
-    default: "Yarn Toolkit",
+    default: "Yarn Toolkit - Create knitting charts and crochet patterns for free",
   },
   description:
     "Create knitting charts and crochet patterns for free. Easily convert uploaded images into beautiful color charts instantly.",

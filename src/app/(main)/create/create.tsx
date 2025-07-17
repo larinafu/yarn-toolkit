@@ -33,7 +33,7 @@ export default function Create({ source }: { source?: BaseOption }) {
       <h1 className="mt-2 mb-2 text-center text-4xl md:text-5xl">
         Create New Pattern
       </h1>
-      <p className="text-center mb-6 text-2xl md:text-3xl">
+      <p className="text-center ml-1 mr-1 mb-6 text-2xl md:text-3xl">
         How would you like to start your pattern?
       </p>
       <section className="flex justify-evenly">

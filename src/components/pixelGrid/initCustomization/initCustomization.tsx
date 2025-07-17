@@ -198,13 +198,13 @@ export default function InitCustomization({
         <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
           Chart Preview
         </h2>
-        <p className="text-center text-2xl md:text-3xl mb-6">
+        <p className="text-center text-2xl md:text-3xl ml-1 mr-1 mb-6">
           We need a few more details to generate your starting pattern.
         </p>
       </div>
       <div className="grow flex flex-col sm:flex-row overflow-auto">
-        <div className="flex flex-row h-full overflow-auto sm:flex-col sm:w-3/12 min-w-xs pr-2 pl-2">
-          <section className="card m-2 shrink-0">
+        <div className="flex flex-row shrink-0 sm:flex-col sm:w-3/12 min-w-xs pr-2 pl-2 overflow-auto sm:overflow-x-visible sm:overflow-y-auto">
+          <section className="card m-2 shrink-0 h-fit">
             <GaugeSwatchInputs
               size={150}
               swatchInputs={swatchInputs}
@@ -230,7 +230,6 @@ export default function InitCustomization({
             />
           </section>
         </div>
-
         <section
           className={`relative m-auto w-full h-full overflow-auto md:w-8/12`}
         >
