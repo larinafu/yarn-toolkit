@@ -60,7 +60,7 @@ export default function PixelGridDownloadPreview({
   canvasCellWidthHeightRatio: number;
   gridLineColor: string;
 }) {
-  const [sizeSelection, setSizeSelection] = useState<sizer>("s");
+  const [sizeSelection, setSizeSelection] = useState<sizer>("m");
   const sizesInfo: {
     [size in sizer]: {
       display: string;
