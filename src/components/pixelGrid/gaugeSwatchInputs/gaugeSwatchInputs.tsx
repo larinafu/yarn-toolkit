@@ -129,7 +129,7 @@ export default function GaugeSwatchInputs({
     <>
       <div className={``}>
         <div className="flex justify-between">
-          <h3 className="grow text-center text-xl sm:text-2xl">
+          <h3 className="grow text-center text-2xl">
             Set your cell size
           </h3>
           <ValidationIndicator errorMsg={isValidSwatchDisplay.error} />
@@ -274,9 +274,9 @@ export default function GaugeSwatchInputs({
         } text-center p-1 pl-2 pr-2 m-1 ml-auto mr-auto rounded`}
       >
         <strong
-          className={`text-${
-            isValidSwatchDisplay.error ? "red-700" : "green-700"
-          } `}
+          className={`${
+            isValidSwatchDisplay.error ? "text-red-700" : "text-green-700"
+          }`}
         >
           ratio: {getAspectRatio()}
         </strong>

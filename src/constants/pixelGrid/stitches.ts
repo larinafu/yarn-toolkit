@@ -14,7 +14,7 @@ export const knitting: StitchGroup = {
       rs: { abbr: "p", name: "Purl" },
       ws: { abbr: "k", name: "Knit" },
     },
-    svgPaths: ["M 40 50 A 1 1 0 0 0 60 50 A 1 1 0 0 0 40 50", "fill"],
+    svgPaths: ["M 25 50 A 1 1 0 0 0 75 50 A 1 1 0 0 0 25 50", "fill"],
     svg: "/stitches/knitting/p.svg",
   },
   yo: {
@@ -36,7 +36,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "k2tog", name: "Knit two stitches together" },
     },
     svgPaths: [
-      ["M 28 35 A 1 1 0 0 0 28 16 A 1 1 0 0 0 28 35", "fill"],
+      ["M 24 41 A 1 1 0 0 0 24 9 A 1 1 0 0 0 24 41", "fill"],
       ["M 7 93 L 93 7", "stroke"],
     ],
     svg: "/stitches/knitting/p2tog.svg",
@@ -55,7 +55,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "ssk", name: "Slip slip knit" },
     },
     svgPaths: [
-      ["M 65 28 A 1 1 90 0 0 84 28 A 1 1 90 0 0 65 28", "fill"],
+      ["M 76 9 A 1 1 90 0 0 76 41 A 1 1 90 0 0 76 9", "fill"],
       ["M 7 7 L 93 93", "stroke"],
     ],
     svg: "/stitches/knitting/ssp.svg",
@@ -66,7 +66,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "p1fb", name: "Purl one front and back" },
     },
     svgPaths: [
-      "M 15 40 L 50 80 L 85 40 M 61 30 A 1 1 0 0 0 37 30 M 61 30 C 60 43 44.6667 44 39 55 L 61 55",
+      "M 15 50 L 50 90 L 85 50 M 61 20 A 1 1 0 0 0 37 20 M 61 20 C 60 33 44.6667 34 39 45 L 61 45",
       "stroke",
     ],
     svg: "/stitches/knitting/k1fb.svg",
@@ -85,7 +85,7 @@ export const knitting: StitchGroup = {
       ws: { abbr: "m1k", name: "Make one knitwise" },
     },
     svgPaths: [
-      "M 10 90 L 10 10 L 30 40 L 50 10 L 50 90 M 60 90 L 60 10 C 102 10 102 50 60 50",
+      "M 5 90 L 5 10 L 25 40 L 45 10 L 45 90 M 62 90 L 62 10 C 104 10 104 50 62 50",
       "stroke",
     ],
     svg: "/stitches/knitting/m1p.svg",
@@ -93,7 +93,7 @@ export const knitting: StitchGroup = {
   m1r: {
     info: { abbr: "m1r", name: "Right-slanting make one" },
     svgPaths: [
-      "M 10 90 L 10 10 L 30 40 L 50 10 L 50 90 M 60 90 L 60 10 C 100 10 100 50 60 50 Q 82 49 90 90",
+      "M 5 90 L 5 10 L 25 40 L 45 10 L 45 90 M 65 90 L 65 10 C 105 10 105 50 65 50 Q 87 49 95 90",
       "stroke",
     ],
     svg: "/stitches/knitting/m1r.svg",
@@ -101,19 +101,19 @@ export const knitting: StitchGroup = {
   m1l: {
     info: { abbr: "m1l", name: "Left-slanting make one" },
     svgPaths: [
-      "M 10 90 L 10 10 L 30 40 L 50 10 L 50 90 M 60 10 L 60 90 L 90 90",
+      "M 5 90 L 5 10 L 25 40 L 45 10 L 45 90 M 65 10 L 65 90 L 95 90",
       "stroke",
     ],
     svg: "/stitches/knitting/m1l.svg",
   },
   rli: {
     info: { abbr: "rli", name: "Right-slanting lifted increase" },
-    svgPaths: ["M 25 25 L 25 75 L 75 25", "stroke"],
+    svgPaths: ["M 10 10 L 10 90 L 90 10", "stroke"],
     svg: "/stitches/knitting/rli.svg",
   },
   lli: {
     info: { abbr: "lli", name: "Left-slanting lifted increase" },
-    svgPaths: ["M 25 25 L 75 75 L 75 25", "stroke"],
+    svgPaths: ["M 10 10 L 90 90 L 90 10", "stroke"],
     svg: "/stitches/knitting/lli.svg",
   },
   sl_wyib: {
@@ -127,7 +127,7 @@ export const knitting: StitchGroup = {
         name: "Slip stitch 1 purlwise with yarn in front",
       },
     },
-    svgPaths: ["M 25 25 L 50 75 L 75 25", "stroke"],
+    svgPaths: ["M 10 10 L 50 90 L 90 10", "stroke"],
     svg: "/stitches/knitting/sl_wyib.svg",
   },
   sl_wyif: {
@@ -141,7 +141,7 @@ export const knitting: StitchGroup = {
         name: "Slip stitch 1 purlwise with yarn in back",
       },
     },
-    svgPaths: ["M 25 25 L 50 75 L 75 25 M 25 50 L 75 50", "stroke"],
+    svgPaths: ["M 10 10 L 50 90 L 90 10 M 10 50 L 90 50", "stroke"],
     svg: "/stitches/knitting/sl_wyif.svg",
   },
   k3tog: {
@@ -170,7 +170,7 @@ export const knitting: StitchGroup = {
       },
     },
     svgPaths: [
-      ["M 40 40 A 1 1 0 0 0 46 46 A 1 1 0 0 0 40 40", "fill"],
+      ["M 24 41 A 1 1 0 0 0 24 9 A 1 1 0 0 0 24 41", "fill"],
       ["M 90 10 L 10 90 M 50 90 L 50 50 L 90 90", "stroke"],
     ],
     svg: "/stitches/knitting/p3tog.svg",
@@ -201,7 +201,7 @@ export const knitting: StitchGroup = {
       },
     },
     svgPaths: [
-      ["M 60 40 A 1 1 90 0 1 54 46 A 1 1 90 0 1 60 40", "fill"],
+      ["M 76 9 A 1 1 90 0 0 76 41 A 1 1 90 0 0 76 9", "fill"],
       ["M 10 10 L 90 90 M 50 90 L 50 50 L 10 90", "stroke"],
     ],
     svg: "/stitches/knitting/sssp.svg",
@@ -217,7 +217,7 @@ export const knitting: StitchGroup = {
         name: "Slip 2 purl 1 pas 2 slip stitches over",
       },
     },
-    svgPaths: ["M 15 75 L 50 25 L 50 75 M 50 25 L 85 75", "stroke"],
+    svgPaths: ["M 10 78.57 L 50 21.43 L 50 78.57 M 50 21.43 L 90 78.57", "stroke"],
     svg: "/stitches/knitting/s2kp2.svg",
   },
   k1_tbl: {
@@ -270,7 +270,7 @@ export const knitting: StitchGroup = {
       abbr: "inc 1-to-3",
       name: "Increase 1 to 3",
     },
-    svgPaths: ["M 15 25 L 50 75 L 50 25 M 50 75 L 85 25", "stroke"],
+    svgPaths: ["M 10 21.43 L 50 78.57 L 50 21.43 M 50 78.57 L 90 21.43", "stroke"],
     svg: "/stitches/knitting/inc_1t3.svg",
   },
   inc_1t4: {
@@ -279,7 +279,7 @@ export const knitting: StitchGroup = {
       name: "Increase 1 to 4",
     },
     svgPaths: [
-      "M 15 35 L 50 85 M 50 85 L 85 35 M 65 45 L 35 45 L 55 20 L 55 60",
+      "M 15 50 L 50 90 M 50 90 L 85 50 M 65 35 L 35 35 L 55 10 L 55 50",
       "stroke",
     ],
     svg: "/stitches/knitting/inc_1t4.svg",
@@ -290,7 +290,7 @@ export const knitting: StitchGroup = {
       name: "Increase 1 to 5",
     },
     svgPaths: [
-      "M 15 35 L 50 85 M 50 85 L 85 35 M 58 15 L 40 15 L 40 30 L 50 30 A 1 1 0 0 1 50 55 L 40 55",
+      "M 15 45 L 50 90 M 50 90 L 85 45 M 61.6 12 L 40 12 L 40 24 L 52 24 A 1.2 1.2 0 0 1 52 54 L 40 54",
       "stroke",
     ],
     svg: "/stitches/knitting/inc_1t5.svg",
@@ -301,7 +301,7 @@ export const knitting: StitchGroup = {
       name: "Decrease 4 to 1 (right slanting)",
     },
     svgPaths: [
-      "M 20 40 L 75 15 L 80 40 M 65 60 L 35 60 L 55 35 L 55 75",
+      "M 20 35 L 75 10 L 80 35 M 71 73 L 35 73 L 59 43 L 59 91",
       "stroke",
     ],
     svg: "/stitches/knitting/dec_4t1_r.svg",
@@ -312,7 +312,7 @@ export const knitting: StitchGroup = {
       name: "Decrease 4 to 1 (left slanting)",
     },
     svgPaths: [
-      "M 20 40 L 25 15 L 80 40 M 60 60 L 30 60 L 50 35 L 50 75",
+      "M 80 35 L 25 10 L 20 35 M 61 73 L 25 73 L 49 43 L 49 91",
       "stroke",
     ],
     svg: "/stitches/knitting/dec_4t1_l.svg",
@@ -323,7 +323,7 @@ export const knitting: StitchGroup = {
       name: "Decrease 4 to 1 (centered)",
     },
     svgPaths: [
-      "M 20 40 L 50 15 L 80 40 M 62 60 L 32 60 L 52 35 L 52 75",
+      "M 10 40 L 50 10 L 90 40 M 68 72 L 32 72 L 56 42 L 56 90",
       "stroke",
     ],
     svg: "/stitches/knitting/dec_4t1.svg",
@@ -334,7 +334,7 @@ export const knitting: StitchGroup = {
       name: "Decrease 5 to 1 (centered)",
     },
     svgPaths: [
-      "M 20 40 L 50 15 L 80 40 M 58 35 L 40 35 L 40 50 L 50 50 A 1 1 0 0 1 50 75 L 40 75",
+      "M 10 40 L 50 10 L 90 40 M 60.8 48 L 39.2 48 L 39.2 60 L 51.2 60 A 1.2 1.2 0 0 1 51.2 90 L 39.2 90",
       "stroke",
     ],
     svg: "/stitches/knitting/dec_5t1.svg",
@@ -345,7 +345,7 @@ export const knitting: StitchGroup = {
       name: "Knit 1 wrapping yarn twice around needle",
     },
     svgPaths: [
-      "M 50 20 A 1 1 0 0 0 50 80 A 1 1 0 0 0 50 20 M 40 40 A 1 1 0 0 1 60 40 C 59 52 39 53 40 65 L 60 65",
+      "M 50 10 A 1.33 1.33 0 0 0 50 90 A 1.33 1.33 0 0 0 50 10 M 36.67 36.67 A 1.33 1.33 0 0 1 63.33 36.67 C 61 53.67 35.33 54.67 36.67 70 L 63.33 70",
       "stroke",
     ],
     svg: "/stitches/knitting/k1_twice.svg",
@@ -363,7 +363,7 @@ export const knitting: StitchGroup = {
       abbr: "St rem on right needle after last BO st",
       name: "Stitch remains on right needle after last bind off stitch",
     },
-    svgPaths: ["M 50 95 A 1 1 0 0 1 150 95", "stroke"],
+    svgPaths: ["M 23.33 10 L 23.33 90 L 76.67 90 L 76.67 76.67 L 36.67 76.67 L 36.67 10 Z", "fill"],
     svg: "/stitches/knitting/st_rem.svg",
   },
   co: {

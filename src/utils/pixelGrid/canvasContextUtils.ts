@@ -86,6 +86,8 @@ const drawStitchPath = (
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
 ) => {
   ctx.lineWidth = 2;
+  ctx.lineJoin = "round"
+  ctx.lineCap = "round"
   if (svgPathStep[1] === "stroke") {
     ctx.stroke(createFromSvgPath(x, y, w, h, svgPathStep[0]));
   } else {

@@ -35,7 +35,7 @@ const ValidationIndicator = ({
             />
           )}
         </button>
-        {isOpen && <div className="card absolute fadeInFast w-30 z-10">{errorMsg}</div>}
+        {isOpen && <div className="card absolute fadeInFast w-30 z-10 right-0">{errorMsg}</div>}
       </div>
     );
   };

@@ -100,12 +100,10 @@ export default function ProjectSizeInputs({
   return (
     <div className="flex flex-col h-full relative overflow-visible">
       <div className="flex">
-        <h3 className="grow text-center text-xl sm:text-2xl">
+        <h3 className="grow text-center text-2xl">
           Set your pattern size
         </h3>
-        <div className="absolute right-0">
-          <ValidationIndicator errorMsg={isValidPatternSizeDisplay.error} />
-        </div>
+        <ValidationIndicator errorMsg={isValidPatternSizeDisplay.error} />
       </div>
       <div className="grow flex items-center">
         <div className={`${styles.container} h-fit`}>

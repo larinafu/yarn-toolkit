@@ -115,7 +115,7 @@ export default function InitCustomization({
     } else {
       acceptedProjSize = patternSize;
     }
-
+    
     clearTimeout(throttleContent.current);
     setGaugeChangeLoading(true);
     const timer: number = window.setTimeout(() => {
@@ -203,7 +203,7 @@ export default function InitCustomization({
         </p>
       </div>
       <div className="grow flex flex-col sm:flex-row overflow-auto">
-        <div className="flex flex-row shrink-0 sm:flex-col sm:w-3/12 min-w-xs pr-2 pl-2 overflow-auto sm:overflow-x-visible sm:overflow-y-auto">
+        <div className="flex flex-row shrink-0 sm:flex-col sm:w-3/12 min-w-xs pr-2 pl-2 overflow-auto">
           <section className="card m-2 shrink-0 h-fit">
             <GaugeSwatchInputs
               size={150}
