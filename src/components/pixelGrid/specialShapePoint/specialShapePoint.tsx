@@ -14,6 +14,7 @@ export default function SpecialShapePoint({
   setPointerDownFromCanvas,
   activeShapeIdx,
   setActiveShapeIdx,
+  isPointerDownFromCanvas,
 }: {
   shapeIdx: number;
   pointIdx: number;
@@ -27,6 +28,7 @@ export default function SpecialShapePoint({
   setActiveShapeIdx: React.Dispatch<
     React.SetStateAction<number | "erase" | null>
   >;
+  isPointerDownFromCanvas: boolean;
 }) {
   const pointRef = useRef<any>(null);
   return (
@@ -49,7 +51,7 @@ export default function SpecialShapePoint({
           }
         }}
         onPointerMove={(e) => {
-          if (activeShapeIdx === "erase") {
+          if (activeShapeIdx === "erase" && isPointerDownFromCanvas) {
             canvasEditTools.handleCanvasEdit(e, "down", {
               shapeId: shapeIdx,
             });
