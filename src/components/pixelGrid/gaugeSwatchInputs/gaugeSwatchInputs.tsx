@@ -37,55 +37,57 @@ export default function GaugeSwatchInputs({
   const isValidSwatchDisplay = isValidSwatch(swatchInputs);
 
   const generateLines = () => {
-    const lines = [];
-    if (swatchInputs.width !== "" && swatchInputs.height !== "") {
-      const prevWidthHeightRatio =
-        parseInt(swatchInputs.width) / parseInt(swatchInputs.height);
-      let distBetweenHorizontalLines: number;
-      let distBetweenVertLines: number;
-      if (prevWidthHeightRatio < 1) {
-        distBetweenVertLines = size / MIN_NUM_ROWS_OR_COLS;
-        distBetweenHorizontalLines =
-          distBetweenVertLines * prevWidthHeightRatio;
-      } else {
-        distBetweenHorizontalLines = size / MIN_NUM_ROWS_OR_COLS;
-        distBetweenVertLines =
-          distBetweenHorizontalLines / prevWidthHeightRatio;
+    if (isValidSwatchDisplay.isValid) {
+      const lines = [];
+      if (swatchInputs.width !== "" && swatchInputs.height !== "") {
+        const prevWidthHeightRatio =
+          parseInt(swatchInputs.width) / parseInt(swatchInputs.height);
+        let distBetweenHorizontalLines: number;
+        let distBetweenVertLines: number;
+        if (prevWidthHeightRatio < 1) {
+          distBetweenVertLines = size / MIN_NUM_ROWS_OR_COLS;
+          distBetweenHorizontalLines =
+            distBetweenVertLines * prevWidthHeightRatio;
+        } else {
+          distBetweenHorizontalLines = size / MIN_NUM_ROWS_OR_COLS;
+          distBetweenVertLines =
+            distBetweenHorizontalLines / prevWidthHeightRatio;
+        }
+        for (
+          let vertLinePos = MARGIN + distBetweenVertLines;
+          vertLinePos < MARGIN + size;
+          vertLinePos += distBetweenVertLines
+        ) {
+          lines.push(
+            <line
+              key={lines.length}
+              x1={vertLinePos}
+              y1={MARGIN}
+              x2={vertLinePos}
+              y2={MARGIN + size}
+              strokeWidth={STROKE_WIDTH}
+            />
+          );
+        }
+        for (
+          let horizLinePos = MARGIN + distBetweenHorizontalLines;
+          horizLinePos < MARGIN + size;
+          horizLinePos += distBetweenHorizontalLines
+        ) {
+          lines.push(
+            <line
+              key={lines.length}
+              x1={MARGIN}
+              y1={horizLinePos}
+              x2={MARGIN + size}
+              y2={horizLinePos}
+              strokeWidth={STROKE_WIDTH}
+            />
+          );
+        }
       }
-      for (
-        let vertLinePos = MARGIN + distBetweenVertLines;
-        vertLinePos < MARGIN + size;
-        vertLinePos += distBetweenVertLines
-      ) {
-        lines.push(
-          <line
-            key={lines.length}
-            x1={vertLinePos}
-            y1={MARGIN}
-            x2={vertLinePos}
-            y2={MARGIN + size}
-            strokeWidth={STROKE_WIDTH}
-          />
-        );
-      }
-      for (
-        let horizLinePos = MARGIN + distBetweenHorizontalLines;
-        horizLinePos < MARGIN + size;
-        horizLinePos += distBetweenHorizontalLines
-      ) {
-        lines.push(
-          <line
-            key={lines.length}
-            x1={MARGIN}
-            y1={horizLinePos}
-            x2={MARGIN + size}
-            y2={horizLinePos}
-            strokeWidth={STROKE_WIDTH}
-          />
-        );
-      }
+      return lines;
     }
-    return lines;
   };
 
   const invalidateForm = () => {
@@ -129,9 +131,7 @@ export default function GaugeSwatchInputs({
     <>
       <div className={``}>
         <div className="flex justify-between">
-          <h3 className="grow text-center text-2xl">
-            Set your cell size
-          </h3>
+          <h3 className="grow text-center text-2xl">Set your cell size</h3>
           <ValidationIndicator errorMsg={isValidSwatchDisplay.error} />
         </div>
         <p className="text-red-600 mb-0.5">
@@ -267,11 +267,11 @@ export default function GaugeSwatchInputs({
         </div>
       </div>
       <div
-        className={`w-fit border ${
+        className={`w-50 whitespace-nowrap border ${
           isValidSwatchDisplay.isValid
             ? "bg-green-100 border-green-700"
             : "bg-red-100 border-red-700"
-        } text-center p-1 pl-2 pr-2 m-1 ml-auto mr-auto rounded`}
+        } text-center p-1 pl-2 pr-2 m-1 ml-auto mr-auto rounded overflow-auto`}
       >
         <strong
           className={`${

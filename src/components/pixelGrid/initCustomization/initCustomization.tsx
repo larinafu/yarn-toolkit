@@ -115,7 +115,7 @@ export default function InitCustomization({
     } else {
       acceptedProjSize = patternSize;
     }
-    
+
     clearTimeout(throttleContent.current);
     setGaugeChangeLoading(true);
     const timer: number = window.setTimeout(() => {
@@ -148,6 +148,10 @@ export default function InitCustomization({
     setSizeChangeLoading(true);
     const timer = window.setTimeout(() => {
       setPatternSize(patternSize);
+      setSwatchInputs({
+        width: swatch.width.toString(),
+        height: swatch.height.toString()
+      });
       if (imageInfo) {
         setBasePattern(
           generateNewPixelGrid({

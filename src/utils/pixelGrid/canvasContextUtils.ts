@@ -217,6 +217,7 @@ const drawSpecialShapes = ({
   };
   gridDims && specialShapesCtx.clearRect(0, 0, gridDims.width, gridDims.height);
   specialShapesCtx.lineWidth = 5;
+  specialShapesCtx.lineCap = "round";
   for (const shape of specialShapes) {
     specialShapesCtx.strokeStyle = shape.color;
     const linePath = [];

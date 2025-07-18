@@ -125,7 +125,6 @@ export default function PixelGridDownloadPreview({
 
   const ModalTools = useModalTools((isOpen) => {
     if (isOpen) {
-      console.log("open now");
       setBlob(null);
       generateBlob.throttle(
         sizesInfo[sizeSelection].dimensions.width,
