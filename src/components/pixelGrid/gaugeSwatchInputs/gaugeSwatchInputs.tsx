@@ -6,11 +6,12 @@ import {
   isValidSwatch,
 } from "@/utils/general/inputValidationUtils";
 import Image from "next/image";
+import ValidationIndicator from "../validationIndicator/validationIndicator";
 
 const MARGIN = 5;
 const MIN_NUM_ROWS_OR_COLS = 4;
 
-const cellRatioInputStyle = "w-full max-w-10 text-center mr-auto text-[100%]";
+const cellRatioInputStyle = "size-8 sm:size-10 text-center mr-auto text-[100%]";
 
 export default function GaugeSwatchInputs({
   size,
@@ -36,55 +37,57 @@ export default function GaugeSwatchInputs({
   const isValidSwatchDisplay = isValidSwatch(swatchInputs);
 
   const generateLines = () => {
-    const lines = [];
-    if (swatchInputs.width !== "" && swatchInputs.height !== "") {
-      const prevWidthHeightRatio =
-        parseInt(swatchInputs.width) / parseInt(swatchInputs.height);
-      let distBetweenHorizontalLines: number;
-      let distBetweenVertLines: number;
-      if (prevWidthHeightRatio < 1) {
-        distBetweenVertLines = size / MIN_NUM_ROWS_OR_COLS;
-        distBetweenHorizontalLines =
-          distBetweenVertLines * prevWidthHeightRatio;
-      } else {
-        distBetweenHorizontalLines = size / MIN_NUM_ROWS_OR_COLS;
-        distBetweenVertLines =
-          distBetweenHorizontalLines / prevWidthHeightRatio;
+    if (isValidSwatchDisplay.isValid) {
+      const lines = [];
+      if (swatchInputs.width !== "" && swatchInputs.height !== "") {
+        const prevWidthHeightRatio =
+          parseInt(swatchInputs.width) / parseInt(swatchInputs.height);
+        let distBetweenHorizontalLines: number;
+        let distBetweenVertLines: number;
+        if (prevWidthHeightRatio < 1) {
+          distBetweenVertLines = size / MIN_NUM_ROWS_OR_COLS;
+          distBetweenHorizontalLines =
+            distBetweenVertLines * prevWidthHeightRatio;
+        } else {
+          distBetweenHorizontalLines = size / MIN_NUM_ROWS_OR_COLS;
+          distBetweenVertLines =
+            distBetweenHorizontalLines / prevWidthHeightRatio;
+        }
+        for (
+          let vertLinePos = MARGIN + distBetweenVertLines;
+          vertLinePos < MARGIN + size;
+          vertLinePos += distBetweenVertLines
+        ) {
+          lines.push(
+            <line
+              key={lines.length}
+              x1={vertLinePos}
+              y1={MARGIN}
+              x2={vertLinePos}
+              y2={MARGIN + size}
+              strokeWidth={STROKE_WIDTH}
+            />
+          );
+        }
+        for (
+          let horizLinePos = MARGIN + distBetweenHorizontalLines;
+          horizLinePos < MARGIN + size;
+          horizLinePos += distBetweenHorizontalLines
+        ) {
+          lines.push(
+            <line
+              key={lines.length}
+              x1={MARGIN}
+              y1={horizLinePos}
+              x2={MARGIN + size}
+              y2={horizLinePos}
+              strokeWidth={STROKE_WIDTH}
+            />
+          );
+        }
       }
-      for (
-        let vertLinePos = MARGIN + distBetweenVertLines;
-        vertLinePos < MARGIN + size;
-        vertLinePos += distBetweenVertLines
-      ) {
-        lines.push(
-          <line
-            key={lines.length}
-            x1={vertLinePos}
-            y1={MARGIN}
-            x2={vertLinePos}
-            y2={MARGIN + size}
-            strokeWidth={STROKE_WIDTH}
-          />
-        );
-      }
-      for (
-        let horizLinePos = MARGIN + distBetweenHorizontalLines;
-        horizLinePos < MARGIN + size;
-        horizLinePos += distBetweenHorizontalLines
-      ) {
-        lines.push(
-          <line
-            key={lines.length}
-            x1={MARGIN}
-            y1={horizLinePos}
-            x2={MARGIN + size}
-            y2={horizLinePos}
-            strokeWidth={STROKE_WIDTH}
-          />
-        );
-      }
+      return lines;
     }
-    return lines;
   };
 
   const invalidateForm = () => {
@@ -126,14 +129,19 @@ export default function GaugeSwatchInputs({
     }`;
   return (
     <>
-      <div className={`text-center h-3/12`}>
-        <h3 className="text-center text-lg md:text-xl">set your cell size</h3>
-        <strong>This value cannot be changed later on!</strong>
+      <div className={``}>
+        <div className="flex justify-between">
+          <h3 className="grow text-center text-2xl">Set your cell size</h3>
+          <ValidationIndicator errorMsg={isValidSwatchDisplay.error} />
+        </div>
+        <p className="text-center text-red-600 mb-0.5">
+          *This value cannot be changed later on!
+        </p>
       </div>
-      <div className="flex justify-center h-1/2">
-        <div className={`${styles.cellRatioPreviewContainer} h-full`}>
+      <div className="flex justify-center">
+        <div className={`${styles.cellRatioPreviewContainer}`}>
           <div />
-          <div className="flex mb-1 sm:justify-center">
+          <div className="flex mb-1 justify-center items-center">
             <button
               disabled={swatchInputs.width === "1"}
               className="buttonBlank p-0"
@@ -242,7 +250,7 @@ export default function GaugeSwatchInputs({
             width={size + MARGIN * 2}
             height={size + MARGIN * 2}
             viewBox={`0 0 ${size + MARGIN * 2} ${size + MARGIN * 2}`}
-            className="stroke-amaranth h-full w-auto"
+            className="stroke-amaranth size-25 sm:size-auto"
           >
             <rect
               x={MARGIN}
@@ -259,12 +267,19 @@ export default function GaugeSwatchInputs({
         </div>
       </div>
       <div
-        className={`h-3/12 ${
-          isValidSwatchDisplay.isValid ? "info-green" : "info-red"
-        } text-center ml-auto mr-auto`}
+        className={`w-50 whitespace-nowrap border ${
+          isValidSwatchDisplay.isValid
+            ? "bg-green-100 border-green-700"
+            : "bg-red-100 border-red-700"
+        } text-center p-1 pl-2 pr-2 m-1 ml-auto mr-auto rounded overflow-auto`}
       >
-        <strong>ratio: {getAspectRatio()}</strong>
-        {isValidSwatchDisplay.error && <p>{isValidSwatchDisplay.error}</p>}
+        <strong
+          className={`${
+            isValidSwatchDisplay.error ? "text-red-700" : "text-green-700"
+          }`}
+        >
+          ratio: {getAspectRatio()}
+        </strong>
       </div>
     </>
   );

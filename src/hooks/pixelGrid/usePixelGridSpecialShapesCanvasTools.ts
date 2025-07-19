@@ -121,6 +121,7 @@ export default function usePixelGridSpecialShapesCanvasTools({
       tarWindowTools.gridDimensions.height
     );
     tarCtx.lineWidth = 5;
+    tarCtx.lineCap = "round";
     for (const shape of specialShapesRef.current) {
       tarCtx.strokeStyle = shape.color;
       const linePath = [];

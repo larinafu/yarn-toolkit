@@ -1,5 +1,4 @@
 .cellRatioPreviewContainer {
   display: inline-grid;
   grid-template-columns: 25% auto;
-  grid-template-rows: 25% auto;
 }

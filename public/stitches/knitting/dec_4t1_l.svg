@@ -2,5 +2,5 @@
 <svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
     xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 100 100"
     style="enable-background:new 0 0 100 100" xml:space="preserve">
-    <path stroke="#000" fill="none" stroke-width="10" stroke-linecap="round" d="M 20 40 L 25 15 L 80 40 M 60 60 L 30 60 L 50 35 L 50 75" />
+    <path stroke="#000" fill="none" stroke-width="10" stroke-linecap="round" d="M 80 35 L 25 10 L 20 35 M 61 73 L 25 73 L 49 43 L 49 91" />
         </svg>
