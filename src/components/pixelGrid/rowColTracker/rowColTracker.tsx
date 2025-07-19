@@ -8,6 +8,60 @@ import {
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
 
 import styles from "./rowColTracker.module.css";
+import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
+import { useState } from "react";
+
+const TrackerOptions = ({
+  pos,
+  number,
+}: {
+  pos: "top" | "bottom" | "left" | "right";
+  number: number;
+}) => {
+  const [isOpen, setOpen] = useState(false);
+  const ref = useRefWithClickawayListener(() => {
+    setOpen(false);
+  }, []);
+  let positioning: string;
+  let type: "row" | "column";
+  switch (pos) {
+    case "top":
+      positioning = "top-full left-0";
+      type = "column";
+      break;
+    case "bottom":
+      positioning = "bottom-full left-0";
+      type = "column";
+      break;
+    case "left":
+      positioning = "left-full top-0";
+      type = "row";
+      break;
+    case "right":
+      positioning = "right-full top-0";
+      type = "row";
+  }
+  return (
+    <div ref={ref} className="relative">
+      <button
+        className="buttonBlank text-black m-0 p-0"
+        onClick={() => setOpen(!isOpen)}
+      >
+        {number}
+      </button>
+      {isOpen && (
+        <ul className={`z-10 card absolute ${positioning}`}>
+          <li>
+            Insert {type} {type === "row" ? "above" : "left"}
+          </li>
+          <li>
+            Insert {type} {type === "row" ? "below" : "right"}
+          </li>
+        </ul>
+      )}
+    </div>
+  );
+};
 
 export default function RowColTracker({
   children,
@@ -85,7 +139,7 @@ export default function RowColTracker({
           opacity: getOpacity(rowNum, "left"),
         }}
       >
-        {rowNum}
+        <TrackerOptions pos="left" number={rowNum} />
       </div>
     );
     rightLabels.push(
@@ -96,7 +150,7 @@ export default function RowColTracker({
           opacity: getOpacity(rowNum, "right"),
         }}
       >
-        {rowNum}
+        <TrackerOptions pos="right" number={rowNum} />
       </div>
     );
   }
@@ -114,7 +168,7 @@ export default function RowColTracker({
           opacity: getOpacity(colNum, "top"),
         }}
       >
-        {colNum}
+        <TrackerOptions pos="top" number={colNum} />
       </div>
     );
     bottomLabels.push(
@@ -125,7 +179,7 @@ export default function RowColTracker({
           opacity: getOpacity(colNum, "bottom"),
         }}
       >
-        {colNum}
+        <TrackerOptions pos="bottom" number={colNum} />
       </div>
     );
   }
@@ -158,7 +212,9 @@ export default function RowColTracker({
       <div
         className={`absolute top-0 left-0 grid grid-cols-3 grid-rows-3 gap-0 ${styles.wrapper}`}
       >
-        <div className={`${styles.content} touch-none relative`}>{children}</div>
+        <div className={`${styles.content} touch-none relative`}>
+          {children}
+        </div>
         <div className={styles.leftLabels}>
           <section className="w-10">{...leftLabels}</section>
         </div>
@@ -173,22 +229,5 @@ export default function RowColTracker({
         </div>
       </div>
     </div>
-    // <div className="relative size-full">
-    //   <div className="absolute top-10 left-10 opacity-0">{children}</div>
-    //   <section className="absolute top-0 left-0 flex items-center size-full">
-    //     <section className="w-10">{...leftLabels}</section>
-    //     <div className="flex flex-col size-full">
-    //       <section className="flex h-10">{...topLabels}</section>
-    //       <div className="grow">
-    //         <div
-    //           className={`touch-none overflow-hidden size-full`}
-    //           ref={pixelGridCanvasRefWithRect.ref}
-    //         ></div>
-    //       </div>
-    //       <section className="flex h-10">{...bottomLabels}</section>
-    //     </div>
-    //     <section className="w-10">{...rightLabels}</section>
-    //   </section>
-    // </div>
   );
 }
