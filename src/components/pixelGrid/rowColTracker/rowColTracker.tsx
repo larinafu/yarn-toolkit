@@ -79,7 +79,7 @@ export default function RowColTracker({
   ) {
     leftLabels.push(
       <div
-        className="flex items-center justify-center"
+        className="flex items-center justify-end pr-0.5"
         style={{
           height: canvasCellDimensions.height,
           opacity: getOpacity(rowNum, "left"),
@@ -90,7 +90,7 @@ export default function RowColTracker({
     );
     rightLabels.push(
       <div
-        className="flex items-center justify-center"
+        className="flex items-center justify-start pl-0.5"
         style={{
           height: canvasCellDimensions.height,
           opacity: getOpacity(rowNum, "right"),
@@ -108,7 +108,7 @@ export default function RowColTracker({
   ) {
     topLabels.push(
       <div
-        className="flex items-center justify-center"
+        className="flex justify-center items-end"
         style={{
           width: canvasCellDimensions.width,
           opacity: getOpacity(colNum, "top"),
@@ -119,7 +119,7 @@ export default function RowColTracker({
     );
     bottomLabels.push(
       <div
-        className="flex items-center justify-center"
+        className="flex items-start justify-center"
         style={{
           width: canvasCellDimensions.width,
           opacity: getOpacity(colNum, "bottom"),
