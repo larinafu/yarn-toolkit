@@ -7,7 +7,6 @@ import {
   PixelGridCanvasSavedData,
 } from "@/types/pixelGrid";
 import { useEffect, useRef, useState } from "react";
-import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
 import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";

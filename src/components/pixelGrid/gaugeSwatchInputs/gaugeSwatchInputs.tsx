@@ -134,7 +134,7 @@ export default function GaugeSwatchInputs({
           <h3 className="grow text-center text-2xl">Set your cell size</h3>
           <ValidationIndicator errorMsg={isValidSwatchDisplay.error} />
         </div>
-        <p className="text-red-600 mb-0.5">
+        <p className="text-center text-red-600 mb-0.5">
           *This value cannot be changed later on!
         </p>
       </div>
