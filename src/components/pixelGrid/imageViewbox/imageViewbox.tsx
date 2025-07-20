@@ -68,10 +68,13 @@ export default function ImageViewbox({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [
+    canvasWindowTools.canvasNumRowsAndCols.numRows,
+    canvasWindowTools.canvasNumRowsAndCols.numCols,
+  ]);
 
   return (
-    <section className="m-auto mt-0 mb-0 w-fit relative touch-none">
+    <section className="m-auto mt-0 mb-0 relative touch-none">
       <canvas ref={viewboxTools.ref}></canvas>
       <canvas
         ref={viewboxTools.specialShapesRef}

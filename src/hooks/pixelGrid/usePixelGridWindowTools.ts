@@ -7,7 +7,6 @@ import {
   PixelGridCanvasWindow,
 } from "@/types/pixelGrid";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
-import { vhToPx, vwToPx } from "@/utils/general/sizeConversionUtils";
 
 export type PixelGridWindowTools = {
   canvasCellDimensions: PixelGridCanvasCellDimensions;

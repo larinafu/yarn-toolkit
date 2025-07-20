@@ -149,10 +149,6 @@ export default function useViewboxTools({
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
 }): ViewboxTools {
-  const [maxPreviewWidthPx, maxPreviewHeightPx] = [
-    vwToPx(MAX_PREVIEW_WIDTH_VW),
-    vhToPx(MAX_PREVIEW_HEIGHT_VH),
-  ];
   const viewboxRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
   const viewboxSpecialShapesRef = useRef(null);
   const [viewboxContext, setViewboxContext] =
@@ -218,6 +214,7 @@ export default function useViewboxTools({
         canvasNumRowsAndCols: curWindowTools.canvasNumRowsAndCols,
         canvasCellWidthHeightRatio: widthHeightRatio,
       });
+
     if (
       !(newViewDims.width === parseInt(viewbox.style.width)) ||
       !(newViewDims.height === parseInt(viewbox.style.height))

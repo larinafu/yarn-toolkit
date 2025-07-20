@@ -3,7 +3,7 @@ import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickaway
 import styles from "./colorPicker.module.css";
 import { useState } from "react";
 import { getColor } from "@/utils/general/colorUtils";
-import { defaultColorsConstants } from "@/constants/colors";
+import { DEFAULT_COLORS } from "@/constants/colors";
 
 export default function ColorPicker({
   activeColorPalette,
@@ -76,7 +76,7 @@ const ColorOption = ({
       </button>
       {openExpand && (
         <section className="absolute card overflow-auto z-40 left-0 right-0 m-auto w-fit fadeInFast">
-          {defaultColorsConstants.map((colorRow, idx) => (
+          {DEFAULT_COLORS.map((colorRow, idx) => (
             <div key={idx} className="flex">
               {Object.values(colorRow).map((expandedColorHex) => (
                 <button

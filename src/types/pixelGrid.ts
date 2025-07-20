@@ -35,6 +35,8 @@ export type AspectRatio = {
 
 export type CanvasPixelData = { hex: string; isSelected?: boolean }[][];
 
+export type GridLayer = "row" | "col";
+
 export type CreateData = {
   pixels: CanvasPixelData;
   curImg: string;

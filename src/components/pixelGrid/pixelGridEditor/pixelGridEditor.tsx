@@ -27,6 +27,7 @@ import usePixelGridEditTools from "@/hooks/pixelGrid/usePixelGridEditTools";
 import usePixelGridSpecialShapesCanvasTools from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 import useViewboxTools from "@/hooks/pixelGrid/useViewboxTools";
 import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
+import usePixelGridSizingTools from "@/hooks/pixelGrid/usePixelGridSizingTools";
 
 export default function PixelGridEditor({
   savedCanvasData,
@@ -98,33 +99,6 @@ export default function PixelGridEditor({
     specialShapesRef: specialShapesTools.specialShapesRef,
   });
 
-  const editRecordTools = usePixelGridEditRecordTools({
-    editMode: editConfigTools.editMode,
-    savedCanvasDataRef,
-    specialShapesRef: specialShapesTools.specialShapesRef,
-    updatePixelColor: colorCanvasTools.updatePixelColor,
-    updateStitch: stitchCanvasTools.updateStitch,
-    viewboxTools,
-    drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
-    setChangedShapes: specialShapesTools.setChangedShapes,
-  });
-
-  const canvasEditTools = usePixelGridEditTools({
-    colorCanvasTools,
-    stitchCanvasTools,
-    specialShapesTools,
-    editMode: editConfigTools.editMode,
-    activeColor:
-      editConfigTools.activeColorPalette[editConfigTools.activeColorIdx][0],
-    activeStitch:
-      editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx],
-    interactionLayerTools,
-    editRecordTools,
-    activeShapeIdx: editConfigTools.activeShapeIdx,
-    stitchColor: editConfigTools.stitchColor,
-    shapeColor: editConfigTools.shapeColor,
-  });
-
   const updateFullCanvas = ({
     colorCanvasContext,
     stitchCanvasContext,
@@ -194,6 +168,40 @@ export default function PixelGridEditor({
       ctx: specialShapesCtx,
     });
   };
+
+  const editRecordTools = usePixelGridEditRecordTools({
+    editMode: editConfigTools.editMode,
+    savedCanvasDataRef,
+    specialShapesRef: specialShapesTools.specialShapesRef,
+    updatePixelColor: colorCanvasTools.updatePixelColor,
+    updateStitch: stitchCanvasTools.updateStitch,
+    updateFullCanvas,
+    viewboxTools,
+    drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
+    setChangedShapes: specialShapesTools.setChangedShapes,
+    canvasWindowTools
+  });
+
+  const gridSizingTools = usePixelGridSizingTools({
+    savedCanvasDataRef,
+    saveSession: editRecordTools.saveSession,
+  });
+
+  const canvasEditTools = usePixelGridEditTools({
+    colorCanvasTools,
+    stitchCanvasTools,
+    specialShapesTools,
+    editMode: editConfigTools.editMode,
+    activeColor:
+      editConfigTools.activeColorPalette[editConfigTools.activeColorIdx][0],
+    activeStitch:
+      editConfigTools.activeStitchPalette[editConfigTools.activeStitchIdx],
+    interactionLayerTools,
+    editRecordTools,
+    activeShapeIdx: editConfigTools.activeShapeIdx,
+    stitchColor: editConfigTools.stitchColor,
+    shapeColor: editConfigTools.shapeColor,
+  });
 
   const resizeObserverRef = useRef<null | ResizeObserver>(null);
 
@@ -293,6 +301,8 @@ export default function PixelGridEditor({
     pixelGridCanvasRefWithRect.ref.current,
     canvasWindowTools.canvasCellDimensions.width,
     canvasWindowTools.canvasCellDimensions.height,
+    canvasWindowTools.canvasNumRowsAndCols.numRows,
+    canvasWindowTools.canvasNumRowsAndCols.numCols
   ]);
 
   return (
@@ -340,6 +350,7 @@ export default function PixelGridEditor({
             canvasNumRowsAndCols={canvasWindowTools.canvasNumRowsAndCols}
             numberFormat={numberFormat}
             pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
+            gridSizingTools={gridSizingTools}
           >
             <PixelGridCanvas
               activeShapeIdx={editConfigTools.activeShapeIdx}

@@ -1,4 +1,4 @@
-import { defaultColorsConstants } from "@/constants/colors";
+import { DEFAULT_CELL_COLOR, DEFAULT_COLORS } from "@/constants/colors";
 import { PatternSize } from "@/types/pixelGrid";
 import * as nearestColorMap from "nearest-color";
 
@@ -9,8 +9,8 @@ const getColorIndicesForCoord = (x: number, y: number, imgWidth: number) => {
 
 export const generateNewPixelGridNoImage = (patternSize: PatternSize) =>
   Array(patternSize.numRows)
-    .fill({ hex: "#ffffff" })
-    .map(() => Array(patternSize.numCols).fill({ hex: "#ffffff" }));
+    .fill({ hex: DEFAULT_CELL_COLOR })
+    .map(() => Array(patternSize.numCols).fill({ hex: DEFAULT_CELL_COLOR }));
 
 export const generateNewPixelGrid = ({
   imgData,
@@ -23,7 +23,7 @@ export const generateNewPixelGrid = ({
   numStitches: number;
   numRows: number;
 }) => {
-  const colorMap = defaultColorsConstants.reduce(
+  const colorMap = DEFAULT_COLORS.reduce(
     (map: { [colorName: string]: string }, colorRow) => {
       for (const [colorName, colorObj] of Object.entries(colorRow)) {
         map[colorName] = colorObj.hex;
