@@ -4,6 +4,7 @@ import {
   PixelGridCanvasCellDimensions,
   PixelGridCanvasDimensions,
   PixelGridCanvasNumRowsAndCols,
+  PixelGridCanvasSavedData,
   PixelGridCanvasWindow,
 } from "@/types/pixelGrid";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
@@ -24,7 +25,19 @@ export type PixelGridWindowTools = {
     canvasWidth?: number,
     canvasHeight?: number
   ) => void;
-  shiftWindow: (rowShift: number, colShift: number) => void;
+  shiftWindow: ({
+    newStartRow,
+    newStartCol,
+    newVisibleRows,
+    newVisibleCols,
+    updateCanvas,
+  }: {
+    newStartCol?: number;
+    newStartRow?: number;
+    newVisibleRows?: number;
+    newVisibleCols?: number;
+    updateCanvas?: boolean;
+  }) => PixelGridCanvasWindow;
   shiftPixelSize: (shift: "up" | "down") => {
     canvasWindow: PixelGridCanvasWindow;
     canvasCellDimensions: PixelGridCanvasCellDimensions;
@@ -83,6 +96,8 @@ export default function usePixelGridWindowTools({
   canvasCellWidthHeightRatio,
   canvasNumRowsAndCols,
   pixelGridCanvasRefWithRect,
+  savedCanvasDataRef,
+  updateFullCanvas,
 }: {
   canvasCellWidthHeightRatio: number;
   canvasNumRowsAndCols: PixelGridCanvasNumRowsAndCols;
@@ -90,6 +105,12 @@ export default function usePixelGridWindowTools({
     ref: React.RefObject<any>;
     getDims: () => DOMRect | undefined;
   };
+  savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  updateFullCanvas: ({
+    windowTools,
+  }: {
+    windowTools?: Partial<PixelGridWindowTools>;
+  }) => void;
 }): PixelGridWindowTools {
   const maxWindowDimensions = {
     viewWidth: pixelGridCanvasRefWithRect.getDims()?.width || 0,
@@ -293,12 +314,66 @@ export default function usePixelGridWindowTools({
       ];
       canvasSizingUtils.resizeCanvas({ ref, gridWidth, gridHeight });
     },
-    shiftWindow: (newRowStart: number, newColStart: number) => {
-      setCanvasWindow({
-        ...canvasWindow,
-        startRow: newRowStart,
-        startCol: newColStart,
-      });
+    shiftWindow: ({
+      newStartRow,
+      newStartCol,
+      newVisibleRows,
+      newVisibleCols,
+      updateCanvas,
+    }: {
+      newStartCol?: number;
+      newStartRow?: number;
+      newVisibleRows?: number;
+      newVisibleCols?: number;
+      updateCanvas?: boolean;
+    }) => {
+      let finalStartRow = newStartRow ?? canvasWindow.startRow;
+      let finalStartCol = newStartCol ?? canvasWindow.startCol;
+      let finalVisibleRows = newVisibleRows || canvasWindow.visibleRows;
+      let finalVisibleCols = newVisibleCols || canvasWindow.visibleCols;
+
+      if (finalVisibleRows > savedCanvasDataRef.current.pixels.length) {
+        newVisibleRows = savedCanvasDataRef.current.pixels.length;
+      } else if (
+        finalStartRow + finalVisibleRows >
+        savedCanvasDataRef.current.pixels.length
+      ) {
+        finalStartRow =
+          savedCanvasDataRef.current.pixels.length - finalVisibleRows;
+      }
+
+      if (finalVisibleCols > savedCanvasDataRef.current.pixels[0].length) {
+        newVisibleCols = savedCanvasDataRef.current.pixels[0].length;
+      } else if (
+        finalStartCol + finalVisibleCols >
+        savedCanvasDataRef.current.pixels[0].length
+      ) {
+        finalStartCol =
+          savedCanvasDataRef.current.pixels[0].length - finalVisibleCols;
+      }
+      const newWindow = {
+        startRow: finalStartRow,
+        startCol: finalStartCol,
+        visibleRows: finalVisibleRows,
+        visibleCols: finalVisibleCols,
+      };
+      if (
+        updateCanvas !== false &&
+        (newWindow.startRow !== canvasWindow.startRow ||
+          newWindow.startCol !== canvasWindow.startCol ||
+          newWindow.visibleRows !== canvasWindow.visibleRows ||
+          newWindow.visibleCols !== canvasWindow.visibleCols ||
+          updateCanvas === true)
+      ) {
+        setCanvasWindow(newWindow);
+        updateFullCanvas({
+          windowTools: {
+            canvasWindow: newWindow,
+          },
+        });
+      }
+
+      return newWindow;
     },
     shiftPixelSize,
     recalcGridSize,

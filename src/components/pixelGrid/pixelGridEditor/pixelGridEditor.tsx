@@ -53,6 +53,15 @@ export default function PixelGridEditor({
 
   const [isPointerDownFromCanvas, setPointerDownFromCanvas] = useState(false);
 
+  const updateFullCanvasRef = useRef<
+    | ((args: {
+        colorCanvasContext?: CanvasRenderingContext2D;
+        stitchCanvasContext?: CanvasRenderingContext2D;
+        specialShapesCanvasContext?: CanvasRenderingContext2D;
+        windowTools?: Partial<PixelGridWindowTools>;
+      }) => void)
+    | null
+  >(null);
   const canvasWindowTools = usePixelGridWindowTools({
     canvasCellWidthHeightRatio:
       savedCanvasData.swatch.width / savedCanvasData.swatch.height,
@@ -61,6 +70,8 @@ export default function PixelGridEditor({
       numRows: savedCanvasData.pixels.length,
       numCols: savedCanvasData.pixels[0].length,
     },
+    savedCanvasDataRef,
+    updateFullCanvas: (...args) => updateFullCanvasRef.current?.(...args),
   });
 
   const interactionLayerTools = usePixelGridInteractionLayerTools({
@@ -97,6 +108,14 @@ export default function PixelGridEditor({
     pixelGridCanvasWindowTools: canvasWindowTools,
     savedCanvasDataRef,
     specialShapesRef: specialShapesTools.specialShapesRef,
+  });
+
+  const editRecordToolsRef = useRef<ReturnType<
+    typeof usePixelGridEditRecordTools
+  > | null>(null);
+  const gridSizingTools = usePixelGridSizingTools({
+    savedCanvasDataRef,
+    saveSession: (...args) => editRecordToolsRef.current?.saveSession(...args),
   });
 
   const updateFullCanvas = ({
@@ -168,6 +187,7 @@ export default function PixelGridEditor({
       ctx: specialShapesCtx,
     });
   };
+  updateFullCanvasRef.current = updateFullCanvas;
 
   const editRecordTools = usePixelGridEditRecordTools({
     editMode: editConfigTools.editMode,
@@ -179,13 +199,11 @@ export default function PixelGridEditor({
     viewboxTools,
     drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
     setChangedShapes: specialShapesTools.setChangedShapes,
-    canvasWindowTools
+    canvasWindowTools,
+    undoGridSizing: gridSizingTools.undo,
+    redoGridSizing: gridSizingTools.redo,
   });
-
-  const gridSizingTools = usePixelGridSizingTools({
-    savedCanvasDataRef,
-    saveSession: editRecordTools.saveSession,
-  });
+  editRecordToolsRef.current = editRecordTools;
 
   const canvasEditTools = usePixelGridEditTools({
     colorCanvasTools,
@@ -302,7 +320,7 @@ export default function PixelGridEditor({
     canvasWindowTools.canvasCellDimensions.width,
     canvasWindowTools.canvasCellDimensions.height,
     canvasWindowTools.canvasNumRowsAndCols.numRows,
-    canvasWindowTools.canvasNumRowsAndCols.numCols
+    canvasWindowTools.canvasNumRowsAndCols.numCols,
   ]);
 
   return (

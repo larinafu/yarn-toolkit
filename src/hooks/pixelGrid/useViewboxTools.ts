@@ -303,7 +303,10 @@ export default function useViewboxTools({
               newColStart === pixelGridCanvasWindowTools.canvasWindow.startCol
             )
           ) {
-            pixelGridCanvasWindowTools.shiftWindow(newRowStart, newColStart);
+            pixelGridCanvasWindowTools.shiftWindow({
+              newStartRow: newRowStart,
+              newStartCol: newColStart,
+            });
           }
           return {
             ...pixelGridCanvasWindow,

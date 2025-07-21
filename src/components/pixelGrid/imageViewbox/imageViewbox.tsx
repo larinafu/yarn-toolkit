@@ -98,24 +98,8 @@ export default function ImageViewbox({
           viewboxTools.pointerActions.handleViewboxRelease();
         }}
         onPointerMove={(e) => {
-          const newCanvasWindow =
-            viewboxTools.pointerActions.handleViewboxMove(e);
           if (viewboxTools.pointerActions.isPointerDown) {
-            if (
-              !(
-                newCanvasWindow?.startRow ===
-                  canvasWindowTools.canvasWindow.startRow &&
-                newCanvasWindow?.startCol ===
-                  canvasWindowTools.canvasWindow.startCol
-              )
-            ) {
-              updateFullCanvas({
-                windowTools: {
-                  ...canvasWindowTools,
-                  canvasWindow: newCanvasWindow,
-                },
-              });
-            }
+            viewboxTools.pointerActions.handleViewboxMove(e);
           }
         }}
         onPointerUp={(e) => {
