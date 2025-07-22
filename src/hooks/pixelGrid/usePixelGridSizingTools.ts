@@ -78,9 +78,9 @@ export default function usePixelGridSizingTools({
       insertIndex,
       0,
       config?.row ||
-        new Array(savedCanvasDataRef.current.pixels[0].length).fill({
-          hex: DEFAULT_CELL_COLOR,
-        })
+        new Array(savedCanvasDataRef.current.pixels[0].length)
+          .fill(null)
+          .map(() => ({ hex: DEFAULT_CELL_COLOR }))
     );
     !config?.noSessionAdd &&
       saveSession({

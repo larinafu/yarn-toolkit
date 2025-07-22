@@ -11,6 +11,15 @@ import styles from "./rowColTracker.module.css";
 import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
 import { useState } from "react";
 import { GridSizingTools } from "@/hooks/pixelGrid/usePixelGridSizingTools";
+import {
+  PROJ_MAX_SIZE,
+  PROJ_MIN_SIZE,
+} from "@/constants/pixelGrid/projectSizeLimits";
+
+type ActionLayerValidations = {
+  canIncrease: boolean;
+  canDecrease: boolean;
+};
 
 const TrackerOptions = ({
   pos,
@@ -18,12 +27,14 @@ const TrackerOptions = ({
   number,
   gridSizingTools,
   layerIdx,
+  actionValidations,
 }: {
   pos: "top" | "bottom" | "left" | "right";
   loc: "top" | "bottom" | "left" | "right";
   number: number;
   gridSizingTools: GridSizingTools;
   layerIdx: number;
+  actionValidations: ActionLayerValidations;
 }) => {
   const [isOpen, setOpen] = useState(false);
   const ref = useRefWithClickawayListener(() => {
@@ -59,6 +70,7 @@ const TrackerOptions = ({
           gridSizingTools.addCol(layerIdx, "left");
         }
       },
+      isDisabled: !actionValidations.canIncrease,
     },
     {
       text: `Insert ${type} ${type === "row" ? "below" : "right"}`,
@@ -69,6 +81,7 @@ const TrackerOptions = ({
           gridSizingTools.addCol(layerIdx, "right");
         }
       },
+      isDisabled: !actionValidations.canIncrease,
     },
     {
       text: `Delete ${type}`,
@@ -79,6 +92,7 @@ const TrackerOptions = ({
           gridSizingTools.deleteCol(layerIdx);
         }
       },
+      isDisabled: !actionValidations.canDecrease,
     },
   ];
   return (
@@ -97,12 +111,15 @@ const TrackerOptions = ({
         >
           {options.map((option, idx) => (
             <li
-              className="whitespace-nowrap hover:bg-gray-200 first:rounded-t-md last:rounded-b-md"
+              className={`whitespace-nowrap  ${
+                option.isDisabled ? "opacity-50" : "hover:bg-gray-200"
+              } first:rounded-t-md last:rounded-b-md`}
               key={idx}
             >
               <button
-                className="text-start buttonBlank text-black m-0 p-0.5 border-0 w-full h-full"
+                className={`text-start buttonBlank text-black m-0 p-0.5 border-0 w-full h-full`}
                 onClick={option.onClick}
+                disabled={option.isDisabled}
               >
                 {option.text}
               </button>
@@ -139,16 +156,19 @@ export default function RowColTracker({
   const leftLabels = [];
   const rightLabels = [];
 
-  let colStart: number, colEnd: number;
+  const actionRowValidations = {
+    canIncrease: canvasNumRowsAndCols.numRows < PROJ_MAX_SIZE,
+    canDecrease: canvasNumRowsAndCols.numRows > PROJ_MIN_SIZE,
+  };
+  const actionColValidations = {
+    canIncrease: canvasNumRowsAndCols.numCols < PROJ_MAX_SIZE,
+    canDecrease: canvasNumRowsAndCols.numCols > PROJ_MIN_SIZE,
+  };
+
   const numberFormatGuide: PixelGridNumberFormatGuide =
     numberFormatGuides[numberFormat];
 
   //   if (numberFormatGuide.numbersReversed) {
-  colStart = canvasNumRowsAndCols.numCols - canvasWindow.startCol;
-  colEnd =
-    canvasNumRowsAndCols.numCols -
-    canvasWindow.visibleCols -
-    canvasWindow.startCol;
 
   const getOpacity = (
     num: number,
@@ -196,6 +216,7 @@ export default function RowColTracker({
           loc={rowStartIdx > canvasWindow.visibleRows / 2 ? "bottom" : "top"}
           gridSizingTools={gridSizingTools}
           layerIdx={rowStartIdx + canvasWindow.startRow}
+          actionValidations={actionRowValidations}
         />
       </div>
     );
@@ -213,6 +234,7 @@ export default function RowColTracker({
           loc={rowStartIdx > canvasWindow.visibleRows / 2 ? "bottom" : "top"}
           gridSizingTools={gridSizingTools}
           layerIdx={rowStartIdx + canvasWindow.startRow}
+          actionValidations={actionRowValidations}
         />
       </div>
     );
@@ -239,6 +261,7 @@ export default function RowColTracker({
           loc={colStartIdx > canvasWindow.visibleCols / 2 ? "right" : "left"}
           gridSizingTools={gridSizingTools}
           layerIdx={colStartIdx + canvasWindow.startCol}
+          actionValidations={actionColValidations}
         />
       </div>
     );
@@ -256,6 +279,7 @@ export default function RowColTracker({
           loc={colStartIdx > canvasWindow.visibleCols / 2 ? "right" : "left"}
           gridSizingTools={gridSizingTools}
           layerIdx={colStartIdx + canvasWindow.startCol}
+          actionValidations={actionColValidations}
         />
       </div>
     );

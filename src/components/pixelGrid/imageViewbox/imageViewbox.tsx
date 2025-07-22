@@ -11,31 +11,13 @@ import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 
 export default function ImageViewbox({
   canvasWindowTools,
-  savedCanvasDataRef,
-  updateFullCanvas,
   viewboxTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
-  updateFullCanvas: ({
-    colorCanvasContext,
-    stitchCanvasContext,
-    specialShapesCanvasContext,
-    windowTools,
-  }: {
-    colorCanvasContext?: CanvasRenderingContext2D;
-    stitchCanvasContext?: CanvasRenderingContext2D;
-    specialShapesCanvasContext?: CanvasRenderingContext2D;
-    windowTools?: Partial<PixelGridWindowTools>;
-  }) => void;
   viewboxTools: ViewboxTools;
 }) {
   const viewboxVisibleRef = useRef(null);
-
-  const [numRows, numCols] = [
-    savedCanvasDataRef.current.pixels.length,
-    savedCanvasDataRef.current.pixels[0].length,
-  ];
 
   useEffect(() => {
     const viewboxContext = (

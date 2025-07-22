@@ -429,7 +429,6 @@ export default function PixelGridEditor({
             <ImageViewbox
               savedCanvasDataRef={savedCanvasDataRef}
               canvasWindowTools={canvasWindowTools}
-              updateFullCanvas={updateFullCanvas}
               viewboxTools={viewboxTools}
             />
           </div>

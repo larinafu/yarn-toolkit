@@ -13,7 +13,7 @@ import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 
 const MAX_PREVIEW_WIDTH_VW = 20;
-const MAX_PREVIEW_HEIGHT_VH = 100;
+const MAX_PREVIEW_HEIGHT_VH = 70;
 const MIN_DIM_PX = 200;
 
 type ViewboxDims = PixelGridCanvasCellDimensions;
@@ -194,6 +194,16 @@ export default function useViewboxTools({
     );
   };
 
+  const drawViewboxSpecialShapes = (ctx?: CanvasRenderingContext2D) => {
+    canvasContextUtils.drawSpecialShapes({
+      specialShapesCtx:
+        ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
+      specialShapes: specialShapesRef.current,
+      cellDims: viewboxCellDims,
+      gridDims: viewboxDims,
+    });
+  }
+
   const updateFullCanvas = ({
     windowTools,
     viewContext,
@@ -234,6 +244,7 @@ export default function useViewboxTools({
         cellDims: newCellDims,
         cells: savedCanvasDataRef.current.pixels,
       });
+      drawViewboxSpecialShapes();
     }
   };
 
@@ -251,15 +262,7 @@ export default function useViewboxTools({
         cellDims: viewboxCellDims,
         cells: savedCanvasDataRef.current.pixels,
       }),
-    drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => {
-      canvasContextUtils.drawSpecialShapes({
-        specialShapesCtx:
-          ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
-        specialShapes: specialShapesRef.current,
-        cellDims: viewboxCellDims,
-        gridDims: viewboxDims,
-      });
-    },
+    drawViewboxSpecialShapes,
     setCtx: setViewboxContext,
     pointerActions: {
       isPointerDown: pointerDownPos !== null,

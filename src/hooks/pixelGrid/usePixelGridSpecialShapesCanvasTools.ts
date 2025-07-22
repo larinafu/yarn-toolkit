@@ -10,6 +10,13 @@ export type PixelGridSpecialShapesCanvasTools = {
   specialShapesRef: React.RefObject<SpecialShape[]>;
   addShape: (row: number, col: number, color: string, shape: "line") => void;
   removeShape: (idx: number) => void;
+  shiftShapes: (
+    layer: "row" | "col",
+    idx: number,
+    action: "add" | "delete",
+    numRows: number,
+    numCols: number
+  ) => void;
   captureShape: (shapeId: number, pointId?: number) => void;
   releasePoint: () => void;
   moveTarPoint: (newPoint: Point) => void;
@@ -55,8 +62,6 @@ export default function usePixelGridSpecialShapesCanvasTools({
 
   const [changedShapes, setChangedShapes] = useState<number[]>([]);
 
-  const specialShapesRefLength = specialShapesRef.current.length;
-
   const addShape = (row: number, col: number, color: string, shape: "line") => {
     setTarPoint({
       shapeId: specialShapesRef.current.length,
@@ -79,6 +84,40 @@ export default function usePixelGridSpecialShapesCanvasTools({
       ...specialShapesRef.current.slice(idx + 1),
     ];
     setChangedShapes([...changedShapes, idx]);
+  };
+
+  const shiftShapes = (
+    layer: "row" | "col",
+    idx: number,
+    action: "add" | "delete",
+    numRows: number,
+    numCols: number
+  ) => {
+    for (const shape of specialShapesRef.current) {
+      for (const point of shape.points) {
+        if (layer === "row") {
+          if (action === "add" && point.row >= idx) {
+            point.row += 1;
+          } else if (action === "delete") {
+            if (point.row === idx) {
+              point.row = Math.min(idx, numRows - 2);
+            } else if (point.row > idx) {
+              point.row -= 1;
+            }
+          }
+        } else {
+          if (action === "add" && point.col >= idx) {
+            point.col += 1;
+          } else if (action === "delete") {
+            if (point.col === idx) {
+              point.col = Math.min(idx, numCols - 2);
+            } else if (point.col > idx) {
+              point.col -= 1;
+            }
+          }
+        }
+      }
+    }
   };
 
   const captureShape = (shapeId: number, pointId?: number) => {
@@ -142,6 +181,7 @@ export default function usePixelGridSpecialShapesCanvasTools({
     setCtx: setSpecialShapesCtx,
     specialShapesRef,
     addShape,
+    shiftShapes,
     captureShape,
     releasePoint,
     moveTarPoint,

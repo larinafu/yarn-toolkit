@@ -333,7 +333,7 @@ export default function usePixelGridWindowTools({
       let finalVisibleCols = newVisibleCols || canvasWindow.visibleCols;
 
       if (finalVisibleRows > savedCanvasDataRef.current.pixels.length) {
-        newVisibleRows = savedCanvasDataRef.current.pixels.length;
+        finalVisibleRows = savedCanvasDataRef.current.pixels.length;
       } else if (
         finalStartRow + finalVisibleRows >
         savedCanvasDataRef.current.pixels.length
@@ -343,7 +343,7 @@ export default function usePixelGridWindowTools({
       }
 
       if (finalVisibleCols > savedCanvasDataRef.current.pixels[0].length) {
-        newVisibleCols = savedCanvasDataRef.current.pixels[0].length;
+        finalVisibleCols = savedCanvasDataRef.current.pixels[0].length;
       } else if (
         finalStartCol + finalVisibleCols >
         savedCanvasDataRef.current.pixels[0].length
@@ -357,6 +357,7 @@ export default function usePixelGridWindowTools({
         visibleRows: finalVisibleRows,
         visibleCols: finalVisibleCols,
       };
+      setCanvasWindow(newWindow);
       if (
         updateCanvas !== false &&
         (newWindow.startRow !== canvasWindow.startRow ||
@@ -365,7 +366,6 @@ export default function usePixelGridWindowTools({
           newWindow.visibleCols !== canvasWindow.visibleCols ||
           updateCanvas === true)
       ) {
-        setCanvasWindow(newWindow);
         updateFullCanvas({
           windowTools: {
             canvasWindow: newWindow,
