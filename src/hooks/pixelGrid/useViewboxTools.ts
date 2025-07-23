@@ -64,10 +64,7 @@ export type ViewboxTools = {
     viewContext?: CanvasRenderingContext2D;
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
-  drawViewboxSpecialShapes: ({
-    ctx,
-    config,
-  }: {
+  drawViewboxSpecialShapes: (args?: {
     ctx?: CanvasRenderingContext2D;
     config?: {
       viewboxDims?: ViewboxCellDims;
