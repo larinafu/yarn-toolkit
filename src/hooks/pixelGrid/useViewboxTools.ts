@@ -13,7 +13,7 @@ import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 
 const MAX_PREVIEW_WIDTH_VW = 20;
-const MAX_PREVIEW_HEIGHT_VH = 100;
+const MAX_PREVIEW_HEIGHT_VH = 70;
 const MIN_DIM_PX = 200;
 
 type ViewboxDims = PixelGridCanvasCellDimensions;
@@ -64,7 +64,13 @@ export type ViewboxTools = {
     viewContext?: CanvasRenderingContext2D;
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
-  drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => void;
+  drawViewboxSpecialShapes: (args?: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  }) => void;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -149,10 +155,6 @@ export default function useViewboxTools({
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
 }): ViewboxTools {
-  const [maxPreviewWidthPx, maxPreviewHeightPx] = [
-    vwToPx(MAX_PREVIEW_WIDTH_VW),
-    vhToPx(MAX_PREVIEW_HEIGHT_VH),
-  ];
   const viewboxRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
   const viewboxSpecialShapesRef = useRef(null);
   const [viewboxContext, setViewboxContext] =
@@ -198,6 +200,25 @@ export default function useViewboxTools({
     );
   };
 
+  const drawViewboxSpecialShapes = ({
+    ctx,
+    config,
+  }: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  } = {}) => {
+    canvasContextUtils.drawSpecialShapes({
+      specialShapesCtx:
+        ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
+      specialShapes: specialShapesRef.current,
+      cellDims: config?.viewboxCellDims || viewboxCellDims,
+      gridDims: config?.viewboxDims || viewboxDims,
+    });
+  };
+
   const updateFullCanvas = ({
     windowTools,
     viewContext,
@@ -218,6 +239,7 @@ export default function useViewboxTools({
         canvasNumRowsAndCols: curWindowTools.canvasNumRowsAndCols,
         canvasCellWidthHeightRatio: widthHeightRatio,
       });
+
     if (
       !(newViewDims.width === parseInt(viewbox.style.width)) ||
       !(newViewDims.height === parseInt(viewbox.style.height))
@@ -237,6 +259,12 @@ export default function useViewboxTools({
         cellDims: newCellDims,
         cells: savedCanvasDataRef.current.pixels,
       });
+      drawViewboxSpecialShapes({
+        config: {
+          viewboxDims: newViewDims,
+          viewboxCellDims: newCellDims,
+        },
+      });
     }
   };
 
@@ -254,15 +282,7 @@ export default function useViewboxTools({
         cellDims: viewboxCellDims,
         cells: savedCanvasDataRef.current.pixels,
       }),
-    drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => {
-      canvasContextUtils.drawSpecialShapes({
-        specialShapesCtx:
-          ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
-        specialShapes: specialShapesRef.current,
-        cellDims: viewboxCellDims,
-        gridDims: viewboxDims,
-      });
-    },
+    drawViewboxSpecialShapes,
     setCtx: setViewboxContext,
     pointerActions: {
       isPointerDown: pointerDownPos !== null,
@@ -306,7 +326,10 @@ export default function useViewboxTools({
               newColStart === pixelGridCanvasWindowTools.canvasWindow.startCol
             )
           ) {
-            pixelGridCanvasWindowTools.shiftWindow(newRowStart, newColStart);
+            pixelGridCanvasWindowTools.shiftWindow({
+              newStartRow: newRowStart,
+              newStartCol: newColStart,
+            });
           }
           return {
             ...pixelGridCanvasWindow,

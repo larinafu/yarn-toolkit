@@ -11,31 +11,13 @@ import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 
 export default function ImageViewbox({
   canvasWindowTools,
-  savedCanvasDataRef,
-  updateFullCanvas,
   viewboxTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
-  updateFullCanvas: ({
-    colorCanvasContext,
-    stitchCanvasContext,
-    specialShapesCanvasContext,
-    windowTools,
-  }: {
-    colorCanvasContext?: CanvasRenderingContext2D;
-    stitchCanvasContext?: CanvasRenderingContext2D;
-    specialShapesCanvasContext?: CanvasRenderingContext2D;
-    windowTools?: Partial<PixelGridWindowTools>;
-  }) => void;
   viewboxTools: ViewboxTools;
 }) {
   const viewboxVisibleRef = useRef(null);
-
-  const [numRows, numCols] = [
-    savedCanvasDataRef.current.pixels.length,
-    savedCanvasDataRef.current.pixels[0].length,
-  ];
 
   useEffect(() => {
     const viewboxContext = (
@@ -68,10 +50,13 @@ export default function ImageViewbox({
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [
+    canvasWindowTools.canvasNumRowsAndCols.numRows,
+    canvasWindowTools.canvasNumRowsAndCols.numCols,
+  ]);
 
   return (
-    <section className="m-auto mt-0 mb-0 w-fit relative touch-none">
+    <section className="m-auto mt-0 mb-0 relative touch-none">
       <canvas ref={viewboxTools.ref}></canvas>
       <canvas
         ref={viewboxTools.specialShapesRef}
@@ -95,24 +80,8 @@ export default function ImageViewbox({
           viewboxTools.pointerActions.handleViewboxRelease();
         }}
         onPointerMove={(e) => {
-          const newCanvasWindow =
-            viewboxTools.pointerActions.handleViewboxMove(e);
           if (viewboxTools.pointerActions.isPointerDown) {
-            if (
-              !(
-                newCanvasWindow?.startRow ===
-                  canvasWindowTools.canvasWindow.startRow &&
-                newCanvasWindow?.startCol ===
-                  canvasWindowTools.canvasWindow.startCol
-              )
-            ) {
-              updateFullCanvas({
-                windowTools: {
-                  ...canvasWindowTools,
-                  canvasWindow: newCanvasWindow,
-                },
-              });
-            }
+            viewboxTools.pointerActions.handleViewboxMove(e);
           }
         }}
         onPointerUp={(e) => {

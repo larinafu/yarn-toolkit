@@ -1,3 +1,8 @@
+import {
+  Point,
+  SpecialShape,
+} from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+
 export type BaseOption = "image" | "blank";
 
 export type Swatch = {
@@ -34,6 +39,8 @@ export type AspectRatio = {
 };
 
 export type CanvasPixelData = { hex: string; isSelected?: boolean }[][];
+
+export type GridLayer = "row" | "col";
 
 export type CreateData = {
   pixels: CanvasPixelData;
@@ -122,3 +129,81 @@ export type StitchGroup = {
     svg: string;
   };
 };
+
+// Sessions
+export type ColorChangeSession = {
+  mode: "colorChange";
+  data: {
+    [row: number]: {
+      [col: number]: {
+        prev: any;
+        new: any;
+      };
+    };
+  };
+};
+
+export type SymbolChangeSessionData = {
+  prev: { stitch: string; stitchColor: string };
+  new: { stitch: string; stitchColor: string };
+};
+
+export type SymbolChangeSession = {
+  mode: "symbolChange";
+  data: {
+    [row: number]: {
+      [col: number]: {
+        prev: { stitch: string; stitchColor: string };
+        new: { stitch: string; stitchColor: string };
+      };
+    };
+  };
+};
+
+export type SpecialShapeChangeCreateUpdateSession = {
+  mode: "specialShapeChange";
+  data: {
+    shapeId: number;
+    type: "create" | "update";
+    prev: Point[];
+    new: Point[];
+    color: string;
+  };
+};
+
+export type SpecialShapeChangeEraseSession = {
+  mode: "specialShapeChange";
+  data: {
+    type: "erase";
+    prev: [number, SpecialShape][];
+    new: null;
+  };
+};
+
+export type GridSizeChangeAddSession = {
+  mode: "gridSizeChange";
+  data: {
+    action: "add";
+    gridLayer: GridLayer;
+    idx: number;
+  };
+};
+
+export type GridSizeChangeDeleteSession = {
+  mode: "gridSizeChange";
+  data: {
+    action: "delete";
+    gridLayer: GridLayer;
+    idx: number;
+    layer: PixelGridCanvasCell[];
+  };
+};
+
+export type Session =
+  | null
+  | ColorChangeSession
+  | SymbolChangeSession
+  | SpecialShapeChangeCreateUpdateSession
+  | SpecialShapeChangeEraseSession
+  | GridSizeChangeAddSession
+  | GridSizeChangeDeleteSession;

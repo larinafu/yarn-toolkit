@@ -13,10 +13,7 @@ import InitPixelGridPreview from "../initPixelGridPreview/initPixelGridPreview";
 import GaugeSwatchInputs from "../gaugeSwatchInputs/gaugeSwatchInputs";
 import SpinnerSmall from "@/components/general/spinnerSmall/spinnerSmall";
 import { useRouter } from "next/navigation";
-import {
-  isValidProjectSize,
-  PROJ_SIZE_LIMIT,
-} from "@/utils/general/inputValidationUtils";
+import { isValidProjectSize } from "@/utils/general/inputValidationUtils";
 import {
   getInitialPatternSize,
   getPatternSizeHeightLimited,
@@ -27,6 +24,7 @@ import {
   generateNewPixelGridNoImage,
 } from "@/utils/pixelGrid/gridGeneratorUtils";
 import { SAVED_CANVAS_DATA_LOC } from "@/constants/pixelGrid/sessionStorage";
+import { PROJ_MAX_SIZE } from "@/constants/pixelGrid/projectSizeLimits";
 
 export default function InitCustomization({
   imageInfo,
@@ -106,7 +104,7 @@ export default function InitCustomization({
 
       if (acceptedProjSize.numRows + acceptedProjSize.numCols === 0) {
         acceptedProjSize = getInitialPatternSize(
-          PROJ_SIZE_LIMIT,
+          PROJ_MAX_SIZE,
           width / height,
           imageInfo.imageData.width,
           imageInfo.imageData.height
@@ -150,7 +148,7 @@ export default function InitCustomization({
       setPatternSize(patternSize);
       setSwatchInputs({
         width: swatch.width.toString(),
-        height: swatch.height.toString()
+        height: swatch.height.toString(),
       });
       if (imageInfo) {
         setBasePattern(

@@ -1,54 +1,15 @@
 import React, { useRef, useState } from "react";
 import { EditMode } from "./usePixelGridEditingConfigTools";
-import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
+import {
+  GridSizeChangeAddSession,
+  GridSizeChangeDeleteSession,
+  PixelGridCanvasSavedData,
+  Session,
+  SymbolChangeSessionData,
+} from "@/types/pixelGrid";
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
-import { Point, SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
+import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 import { ViewboxTools } from "./useViewboxTools";
-
-type SymbolChangeSessionData = {
-  prev: { stitch: string; stitchColor: string };
-  new: { stitch: string; stitchColor: string };
-};
-
-type Session =
-  | null
-  | {
-      mode: "colorChange";
-      data: {
-        [row: number]: {
-          [col: number]: {
-            prev: any;
-            new: any;
-          };
-        };
-      };
-    }
-  | {
-      mode: "symbolChange";
-      data: {
-        [row: number]: {
-          [col: number]: SymbolChangeSessionData;
-        };
-      };
-    }
-  | {
-      mode: "specialShapeChange";
-      data: {
-        shapeId: number;
-        type: "create" | "update";
-        prev: Point[];
-        new: Point[];
-        color: string;
-      };
-    }
-  | {
-      mode: "specialShapeChange";
-      data: {
-        type: "erase";
-        prev: [number, SpecialShape][];
-        new: null;
-      };
-    };
 
 type Record = Session[];
 
@@ -56,7 +17,7 @@ export type EditRecordTools = {
   addToSession: (row: number, col: number, data: any) => void;
   canRedo: boolean;
   canUndo: boolean;
-  saveSession: () => void;
+  saveSession: (instaSession?: Session) => void;
   sessionRef: React.RefObject<Session>;
   undo: () => void;
   redo: () => void;
@@ -73,6 +34,10 @@ export default function usePixelGridEditRecordTools({
   viewboxTools,
   drawShapesOnCanvas,
   setChangedShapes,
+  updateFullCanvas,
+  canvasWindowTools,
+  undoGridSizing,
+  redoGridSizing,
 }: {
   editMode: EditMode;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
@@ -110,9 +75,27 @@ export default function usePixelGridEditRecordTools({
     ctx?: CanvasRenderingContext2D | null;
   }) => void;
   setChangedShapes: React.Dispatch<React.SetStateAction<number[]>>;
+  updateFullCanvas: ({
+    colorCanvasContext,
+    stitchCanvasContext,
+    specialShapesCanvasContext,
+    windowTools,
+  }: {
+    colorCanvasContext?: CanvasRenderingContext2D;
+    stitchCanvasContext?: CanvasRenderingContext2D;
+    specialShapesCanvasContext?: CanvasRenderingContext2D;
+    windowTools?: Partial<PixelGridWindowTools>;
+  }) => void;
+  canvasWindowTools: PixelGridWindowTools;
+  undoGridSizing: (
+    session: GridSizeChangeAddSession | GridSizeChangeDeleteSession
+  ) => void;
+  redoGridSizing: (
+    session: GridSizeChangeAddSession | GridSizeChangeDeleteSession
+  ) => void;
 }): EditRecordTools {
   const sessionRef = useRef<Session>(null);
-  const recordRef = useRef<Record>([]);
+  const [record, setRecord] = useState<Record>([]);
   const [recordPos, setRecordPos] = useState(0);
   const addToSession = (row: number, col: number, data: any) => {
     let prevData;
@@ -189,7 +172,7 @@ export default function usePixelGridEditRecordTools({
     }
   };
 
-  const saveSession = () => {
+  const saveSession = (instaSession?: Session) => {
     if (sessionRef.current) {
       switch (editMode) {
         case "colorChange":
@@ -235,17 +218,39 @@ export default function usePixelGridEditRecordTools({
             }
           }
       }
-      recordRef.current = recordRef.current.slice(0, recordPos);
-      if (recordRef.current.length === RECORD_CACHE_SIZE) {
-        recordRef.current = recordRef.current.slice(1, recordPos);
+    } else if (instaSession) {
+      switch (instaSession.mode) {
+        case "gridSizeChange":
+          sessionRef.current = instaSession;
+          const newWindow = canvasWindowTools.shiftWindow({
+            updateCanvas: false,
+          });
+          updateFullCanvas({
+            windowTools: {
+              canvasWindow: newWindow,
+            },
+          });
+          viewboxTools.updateFullCanvas({
+            windowTools: {
+              canvasNumRowsAndCols: {
+                numRows: savedCanvasDataRef.current.pixels.length,
+                numCols: savedCanvasDataRef.current.pixels[0].length,
+              },
+            },
+          });
       }
-      recordRef.current.push(sessionRef.current);
-      setRecordPos(recordRef.current.length);
-      sessionRef.current = null;
     }
+    if (recordPos === RECORD_CACHE_SIZE) {
+      setRecord([...record.slice(1, recordPos), sessionRef.current]);
+    } else {
+      setRecord([...record.slice(0, recordPos), sessionRef.current]);
+      setRecordPos(recordPos + 1);
+    }
+
+    sessionRef.current = null;
   };
   const undo = () => {
-    const session: Session = recordRef.current[recordPos - 1];
+    const session: Session = record[recordPos - 1];
     if (session) {
       switch (session.mode) {
         case "colorChange":
@@ -309,6 +314,25 @@ export default function usePixelGridEditRecordTools({
           }
           viewboxTools.drawViewboxSpecialShapes();
           drawShapesOnCanvas({});
+          break;
+        case "gridSizeChange":
+          undoGridSizing(session);
+          const newWindow = canvasWindowTools.shiftWindow({
+            updateCanvas: false,
+          });
+          updateFullCanvas({
+            windowTools: {
+              canvasWindow: newWindow,
+            },
+          });
+          viewboxTools.updateFullCanvas({
+            windowTools: {
+              canvasNumRowsAndCols: {
+                numRows: savedCanvasDataRef.current.pixels.length,
+                numCols: savedCanvasDataRef.current.pixels[0].length,
+              },
+            },
+          });
       }
 
       setRecordPos(recordPos - 1);
@@ -316,7 +340,7 @@ export default function usePixelGridEditRecordTools({
   };
 
   const redo = () => {
-    const session: Session = recordRef.current[recordPos];
+    const session: Session = record[recordPos];
     if (session) {
       switch (session.mode) {
         case "colorChange":
@@ -381,6 +405,25 @@ export default function usePixelGridEditRecordTools({
           }
           viewboxTools.drawViewboxSpecialShapes();
           drawShapesOnCanvas({});
+          break;
+        case "gridSizeChange":
+          redoGridSizing(session);
+          const newWindow = canvasWindowTools.shiftWindow({
+            updateCanvas: false,
+          });
+          updateFullCanvas({
+            windowTools: {
+              canvasWindow: newWindow,
+            },
+          });
+          viewboxTools.updateFullCanvas({
+            windowTools: {
+              canvasNumRowsAndCols: {
+                numRows: savedCanvasDataRef.current.pixels.length,
+                numCols: savedCanvasDataRef.current.pixels[0].length,
+              },
+            },
+          });
       }
 
       setRecordPos(recordPos + 1);
@@ -389,7 +432,7 @@ export default function usePixelGridEditRecordTools({
   return {
     addToSession,
     sessionRef,
-    canRedo: recordPos < recordRef.current.length,
+    canRedo: recordPos < record.length,
     canUndo: recordPos > 0,
     saveSession,
     undo,

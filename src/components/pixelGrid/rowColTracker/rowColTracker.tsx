@@ -8,6 +8,128 @@ import {
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
 
 import styles from "./rowColTracker.module.css";
+import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
+import { useState } from "react";
+import { GridSizingTools } from "@/hooks/pixelGrid/usePixelGridSizingTools";
+import {
+  PROJ_MAX_SIZE,
+  PROJ_MIN_SIZE,
+} from "@/constants/pixelGrid/projectSizeLimits";
+
+type ActionLayerValidations = {
+  canIncrease: boolean;
+  canDecrease: boolean;
+};
+
+const TrackerOptions = ({
+  pos,
+  loc,
+  number,
+  gridSizingTools,
+  layerIdx,
+  actionValidations,
+}: {
+  pos: "top" | "bottom" | "left" | "right";
+  loc: "top" | "bottom" | "left" | "right";
+  number: number;
+  gridSizingTools: GridSizingTools;
+  layerIdx: number;
+  actionValidations: ActionLayerValidations;
+}) => {
+  const [isOpen, setOpen] = useState(false);
+  const ref = useRefWithClickawayListener(() => {
+    setOpen(false);
+  }, []);
+  let positioning: string;
+  let type: "row" | "column";
+  switch (pos) {
+    case "top":
+      positioning = `top-full ${loc === "left" ? "left-0" : "right-0"}`;
+      type = "column";
+      break;
+    case "bottom":
+      positioning = `bottom-full ${loc === "left" ? "left-0" : "right-0"}`;
+      type = "column";
+      break;
+    case "left":
+      positioning = `left-full ${loc === "top" ? "top-0" : "bottom-0"}`;
+      type = "row";
+      break;
+    case "right":
+      positioning = `right-full ${loc === "top" ? "top-0" : "bottom-0"}`;
+      type = "row";
+  }
+
+  const options = [
+    {
+      text: `Insert ${type} ${type === "row" ? "above" : "left"}`,
+      onClick: () => {
+        if (type === "row") {
+          gridSizingTools.addRow(layerIdx, "top");
+        } else {
+          gridSizingTools.addCol(layerIdx, "left");
+        }
+      },
+      isDisabled: !actionValidations.canIncrease,
+    },
+    {
+      text: `Insert ${type} ${type === "row" ? "below" : "right"}`,
+      onClick: () => {
+        if (type === "row") {
+          gridSizingTools.addRow(layerIdx, "bottom");
+        } else {
+          gridSizingTools.addCol(layerIdx, "right");
+        }
+      },
+      isDisabled: !actionValidations.canIncrease,
+    },
+    {
+      text: `Delete ${type}`,
+      onClick: () => {
+        if (type === "row") {
+          gridSizingTools.deleteRow(layerIdx);
+        } else {
+          gridSizingTools.deleteCol(layerIdx);
+        }
+      },
+      isDisabled: !actionValidations.canDecrease,
+    },
+  ];
+  return (
+    <div ref={ref} className="relative">
+      <button
+        className={`buttonBlank text-black m-0 p-0 ${
+          isOpen ? "bg-amaranth-light" : ""
+        }`}
+        onClick={() => setOpen(!isOpen)}
+      >
+        {number}
+      </button>
+      {isOpen && (
+        <ul
+          className={`z-10 w-fit card absolute m-1 fadeInFast p-0 ${positioning}`}
+        >
+          {options.map((option, idx) => (
+            <li
+              className={`whitespace-nowrap  ${
+                option.isDisabled ? "opacity-50" : "hover:bg-gray-200"
+              } first:rounded-t-md last:rounded-b-md`}
+              key={idx}
+            >
+              <button
+                className={`text-start buttonBlank text-black m-0 p-0.5 border-0 w-full h-full`}
+                onClick={option.onClick}
+                disabled={option.isDisabled}
+              >
+                {option.text}
+              </button>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+};
 
 export default function RowColTracker({
   children,
@@ -16,6 +138,7 @@ export default function RowColTracker({
   canvasNumRowsAndCols,
   numberFormat,
   pixelGridCanvasRefWithRect,
+  gridSizingTools,
 }: {
   children: React.ReactNode;
   canvasWindow: PixelGridCanvasWindow;
@@ -26,30 +149,26 @@ export default function RowColTracker({
     ref: React.RefObject<any>;
     getDims: () => DOMRect | undefined;
   };
+  gridSizingTools: GridSizingTools;
 }) {
   const topLabels = [];
   const bottomLabels = [];
   const leftLabels = [];
   const rightLabels = [];
 
-  let rowStart: number, rowEnd: number, colStart: number, colEnd: number;
+  const actionRowValidations = {
+    canIncrease: canvasNumRowsAndCols.numRows < PROJ_MAX_SIZE,
+    canDecrease: canvasNumRowsAndCols.numRows > PROJ_MIN_SIZE,
+  };
+  const actionColValidations = {
+    canIncrease: canvasNumRowsAndCols.numCols < PROJ_MAX_SIZE,
+    canDecrease: canvasNumRowsAndCols.numCols > PROJ_MIN_SIZE,
+  };
+
   const numberFormatGuide: PixelGridNumberFormatGuide =
     numberFormatGuides[numberFormat];
 
   //   if (numberFormatGuide.numbersReversed) {
-  colStart = canvasNumRowsAndCols.numCols - canvasWindow.startCol;
-  colEnd =
-    canvasNumRowsAndCols.numCols -
-    canvasWindow.visibleCols -
-    canvasWindow.startCol;
-  rowStart = canvasNumRowsAndCols.numRows - canvasWindow.startRow;
-  rowStart = 1 + (rowStart - 1) * numberFormatGuide.stepCount;
-  rowEnd =
-    canvasNumRowsAndCols.numRows -
-    canvasWindow.visibleRows -
-    canvasWindow.startRow;
-  rowEnd = 1 + (rowEnd - 1) * numberFormatGuide.stepCount;
-  //   }
 
   const getOpacity = (
     num: number,
@@ -70,22 +189,35 @@ export default function RowColTracker({
     }
   };
 
+  const getDisplayNum = (idx: number) => {
+    return (
+      numberFormatGuide.stepCount *
+        (canvasNumRowsAndCols.numRows - (idx + canvasWindow.startRow)) +
+      (1 - numberFormatGuide.stepCount)
+    );
+  };
   for (
-    let rowNum = rowStart;
-    rowNum > rowEnd;
-    rowNum =
-      rowNum +
-      numberFormatGuide.stepCount * (numberFormatGuide.numbersReversed ? -1 : 1)
+    let rowStartIdx = 0;
+    rowStartIdx < canvasWindow.visibleRows;
+    rowStartIdx += 1
   ) {
+    const displayRowNum = getDisplayNum(rowStartIdx);
     leftLabels.push(
       <div
         className="flex items-center justify-end pr-0.5"
         style={{
           height: canvasCellDimensions.height,
-          opacity: getOpacity(rowNum, "left"),
+          opacity: getOpacity(displayRowNum, "left"),
         }}
       >
-        {rowNum}
+        <TrackerOptions
+          pos="left"
+          number={displayRowNum}
+          loc={rowStartIdx > canvasWindow.visibleRows / 2 ? "bottom" : "top"}
+          gridSizingTools={gridSizingTools}
+          layerIdx={rowStartIdx + canvasWindow.startRow}
+          actionValidations={actionRowValidations}
+        />
       </div>
     );
     rightLabels.push(
@@ -93,28 +225,44 @@ export default function RowColTracker({
         className="flex items-center justify-start pl-0.5"
         style={{
           height: canvasCellDimensions.height,
-          opacity: getOpacity(rowNum, "right"),
+          opacity: getOpacity(displayRowNum, "right"),
         }}
       >
-        {rowNum}
+        <TrackerOptions
+          pos="right"
+          number={displayRowNum}
+          loc={rowStartIdx > canvasWindow.visibleRows / 2 ? "bottom" : "top"}
+          gridSizingTools={gridSizingTools}
+          layerIdx={rowStartIdx + canvasWindow.startRow}
+          actionValidations={actionRowValidations}
+        />
       </div>
     );
   }
 
   for (
-    let colNum = colStart;
-    colNum > colEnd;
-    numberFormatGuide.numbersReversed ? colNum-- : colNum++
+    let colStartIdx = 0;
+    colStartIdx < canvasWindow.visibleCols;
+    colStartIdx += 1
   ) {
+    const displayColNum =
+      canvasNumRowsAndCols.numCols - (colStartIdx + canvasWindow.startCol);
     topLabels.push(
       <div
         className="flex justify-center items-end"
         style={{
           width: canvasCellDimensions.width,
-          opacity: getOpacity(colNum, "top"),
+          opacity: getOpacity(displayColNum, "top"),
         }}
       >
-        {colNum}
+        <TrackerOptions
+          pos="top"
+          number={displayColNum}
+          loc={colStartIdx > canvasWindow.visibleCols / 2 ? "right" : "left"}
+          gridSizingTools={gridSizingTools}
+          layerIdx={colStartIdx + canvasWindow.startCol}
+          actionValidations={actionColValidations}
+        />
       </div>
     );
     bottomLabels.push(
@@ -122,10 +270,17 @@ export default function RowColTracker({
         className="flex items-start justify-center"
         style={{
           width: canvasCellDimensions.width,
-          opacity: getOpacity(colNum, "bottom"),
+          opacity: getOpacity(displayColNum, "bottom"),
         }}
       >
-        {colNum}
+        <TrackerOptions
+          pos="bottom"
+          number={displayColNum}
+          loc={colStartIdx > canvasWindow.visibleCols / 2 ? "right" : "left"}
+          gridSizingTools={gridSizingTools}
+          layerIdx={colStartIdx + canvasWindow.startCol}
+          actionValidations={actionColValidations}
+        />
       </div>
     );
   }
@@ -158,7 +313,9 @@ export default function RowColTracker({
       <div
         className={`absolute top-0 left-0 grid grid-cols-3 grid-rows-3 gap-0 ${styles.wrapper}`}
       >
-        <div className={`${styles.content} touch-none relative`}>{children}</div>
+        <div className={`${styles.content} touch-none relative`}>
+          {children}
+        </div>
         <div className={styles.leftLabels}>
           <section className="w-10">{...leftLabels}</section>
         </div>
@@ -173,22 +330,5 @@ export default function RowColTracker({
         </div>
       </div>
     </div>
-    // <div className="relative size-full">
-    //   <div className="absolute top-10 left-10 opacity-0">{children}</div>
-    //   <section className="absolute top-0 left-0 flex items-center size-full">
-    //     <section className="w-10">{...leftLabels}</section>
-    //     <div className="flex flex-col size-full">
-    //       <section className="flex h-10">{...topLabels}</section>
-    //       <div className="grow">
-    //         <div
-    //           className={`touch-none overflow-hidden size-full`}
-    //           ref={pixelGridCanvasRefWithRect.ref}
-    //         ></div>
-    //       </div>
-    //       <section className="flex h-10">{...bottomLabels}</section>
-    //     </div>
-    //     <section className="w-10">{...rightLabels}</section>
-    //   </section>
-    // </div>
   );
 }
