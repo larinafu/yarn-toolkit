@@ -64,7 +64,16 @@ export type ViewboxTools = {
     viewContext?: CanvasRenderingContext2D;
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
-  drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => void;
+  drawViewboxSpecialShapes: ({
+    ctx,
+    config,
+  }: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  }) => void;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -194,15 +203,24 @@ export default function useViewboxTools({
     );
   };
 
-  const drawViewboxSpecialShapes = (ctx?: CanvasRenderingContext2D) => {
+  const drawViewboxSpecialShapes = ({
+    ctx,
+    config,
+  }: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  } = {}) => {
     canvasContextUtils.drawSpecialShapes({
       specialShapesCtx:
         ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
       specialShapes: specialShapesRef.current,
-      cellDims: viewboxCellDims,
-      gridDims: viewboxDims,
+      cellDims: config?.viewboxCellDims || viewboxCellDims,
+      gridDims: config?.viewboxDims || viewboxDims,
     });
-  }
+  };
 
   const updateFullCanvas = ({
     windowTools,
@@ -244,7 +262,12 @@ export default function useViewboxTools({
         cellDims: newCellDims,
         cells: savedCanvasDataRef.current.pixels,
       });
-      drawViewboxSpecialShapes();
+      drawViewboxSpecialShapes({
+        config: {
+          viewboxDims: newViewDims,
+          viewboxCellDims: newCellDims,
+        },
+      });
     }
   };
 
