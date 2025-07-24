@@ -1,4 +1,583 @@
-import { StitchGroup } from "@/types/pixelGrid";
+import { CableStitchGroup, StitchGroup } from "@/types/pixelGrid";
+
+const knittingCableStitches: CableStitchGroup = {
+  cable_1_1_1_LC: {
+    name: "1/1/1 LC",
+    svg: "stitches/knitting/cable/1_1_1_LC.svg",
+    svgPaths: [
+      ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_1_1_LPC: {
+    name: "1/1/1 LPC",
+    svg: "stitches/knitting/cable/1_1_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 150.0,50 L 200,0 Z", "#000"],
+      ["M 100,100 L 150.0,50 L 200,100 Z", "#000"],
+      ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_1_1_RC: {
+    name: "1/1/1 RC",
+    svg: "stitches/knitting/cable/1_1_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
+      ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_1_1_RPC: {
+    name: "1/1/1 RPC",
+    svg: "stitches/knitting/cable/1_1_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 150.0,50 L 200,0 Z", "#000"],
+      ["M 100,100 L 150.0,50 L 200,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
+      ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_2_1_LC: {
+    name: "1/2/1 LC",
+    svg: "stitches/knitting/cable/1_2_1_LC.svg",
+    svgPaths: [
+      ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_2_1_LPC: {
+    name: "1/2/1 LPC",
+    svg: "stitches/knitting/cable/1_2_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 200.0,50 L 300,0 Z", "#000"],
+      ["M 100,100 L 200.0,50 L 300,100 Z", "#000"],
+      ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_2_1_RC: {
+    name: "1/2/1 RC",
+    svg: "stitches/knitting/cable/1_2_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
+      ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_2_1_RPC: {
+    name: "1/2/1 RPC",
+    svg: "stitches/knitting/cable/1_2_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 200.0,50 L 300,0 Z", "#000"],
+      ["M 100,100 L 200.0,50 L 300,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
+      ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_3_1_LC: {
+    name: "1/3/1 LC",
+    svg: "stitches/knitting/cable/1_3_1_LC.svg",
+    svgPaths: [
+      ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_3_1_LPC: {
+    name: "1/3/1 LPC",
+    svg: "stitches/knitting/cable/1_3_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 250.0,50 L 400,0 Z", "#000"],
+      ["M 100,100 L 250.0,50 L 400,100 Z", "#000"],
+      ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_3_1_RC: {
+    name: "1/3/1 RC",
+    svg: "stitches/knitting/cable/1_3_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_3_1_RPC: {
+    name: "1/3/1 RPC",
+    svg: "stitches/knitting/cable/1_3_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 250.0,50 L 400,0 Z", "#000"],
+      ["M 100,100 L 250.0,50 L 400,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_4_1_LC: {
+    name: "1/4/1 LC",
+    svg: "stitches/knitting/cable/1_4_1_LC.svg",
+    svgPaths: [
+      ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_4_1_LPC: {
+    name: "1/4/1 LPC",
+    svg: "stitches/knitting/cable/1_4_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 300.0,50 L 500,0 Z", "#000"],
+      ["M 100,100 L 300.0,50 L 500,100 Z", "#000"],
+      ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_4_1_RC: {
+    name: "1/4/1 RC",
+    svg: "stitches/knitting/cable/1_4_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_4_1_RPC: {
+    name: "1/4/1 RPC",
+    svg: "stitches/knitting/cable/1_4_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 300.0,50 L 500,0 Z", "#000"],
+      ["M 100,100 L 300.0,50 L 500,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_5_1_LC: {
+    name: "1/5/1 LC",
+    svg: "stitches/knitting/cable/1_5_1_LC.svg",
+    svgPaths: [
+      ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_5_1_LPC: {
+    name: "1/5/1 LPC",
+    svg: "stitches/knitting/cable/1_5_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 350.0,50 L 600,0 Z", "#000"],
+      ["M 100,100 L 350.0,50 L 600,100 Z", "#000"],
+      ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_5_1_RC: {
+    name: "1/5/1 RC",
+    svg: "stitches/knitting/cable/1_5_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_5_1_RPC: {
+    name: "1/5/1 RPC",
+    svg: "stitches/knitting/cable/1_5_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 350.0,50 L 600,0 Z", "#000"],
+      ["M 100,100 L 350.0,50 L 600,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_6_1_LC: {
+    name: "1/6/1 LC",
+    svg: "stitches/knitting/cable/1_6_1_LC.svg",
+    svgPaths: [
+      ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_6_1_LPC: {
+    name: "1/6/1 LPC",
+    svg: "stitches/knitting/cable/1_6_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 400.0,50 L 700,0 Z", "#000"],
+      ["M 100,100 L 400.0,50 L 700,100 Z", "#000"],
+      ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_6_1_RC: {
+    name: "1/6/1 RC",
+    svg: "stitches/knitting/cable/1_6_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
+      ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_6_1_RPC: {
+    name: "1/6/1 RPC",
+    svg: "stitches/knitting/cable/1_6_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 400.0,50 L 700,0 Z", "#000"],
+      ["M 100,100 L 400.0,50 L 700,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
+      ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_7_1_LC: {
+    name: "1/7/1 LC",
+    svg: "stitches/knitting/cable/1_7_1_LC.svg",
+    svgPaths: [
+      ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_7_1_LPC: {
+    name: "1/7/1 LPC",
+    svg: "stitches/knitting/cable/1_7_1_LPC.svg",
+    svgPaths: [
+      ["M 100,0 L 450.0,50 L 800,0 Z", "#000"],
+      ["M 100,100 L 450.0,50 L 800,100 Z", "#000"],
+      ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_7_1_RC: {
+    name: "1/7/1 RC",
+    svg: "stitches/knitting/cable/1_7_1_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
+      ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_1_7_1_RPC: {
+    name: "1/7/1 RPC",
+    svg: "stitches/knitting/cable/1_7_1_RPC.svg",
+    svgPaths: [
+      ["M 100,0 L 450.0,50 L 800,0 Z", "#000"],
+      ["M 100,100 L 450.0,50 L 800,100 Z", "#000"],
+      ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
+      ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_1_2_LC: {
+    name: "2/1/2 LC",
+    svg: "stitches/knitting/cable/2_1_2_LC.svg",
+    svgPaths: [
+      ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_1_2_LPC: {
+    name: "2/1/2 LPC",
+    svg: "stitches/knitting/cable/2_1_2_LPC.svg",
+    svgPaths: [
+      ["M 200,0 L 250.0,50 L 300,0 Z", "#000"],
+      ["M 200,100 L 250.0,50 L 300,100 Z", "#000"],
+      ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_1_2_RC: {
+    name: "2/1/2 RC",
+    svg: "stitches/knitting/cable/2_1_2_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
+      ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_1_2_RPC: {
+    name: "2/1/2 RPC",
+    svg: "stitches/knitting/cable/2_1_2_RPC.svg",
+    svgPaths: [
+      ["M 200,0 L 250.0,50 L 300,0 Z", "#000"],
+      ["M 200,100 L 250.0,50 L 300,100 Z", "#000"],
+      ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
+      ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_2_2_LC: {
+    name: "2/2/2 LC",
+    svg: "stitches/knitting/cable/2_2_2_LC.svg",
+    svgPaths: [
+      ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_2_2_LPC: {
+    name: "2/2/2 LPC",
+    svg: "stitches/knitting/cable/2_2_2_LPC.svg",
+    svgPaths: [
+      ["M 200,0 L 300.0,50 L 400,0 Z", "#000"],
+      ["M 200,100 L 300.0,50 L 400,100 Z", "#000"],
+      ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_2_2_RC: {
+    name: "2/2/2 RC",
+    svg: "stitches/knitting/cable/2_2_2_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_2_2_RPC: {
+    name: "2/2/2 RPC",
+    svg: "stitches/knitting/cable/2_2_2_RPC.svg",
+    svgPaths: [
+      ["M 200,0 L 300.0,50 L 400,0 Z", "#000"],
+      ["M 200,100 L 300.0,50 L 400,100 Z", "#000"],
+      ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_3_2_LC: {
+    name: "2/3/2 LC",
+    svg: "stitches/knitting/cable/2_3_2_LC.svg",
+    svgPaths: [
+      ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_3_2_LPC: {
+    name: "2/3/2 LPC",
+    svg: "stitches/knitting/cable/2_3_2_LPC.svg",
+    svgPaths: [
+      ["M 200,0 L 350.0,50 L 500,0 Z", "#000"],
+      ["M 200,100 L 350.0,50 L 500,100 Z", "#000"],
+      ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_3_2_RC: {
+    name: "2/3/2 RC",
+    svg: "stitches/knitting/cable/2_3_2_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_3_2_RPC: {
+    name: "2/3/2 RPC",
+    svg: "stitches/knitting/cable/2_3_2_RPC.svg",
+    svgPaths: [
+      ["M 200,0 L 350.0,50 L 500,0 Z", "#000"],
+      ["M 200,100 L 350.0,50 L 500,100 Z", "#000"],
+      ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_4_2_LC: {
+    name: "2/4/2 LC",
+    svg: "stitches/knitting/cable/2_4_2_LC.svg",
+    svgPaths: [
+      ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_4_2_LPC: {
+    name: "2/4/2 LPC",
+    svg: "stitches/knitting/cable/2_4_2_LPC.svg",
+    svgPaths: [
+      ["M 200,0 L 400.0,50 L 600,0 Z", "#000"],
+      ["M 200,100 L 400.0,50 L 600,100 Z", "#000"],
+      ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_4_2_RC: {
+    name: "2/4/2 RC",
+    svg: "stitches/knitting/cable/2_4_2_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_4_2_RPC: {
+    name: "2/4/2 RPC",
+    svg: "stitches/knitting/cable/2_4_2_RPC.svg",
+    svgPaths: [
+      ["M 200,0 L 400.0,50 L 600,0 Z", "#000"],
+      ["M 200,100 L 400.0,50 L 600,100 Z", "#000"],
+      ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_5_2_LC: {
+    name: "2/5/2 LC",
+    svg: "stitches/knitting/cable/2_5_2_LC.svg",
+    svgPaths: [
+      ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_5_2_LPC: {
+    name: "2/5/2 LPC",
+    svg: "stitches/knitting/cable/2_5_2_LPC.svg",
+    svgPaths: [
+      ["M 200,0 L 450.0,50 L 700,0 Z", "#000"],
+      ["M 200,100 L 450.0,50 L 700,100 Z", "#000"],
+      ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_5_2_RC: {
+    name: "2/5/2 RC",
+    svg: "stitches/knitting/cable/2_5_2_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
+      ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_2_5_2_RPC: {
+    name: "2/5/2 RPC",
+    svg: "stitches/knitting/cable/2_5_2_RPC.svg",
+    svgPaths: [
+      ["M 200,0 L 450.0,50 L 700,0 Z", "#000"],
+      ["M 200,100 L 450.0,50 L 700,100 Z", "#000"],
+      ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
+      ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_1_3_LC: {
+    name: "3/1/3 LC",
+    svg: "stitches/knitting/cable/3_1_3_LC.svg",
+    svgPaths: [
+      ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_1_3_LPC: {
+    name: "3/1/3 LPC",
+    svg: "stitches/knitting/cable/3_1_3_LPC.svg",
+    svgPaths: [
+      ["M 300,0 L 350.0,50 L 400,0 Z", "#000"],
+      ["M 300,100 L 350.0,50 L 400,100 Z", "#000"],
+      ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_1_3_RC: {
+    name: "3/1/3 RC",
+    svg: "stitches/knitting/cable/3_1_3_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_1_3_RPC: {
+    name: "3/1/3 RPC",
+    svg: "stitches/knitting/cable/3_1_3_RPC.svg",
+    svgPaths: [
+      ["M 300,0 L 350.0,50 L 400,0 Z", "#000"],
+      ["M 300,100 L 350.0,50 L 400,100 Z", "#000"],
+      ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
+      ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_2_3_LC: {
+    name: "3/2/3 LC",
+    svg: "stitches/knitting/cable/3_2_3_LC.svg",
+    svgPaths: [
+      ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_2_3_LPC: {
+    name: "3/2/3 LPC",
+    svg: "stitches/knitting/cable/3_2_3_LPC.svg",
+    svgPaths: [
+      ["M 300,0 L 400.0,50 L 500,0 Z", "#000"],
+      ["M 300,100 L 400.0,50 L 500,100 Z", "#000"],
+      ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_2_3_RC: {
+    name: "3/2/3 RC",
+    svg: "stitches/knitting/cable/3_2_3_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_2_3_RPC: {
+    name: "3/2/3 RPC",
+    svg: "stitches/knitting/cable/3_2_3_RPC.svg",
+    svgPaths: [
+      ["M 300,0 L 400.0,50 L 500,0 Z", "#000"],
+      ["M 300,100 L 400.0,50 L 500,100 Z", "#000"],
+      ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_3_3_LC: {
+    name: "3/3/3 LC",
+    svg: "stitches/knitting/cable/3_3_3_LC.svg",
+    svgPaths: [
+      ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_3_3_LPC: {
+    name: "3/3/3 LPC",
+    svg: "stitches/knitting/cable/3_3_3_LPC.svg",
+    svgPaths: [
+      ["M 300,0 L 450.0,50 L 600,0 Z", "#000"],
+      ["M 300,100 L 450.0,50 L 600,100 Z", "#000"],
+      ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_3_3_RC: {
+    name: "3/3/3 RC",
+    svg: "stitches/knitting/cable/3_3_3_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_3_3_3_RPC: {
+    name: "3/3/3 RPC",
+    svg: "stitches/knitting/cable/3_3_3_RPC.svg",
+    svgPaths: [
+      ["M 300,0 L 450.0,50 L 600,0 Z", "#000"],
+      ["M 300,100 L 450.0,50 L 600,100 Z", "#000"],
+      ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
+      ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_4_1_4_LC: {
+    name: "4/1/4 LC",
+    svg: "stitches/knitting/cable/4_1_4_LC.svg",
+    svgPaths: [
+      ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_4_1_4_LPC: {
+    name: "4/1/4 LPC",
+    svg: "stitches/knitting/cable/4_1_4_LPC.svg",
+    svgPaths: [
+      ["M 400,0 L 450.0,50 L 500,0 Z", "#000"],
+      ["M 400,100 L 450.0,50 L 500,100 Z", "#000"],
+      ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
+      ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
+    ],
+  },
+  cable_4_1_4_RC: {
+    name: "4/1/4 RC",
+    svg: "stitches/knitting/cable/4_1_4_RC.svg",
+    svgPaths: [
+      ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+  cable_4_1_4_RPC: {
+    name: "4/1/4 RPC",
+    svg: "stitches/knitting/cable/4_1_4_RPC.svg",
+    svgPaths: [
+      ["M 400,0 L 450.0,50 L 500,0 Z", "#000"],
+      ["M 400,100 L 450.0,50 L 500,100 Z", "#000"],
+      ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
+      ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
+    ],
+  },
+};
 
 export const knitting: StitchGroup = {
   k: {
@@ -217,7 +796,10 @@ export const knitting: StitchGroup = {
         name: "Slip 2 purl 1 pas 2 slip stitches over",
       },
     },
-    svgPaths: ["M 10 78.57 L 50 21.43 L 50 78.57 M 50 21.43 L 90 78.57", "stroke"],
+    svgPaths: [
+      "M 10 78.57 L 50 21.43 L 50 78.57 M 50 21.43 L 90 78.57",
+      "stroke",
+    ],
     svg: "/stitches/knitting/s2kp2.svg",
   },
   k1_tbl: {
@@ -270,7 +852,10 @@ export const knitting: StitchGroup = {
       abbr: "inc 1-to-3",
       name: "Increase 1 to 3",
     },
-    svgPaths: ["M 10 21.43 L 50 78.57 L 50 21.43 M 50 78.57 L 90 21.43", "stroke"],
+    svgPaths: [
+      "M 10 21.43 L 50 78.57 L 50 21.43 M 50 78.57 L 90 21.43",
+      "stroke",
+    ],
     svg: "/stitches/knitting/inc_1t3.svg",
   },
   inc_1t4: {
@@ -363,7 +948,10 @@ export const knitting: StitchGroup = {
       abbr: "St rem on right needle after last BO st",
       name: "Stitch remains on right needle after last bind off stitch",
     },
-    svgPaths: ["M 23.33 10 L 23.33 90 L 76.67 90 L 76.67 76.67 L 36.67 76.67 L 36.67 10 Z", "fill"],
+    svgPaths: [
+      "M 23.33 10 L 23.33 90 L 76.67 90 L 76.67 76.67 L 36.67 76.67 L 36.67 10 Z",
+      "fill",
+    ],
     svg: "/stitches/knitting/st_rem.svg",
   },
   co: {

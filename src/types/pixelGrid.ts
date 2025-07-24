@@ -130,6 +130,16 @@ export type StitchGroup = {
   };
 };
 
+export type CableStitch = {
+  name: string;
+  svgPaths: [string, "#FFF" | "#000"][];
+  svg: string;
+};
+
+export type CableStitchGroup = {
+  [stitchId: string]: CableStitch;
+};
+
 // Sessions
 export type ColorChangeSession = {
   mode: "colorChange";
