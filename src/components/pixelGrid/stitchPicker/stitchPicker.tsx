@@ -5,6 +5,8 @@ import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickaway
 import { knitting } from "@/constants/pixelGrid/stitches";
 import SimpleColorPicker from "../simpleColorPicker/simpleColorPicker";
 
+type StitchCategory = "simple" | "cable";
+
 export default function StitchPicker({
   activeStitchPalette,
   activeStitchIdx,
@@ -98,6 +100,15 @@ const StitchOption = ({
               />
             </button>
           ))}
+          <button className="flex rounded-4xl h-7">
+            <p>cable</p>
+            <Image
+              width={20}
+              height={20}
+              alt="right arrow"
+              src={"/right-line-arrow.svg"}
+            />
+          </button>
         </section>
       )}
     </div>

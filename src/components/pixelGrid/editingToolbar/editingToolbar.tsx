@@ -37,6 +37,175 @@ type EditModeIcon = {
   color: string;
 };
 
+// const execute = () => {
+//   function drawTriangle(
+//     paddingLeftRight: number,
+//     width: number,
+//     pos: "top" | "bottom"
+//   ): string {
+//     const height = 50; // Fixed triangle height in pixels
+//     const startX = paddingLeftRight * 100;
+
+//     let baseLeft: number, baseRight: number, apexX: number;
+//     let apexY: number, baseY: number;
+
+//     if (pos === "top") {
+//       // Upside-down triangle starting from 0
+//       baseLeft = 0 + paddingLeftRight * 100;
+//       baseRight = baseLeft + width * 100;
+//       apexX = baseLeft + (width * 100) / 2;
+//       baseY = 0;
+//       apexY = height;
+//     } else {
+//       // Upright triangle starting from paddingLeftRight * 100
+//       baseLeft = startX;
+//       baseRight = baseLeft + width * 100;
+//       apexX = baseLeft + (width * 100) / 2;
+//       baseY = height + height; // shifted down by height (50) more
+//       apexY = height;
+//     }
+
+//     return `M ${baseLeft},${baseY} L ${apexX},${apexY} L ${baseRight},${baseY} Z`;
+//   }
+//   function drawParallelogram(
+//     crossedOver: number,
+//     crossingOver: number,
+//     direction: "left" | "right"
+//   ): string {
+//     const crossed = crossedOver * 100;
+//     const crossing = crossingOver * 100;
+//     const height = 100;
+
+//     let points;
+
+//     if (direction === "right") {
+//       // Tilted to the right
+//       const A = { x: 0, y: 0 };
+//       const B = { x: crossing, y: 0 };
+//       const C = { x: crossing + crossed, y: height };
+//       const D = { x: crossed, y: height };
+//       points = [A, B, C, D];
+//     } else {
+//       // Tilted to the left
+//       const A = { x: crossed, y: 0 };
+//       const B = { x: crossed + crossing, y: 0 };
+//       const C = { x: crossing, y: height };
+//       const D = { x: 0, y: height };
+//       points = [A, B, C, D];
+//     }
+
+//     return `M ${points[0].x},${points[0].y} L ${points[1].x},${points[1].y} L ${points[2].x},${points[2].y} L ${points[3].x},${points[3].y} Z`;
+//   }
+
+//   const map: {
+//     [s: string]: {
+//       [l: string]: { [p: string]: string };
+//     };
+//   } = {};
+//   for (let i = 1; i < 5; i++) {
+//     const spaceRemaining = 9 - i * 2;
+//     for (let j = 1; j < spaceRemaining + 1; j++) {
+//       map[`${i}/${j}/${i}`] = {
+//         left: {},
+//         right: {},
+//       };
+//       map[`${i}/${j}/${i}`]["right"][
+//         "reg"
+//       ] = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+//       xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 ${
+//         (i * 2 + j) * 100
+//       } 100"
+//       style="enable-background:new 0 0 100 100" xml:space="preserve">
+//       <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//         j + i,
+//         i,
+//         "left"
+//       )}" />
+//       <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//         j + i,
+//         i,
+//         "right"
+//       )}" />
+//           </svg>`;
+//       map[`${i}/${j}/${i}`]["right"][
+//         "purl"
+//       ] = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+//       xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 ${
+//         (i * 2 + j) * 100
+//       } 100"
+//       style="enable-background:new 0 0 100 100" xml:space="preserve">
+//       <path stroke="#000" fill="#000" stroke-width="10" stroke-linecap="round" d="${drawTriangle(
+//         i,
+//         j,
+//         "top"
+//       )}" />
+//       <path stroke="#000" fill="#000" stroke-width="10" stroke-linecap="round" d="${drawTriangle(
+//         i,
+//         j,
+//         "bottom"
+//       )}" />
+//       <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//         j + i,
+//         i,
+//         "left"
+//       )}" />
+//       <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//         j + i,
+//         i,
+//         "right"
+//       )}" />
+//           </svg>`;
+//       map[`${i}/${j}/${i}`]["left"][
+//         "reg"
+//       ] = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+//           xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 ${
+//             (i * 2 + j) * 100
+//           } 100"
+//           style="enable-background:new 0 0 100 100" xml:space="preserve">
+//           <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//             j + i,
+//             i,
+//             "right"
+//           )}" />
+//           <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//             j + i,
+//             i,
+//             "left"
+//           )}" />
+//               </svg>`;
+//       map[`${i}/${j}/${i}`]["left"][
+//         "purl"
+//       ] = `<svg version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
+//               xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 ${
+//                 (i * 2 + j) * 100
+//               } 100"
+//               style="enable-background:new 0 0 100 100" xml:space="preserve">
+//               <path stroke="#000" fill="#000" stroke-width="10" stroke-linecap="round" d="${drawTriangle(
+//                 i,
+//                 j,
+//                 "top"
+//               )}" />
+//               <path stroke="#000" fill="#000" stroke-width="10" stroke-linecap="round" d="${drawTriangle(
+//                 i,
+//                 j,
+//                 "bottom"
+//               )}" />
+//               <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//                 j + i,
+//                 i,
+//                 "right"
+//               )}" />
+//               <path stroke="#000" fill="#FFF" stroke-width="10" stroke-linecap="round" d="${drawParallelogram(
+//                 j + i,
+//                 i,
+//                 "left"
+//               )}" />
+//                   </svg>`;
+//     }
+//   }
+//   return map;
+// };
+
 export default function EditingToolbar({
   shiftPixelSize,
   windowTools,
@@ -181,6 +350,12 @@ export default function EditingToolbar({
   ]);
   return (
     <header className="card grow m-2 p-0 flex justify-center overflow-auto">
+      <Image
+        width={50}
+        height={50}
+        alt=""
+        src={"/stitches/knitting/cable/4_2_RPC.svg"}
+      />
       <div className="grow overflow-x-auto">
         <div className="flex align-center">
           <Link
