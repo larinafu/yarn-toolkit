@@ -1,9 +1,9 @@
 import { CableStitchGroup, StitchGroup } from "@/types/pixelGrid";
 
-const knittingCableStitches: CableStitchGroup = {
+export const KNITTING_CABLE_STITCHES: CableStitchGroup = {
   cable_1_1_1_LC: {
     name: "1/1/1 LC",
-    svg: "stitches/knitting/cable/1_1_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_1_1_LC.svg",
     svgPaths: [
       ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
@@ -11,7 +11,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_1_1_LPC: {
     name: "1/1/1 LPC",
-    svg: "stitches/knitting/cable/1_1_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_1_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 150.0,50 L 200,0 Z", "#000"],
       ["M 100,100 L 150.0,50 L 200,100 Z", "#000"],
@@ -21,7 +21,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_1_1_RC: {
     name: "1/1/1 RC",
-    svg: "stitches/knitting/cable/1_1_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_1_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 300,100 L 200,100 Z", "#FFF"],
       ["M 200,0 L 300,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -29,7 +29,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_1_1_RPC: {
     name: "1/1/1 RPC",
-    svg: "stitches/knitting/cable/1_1_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_1_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 150.0,50 L 200,0 Z", "#000"],
       ["M 100,100 L 150.0,50 L 200,100 Z", "#000"],
@@ -39,7 +39,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_2_1_LC: {
     name: "1/2/1 LC",
-    svg: "stitches/knitting/cable/1_2_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_2_1_LC.svg",
     svgPaths: [
       ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
@@ -47,7 +47,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_2_1_LPC: {
     name: "1/2/1 LPC",
-    svg: "stitches/knitting/cable/1_2_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_2_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 200.0,50 L 300,0 Z", "#000"],
       ["M 100,100 L 200.0,50 L 300,100 Z", "#000"],
@@ -57,7 +57,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_2_1_RC: {
     name: "1/2/1 RC",
-    svg: "stitches/knitting/cable/1_2_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_2_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 400,100 L 300,100 Z", "#FFF"],
       ["M 300,0 L 400,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -65,7 +65,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_2_1_RPC: {
     name: "1/2/1 RPC",
-    svg: "stitches/knitting/cable/1_2_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_2_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 200.0,50 L 300,0 Z", "#000"],
       ["M 100,100 L 200.0,50 L 300,100 Z", "#000"],
@@ -75,7 +75,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_3_1_LC: {
     name: "1/3/1 LC",
-    svg: "stitches/knitting/cable/1_3_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_3_1_LC.svg",
     svgPaths: [
       ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
@@ -83,7 +83,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_3_1_LPC: {
     name: "1/3/1 LPC",
-    svg: "stitches/knitting/cable/1_3_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_3_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 250.0,50 L 400,0 Z", "#000"],
       ["M 100,100 L 250.0,50 L 400,100 Z", "#000"],
@@ -93,7 +93,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_3_1_RC: {
     name: "1/3/1 RC",
-    svg: "stitches/knitting/cable/1_3_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_3_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 500,100 L 400,100 Z", "#FFF"],
       ["M 400,0 L 500,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -101,7 +101,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_3_1_RPC: {
     name: "1/3/1 RPC",
-    svg: "stitches/knitting/cable/1_3_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_3_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 250.0,50 L 400,0 Z", "#000"],
       ["M 100,100 L 250.0,50 L 400,100 Z", "#000"],
@@ -111,7 +111,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_4_1_LC: {
     name: "1/4/1 LC",
-    svg: "stitches/knitting/cable/1_4_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_4_1_LC.svg",
     svgPaths: [
       ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
@@ -119,7 +119,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_4_1_LPC: {
     name: "1/4/1 LPC",
-    svg: "stitches/knitting/cable/1_4_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_4_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 300.0,50 L 500,0 Z", "#000"],
       ["M 100,100 L 300.0,50 L 500,100 Z", "#000"],
@@ -129,7 +129,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_4_1_RC: {
     name: "1/4/1 RC",
-    svg: "stitches/knitting/cable/1_4_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_4_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 600,100 L 500,100 Z", "#FFF"],
       ["M 500,0 L 600,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -137,7 +137,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_4_1_RPC: {
     name: "1/4/1 RPC",
-    svg: "stitches/knitting/cable/1_4_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_4_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 300.0,50 L 500,0 Z", "#000"],
       ["M 100,100 L 300.0,50 L 500,100 Z", "#000"],
@@ -147,7 +147,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_5_1_LC: {
     name: "1/5/1 LC",
-    svg: "stitches/knitting/cable/1_5_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_5_1_LC.svg",
     svgPaths: [
       ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
@@ -155,7 +155,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_5_1_LPC: {
     name: "1/5/1 LPC",
-    svg: "stitches/knitting/cable/1_5_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_5_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 350.0,50 L 600,0 Z", "#000"],
       ["M 100,100 L 350.0,50 L 600,100 Z", "#000"],
@@ -165,7 +165,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_5_1_RC: {
     name: "1/5/1 RC",
-    svg: "stitches/knitting/cable/1_5_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_5_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 700,100 L 600,100 Z", "#FFF"],
       ["M 600,0 L 700,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -173,7 +173,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_5_1_RPC: {
     name: "1/5/1 RPC",
-    svg: "stitches/knitting/cable/1_5_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_5_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 350.0,50 L 600,0 Z", "#000"],
       ["M 100,100 L 350.0,50 L 600,100 Z", "#000"],
@@ -183,7 +183,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_6_1_LC: {
     name: "1/6/1 LC",
-    svg: "stitches/knitting/cable/1_6_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_6_1_LC.svg",
     svgPaths: [
       ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
@@ -191,7 +191,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_6_1_LPC: {
     name: "1/6/1 LPC",
-    svg: "stitches/knitting/cable/1_6_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_6_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 400.0,50 L 700,0 Z", "#000"],
       ["M 100,100 L 400.0,50 L 700,100 Z", "#000"],
@@ -201,7 +201,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_6_1_RC: {
     name: "1/6/1 RC",
-    svg: "stitches/knitting/cable/1_6_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_6_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 800,100 L 700,100 Z", "#FFF"],
       ["M 700,0 L 800,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -209,7 +209,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_6_1_RPC: {
     name: "1/6/1 RPC",
-    svg: "stitches/knitting/cable/1_6_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_6_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 400.0,50 L 700,0 Z", "#000"],
       ["M 100,100 L 400.0,50 L 700,100 Z", "#000"],
@@ -219,7 +219,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_7_1_LC: {
     name: "1/7/1 LC",
-    svg: "stitches/knitting/cable/1_7_1_LC.svg",
+    svg: "/stitches/knitting/cable/1_7_1_LC.svg",
     svgPaths: [
       ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
@@ -227,7 +227,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_7_1_LPC: {
     name: "1/7/1 LPC",
-    svg: "stitches/knitting/cable/1_7_1_LPC.svg",
+    svg: "/stitches/knitting/cable/1_7_1_LPC.svg",
     svgPaths: [
       ["M 100,0 L 450.0,50 L 800,0 Z", "#000"],
       ["M 100,100 L 450.0,50 L 800,100 Z", "#000"],
@@ -237,7 +237,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_7_1_RC: {
     name: "1/7/1 RC",
-    svg: "stitches/knitting/cable/1_7_1_RC.svg",
+    svg: "/stitches/knitting/cable/1_7_1_RC.svg",
     svgPaths: [
       ["M 0,0 L 100,0 L 900,100 L 800,100 Z", "#FFF"],
       ["M 800,0 L 900,0 L 100,100 L 0,100 Z", "#FFF"],
@@ -245,7 +245,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_1_7_1_RPC: {
     name: "1/7/1 RPC",
-    svg: "stitches/knitting/cable/1_7_1_RPC.svg",
+    svg: "/stitches/knitting/cable/1_7_1_RPC.svg",
     svgPaths: [
       ["M 100,0 L 450.0,50 L 800,0 Z", "#000"],
       ["M 100,100 L 450.0,50 L 800,100 Z", "#000"],
@@ -255,7 +255,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_1_2_LC: {
     name: "2/1/2 LC",
-    svg: "stitches/knitting/cable/2_1_2_LC.svg",
+    svg: "/stitches/knitting/cable/2_1_2_LC.svg",
     svgPaths: [
       ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
@@ -263,7 +263,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_1_2_LPC: {
     name: "2/1/2 LPC",
-    svg: "stitches/knitting/cable/2_1_2_LPC.svg",
+    svg: "/stitches/knitting/cable/2_1_2_LPC.svg",
     svgPaths: [
       ["M 200,0 L 250.0,50 L 300,0 Z", "#000"],
       ["M 200,100 L 250.0,50 L 300,100 Z", "#000"],
@@ -273,7 +273,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_1_2_RC: {
     name: "2/1/2 RC",
-    svg: "stitches/knitting/cable/2_1_2_RC.svg",
+    svg: "/stitches/knitting/cable/2_1_2_RC.svg",
     svgPaths: [
       ["M 0,0 L 200,0 L 500,100 L 300,100 Z", "#FFF"],
       ["M 300,0 L 500,0 L 200,100 L 0,100 Z", "#FFF"],
@@ -281,7 +281,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_1_2_RPC: {
     name: "2/1/2 RPC",
-    svg: "stitches/knitting/cable/2_1_2_RPC.svg",
+    svg: "/stitches/knitting/cable/2_1_2_RPC.svg",
     svgPaths: [
       ["M 200,0 L 250.0,50 L 300,0 Z", "#000"],
       ["M 200,100 L 250.0,50 L 300,100 Z", "#000"],
@@ -291,7 +291,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_2_2_LC: {
     name: "2/2/2 LC",
-    svg: "stitches/knitting/cable/2_2_2_LC.svg",
+    svg: "/stitches/knitting/cable/2_2_2_LC.svg",
     svgPaths: [
       ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
@@ -299,7 +299,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_2_2_LPC: {
     name: "2/2/2 LPC",
-    svg: "stitches/knitting/cable/2_2_2_LPC.svg",
+    svg: "/stitches/knitting/cable/2_2_2_LPC.svg",
     svgPaths: [
       ["M 200,0 L 300.0,50 L 400,0 Z", "#000"],
       ["M 200,100 L 300.0,50 L 400,100 Z", "#000"],
@@ -309,7 +309,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_2_2_RC: {
     name: "2/2/2 RC",
-    svg: "stitches/knitting/cable/2_2_2_RC.svg",
+    svg: "/stitches/knitting/cable/2_2_2_RC.svg",
     svgPaths: [
       ["M 0,0 L 200,0 L 600,100 L 400,100 Z", "#FFF"],
       ["M 400,0 L 600,0 L 200,100 L 0,100 Z", "#FFF"],
@@ -317,7 +317,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_2_2_RPC: {
     name: "2/2/2 RPC",
-    svg: "stitches/knitting/cable/2_2_2_RPC.svg",
+    svg: "/stitches/knitting/cable/2_2_2_RPC.svg",
     svgPaths: [
       ["M 200,0 L 300.0,50 L 400,0 Z", "#000"],
       ["M 200,100 L 300.0,50 L 400,100 Z", "#000"],
@@ -327,7 +327,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_3_2_LC: {
     name: "2/3/2 LC",
-    svg: "stitches/knitting/cable/2_3_2_LC.svg",
+    svg: "/stitches/knitting/cable/2_3_2_LC.svg",
     svgPaths: [
       ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
@@ -335,7 +335,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_3_2_LPC: {
     name: "2/3/2 LPC",
-    svg: "stitches/knitting/cable/2_3_2_LPC.svg",
+    svg: "/stitches/knitting/cable/2_3_2_LPC.svg",
     svgPaths: [
       ["M 200,0 L 350.0,50 L 500,0 Z", "#000"],
       ["M 200,100 L 350.0,50 L 500,100 Z", "#000"],
@@ -345,7 +345,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_3_2_RC: {
     name: "2/3/2 RC",
-    svg: "stitches/knitting/cable/2_3_2_RC.svg",
+    svg: "/stitches/knitting/cable/2_3_2_RC.svg",
     svgPaths: [
       ["M 0,0 L 200,0 L 700,100 L 500,100 Z", "#FFF"],
       ["M 500,0 L 700,0 L 200,100 L 0,100 Z", "#FFF"],
@@ -353,7 +353,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_3_2_RPC: {
     name: "2/3/2 RPC",
-    svg: "stitches/knitting/cable/2_3_2_RPC.svg",
+    svg: "/stitches/knitting/cable/2_3_2_RPC.svg",
     svgPaths: [
       ["M 200,0 L 350.0,50 L 500,0 Z", "#000"],
       ["M 200,100 L 350.0,50 L 500,100 Z", "#000"],
@@ -363,7 +363,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_4_2_LC: {
     name: "2/4/2 LC",
-    svg: "stitches/knitting/cable/2_4_2_LC.svg",
+    svg: "/stitches/knitting/cable/2_4_2_LC.svg",
     svgPaths: [
       ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
@@ -371,7 +371,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_4_2_LPC: {
     name: "2/4/2 LPC",
-    svg: "stitches/knitting/cable/2_4_2_LPC.svg",
+    svg: "/stitches/knitting/cable/2_4_2_LPC.svg",
     svgPaths: [
       ["M 200,0 L 400.0,50 L 600,0 Z", "#000"],
       ["M 200,100 L 400.0,50 L 600,100 Z", "#000"],
@@ -381,7 +381,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_4_2_RC: {
     name: "2/4/2 RC",
-    svg: "stitches/knitting/cable/2_4_2_RC.svg",
+    svg: "/stitches/knitting/cable/2_4_2_RC.svg",
     svgPaths: [
       ["M 0,0 L 200,0 L 800,100 L 600,100 Z", "#FFF"],
       ["M 600,0 L 800,0 L 200,100 L 0,100 Z", "#FFF"],
@@ -389,7 +389,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_4_2_RPC: {
     name: "2/4/2 RPC",
-    svg: "stitches/knitting/cable/2_4_2_RPC.svg",
+    svg: "/stitches/knitting/cable/2_4_2_RPC.svg",
     svgPaths: [
       ["M 200,0 L 400.0,50 L 600,0 Z", "#000"],
       ["M 200,100 L 400.0,50 L 600,100 Z", "#000"],
@@ -399,7 +399,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_5_2_LC: {
     name: "2/5/2 LC",
-    svg: "stitches/knitting/cable/2_5_2_LC.svg",
+    svg: "/stitches/knitting/cable/2_5_2_LC.svg",
     svgPaths: [
       ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
@@ -407,7 +407,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_5_2_LPC: {
     name: "2/5/2 LPC",
-    svg: "stitches/knitting/cable/2_5_2_LPC.svg",
+    svg: "/stitches/knitting/cable/2_5_2_LPC.svg",
     svgPaths: [
       ["M 200,0 L 450.0,50 L 700,0 Z", "#000"],
       ["M 200,100 L 450.0,50 L 700,100 Z", "#000"],
@@ -417,7 +417,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_5_2_RC: {
     name: "2/5/2 RC",
-    svg: "stitches/knitting/cable/2_5_2_RC.svg",
+    svg: "/stitches/knitting/cable/2_5_2_RC.svg",
     svgPaths: [
       ["M 0,0 L 200,0 L 900,100 L 700,100 Z", "#FFF"],
       ["M 700,0 L 900,0 L 200,100 L 0,100 Z", "#FFF"],
@@ -425,7 +425,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_2_5_2_RPC: {
     name: "2/5/2 RPC",
-    svg: "stitches/knitting/cable/2_5_2_RPC.svg",
+    svg: "/stitches/knitting/cable/2_5_2_RPC.svg",
     svgPaths: [
       ["M 200,0 L 450.0,50 L 700,0 Z", "#000"],
       ["M 200,100 L 450.0,50 L 700,100 Z", "#000"],
@@ -435,7 +435,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_1_3_LC: {
     name: "3/1/3 LC",
-    svg: "stitches/knitting/cable/3_1_3_LC.svg",
+    svg: "/stitches/knitting/cable/3_1_3_LC.svg",
     svgPaths: [
       ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
@@ -443,7 +443,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_1_3_LPC: {
     name: "3/1/3 LPC",
-    svg: "stitches/knitting/cable/3_1_3_LPC.svg",
+    svg: "/stitches/knitting/cable/3_1_3_LPC.svg",
     svgPaths: [
       ["M 300,0 L 350.0,50 L 400,0 Z", "#000"],
       ["M 300,100 L 350.0,50 L 400,100 Z", "#000"],
@@ -453,7 +453,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_1_3_RC: {
     name: "3/1/3 RC",
-    svg: "stitches/knitting/cable/3_1_3_RC.svg",
+    svg: "/stitches/knitting/cable/3_1_3_RC.svg",
     svgPaths: [
       ["M 0,0 L 300,0 L 700,100 L 400,100 Z", "#FFF"],
       ["M 400,0 L 700,0 L 300,100 L 0,100 Z", "#FFF"],
@@ -461,7 +461,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_1_3_RPC: {
     name: "3/1/3 RPC",
-    svg: "stitches/knitting/cable/3_1_3_RPC.svg",
+    svg: "/stitches/knitting/cable/3_1_3_RPC.svg",
     svgPaths: [
       ["M 300,0 L 350.0,50 L 400,0 Z", "#000"],
       ["M 300,100 L 350.0,50 L 400,100 Z", "#000"],
@@ -471,7 +471,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_2_3_LC: {
     name: "3/2/3 LC",
-    svg: "stitches/knitting/cable/3_2_3_LC.svg",
+    svg: "/stitches/knitting/cable/3_2_3_LC.svg",
     svgPaths: [
       ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
@@ -479,7 +479,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_2_3_LPC: {
     name: "3/2/3 LPC",
-    svg: "stitches/knitting/cable/3_2_3_LPC.svg",
+    svg: "/stitches/knitting/cable/3_2_3_LPC.svg",
     svgPaths: [
       ["M 300,0 L 400.0,50 L 500,0 Z", "#000"],
       ["M 300,100 L 400.0,50 L 500,100 Z", "#000"],
@@ -489,7 +489,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_2_3_RC: {
     name: "3/2/3 RC",
-    svg: "stitches/knitting/cable/3_2_3_RC.svg",
+    svg: "/stitches/knitting/cable/3_2_3_RC.svg",
     svgPaths: [
       ["M 0,0 L 300,0 L 800,100 L 500,100 Z", "#FFF"],
       ["M 500,0 L 800,0 L 300,100 L 0,100 Z", "#FFF"],
@@ -497,7 +497,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_2_3_RPC: {
     name: "3/2/3 RPC",
-    svg: "stitches/knitting/cable/3_2_3_RPC.svg",
+    svg: "/stitches/knitting/cable/3_2_3_RPC.svg",
     svgPaths: [
       ["M 300,0 L 400.0,50 L 500,0 Z", "#000"],
       ["M 300,100 L 400.0,50 L 500,100 Z", "#000"],
@@ -507,7 +507,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_3_3_LC: {
     name: "3/3/3 LC",
-    svg: "stitches/knitting/cable/3_3_3_LC.svg",
+    svg: "/stitches/knitting/cable/3_3_3_LC.svg",
     svgPaths: [
       ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
@@ -515,7 +515,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_3_3_LPC: {
     name: "3/3/3 LPC",
-    svg: "stitches/knitting/cable/3_3_3_LPC.svg",
+    svg: "/stitches/knitting/cable/3_3_3_LPC.svg",
     svgPaths: [
       ["M 300,0 L 450.0,50 L 600,0 Z", "#000"],
       ["M 300,100 L 450.0,50 L 600,100 Z", "#000"],
@@ -525,7 +525,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_3_3_RC: {
     name: "3/3/3 RC",
-    svg: "stitches/knitting/cable/3_3_3_RC.svg",
+    svg: "/stitches/knitting/cable/3_3_3_RC.svg",
     svgPaths: [
       ["M 0,0 L 300,0 L 900,100 L 600,100 Z", "#FFF"],
       ["M 600,0 L 900,0 L 300,100 L 0,100 Z", "#FFF"],
@@ -533,7 +533,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_3_3_3_RPC: {
     name: "3/3/3 RPC",
-    svg: "stitches/knitting/cable/3_3_3_RPC.svg",
+    svg: "/stitches/knitting/cable/3_3_3_RPC.svg",
     svgPaths: [
       ["M 300,0 L 450.0,50 L 600,0 Z", "#000"],
       ["M 300,100 L 450.0,50 L 600,100 Z", "#000"],
@@ -543,7 +543,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_4_1_4_LC: {
     name: "4/1/4 LC",
-    svg: "stitches/knitting/cable/4_1_4_LC.svg",
+    svg: "/stitches/knitting/cable/4_1_4_LC.svg",
     svgPaths: [
       ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
       ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
@@ -551,7 +551,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_4_1_4_LPC: {
     name: "4/1/4 LPC",
-    svg: "stitches/knitting/cable/4_1_4_LPC.svg",
+    svg: "/stitches/knitting/cable/4_1_4_LPC.svg",
     svgPaths: [
       ["M 400,0 L 450.0,50 L 500,0 Z", "#000"],
       ["M 400,100 L 450.0,50 L 500,100 Z", "#000"],
@@ -561,7 +561,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_4_1_4_RC: {
     name: "4/1/4 RC",
-    svg: "stitches/knitting/cable/4_1_4_RC.svg",
+    svg: "/stitches/knitting/cable/4_1_4_RC.svg",
     svgPaths: [
       ["M 0,0 L 400,0 L 900,100 L 500,100 Z", "#FFF"],
       ["M 500,0 L 900,0 L 400,100 L 0,100 Z", "#FFF"],
@@ -569,7 +569,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
   cable_4_1_4_RPC: {
     name: "4/1/4 RPC",
-    svg: "stitches/knitting/cable/4_1_4_RPC.svg",
+    svg: "/stitches/knitting/cable/4_1_4_RPC.svg",
     svgPaths: [
       ["M 400,0 L 450.0,50 L 500,0 Z", "#000"],
       ["M 400,100 L 450.0,50 L 500,100 Z", "#000"],
@@ -579,7 +579,7 @@ const knittingCableStitches: CableStitchGroup = {
   },
 };
 
-export const knitting: StitchGroup = {
+export const KNITTING_STITCHES: StitchGroup = {
   k: {
     info: {
       rs: { abbr: "k", name: "Knit" },

@@ -6,7 +6,10 @@ import {
   PixelGridCanvasSavedData,
   SvgPath,
 } from "@/types/pixelGrid";
-import { knitting } from "@/constants/pixelGrid/stitches";
+import {
+  KNITTING_CABLE_STITCHES,
+  KNITTING_STITCHES,
+} from "@/constants/pixelGrid/stitches";
 
 export type StitchCanvasTools = {
   ctx: CanvasRenderingContext2D | null;
@@ -75,6 +78,30 @@ export default function usePixelGridStitchCanvasTools({
     }
   };
 
+  const drawCableStitch = (
+    x: number,
+    y: number,
+    stitch: string,
+    context: CanvasRenderingContext2D,
+    windowTools: PixelGridWindowTools
+  ) => {
+    const svgPaths = KNITTING_CABLE_STITCHES[stitch].svgPaths;
+    context.strokeStyle = "#000";
+    context.lineWidth = 2;
+    for (const svgPath of svgPaths) {
+      context.fillStyle = svgPath[1];
+      const path = createCableFromSvgPath(
+        x,
+        y,
+        windowTools.canvasCellDimensions.width,
+        windowTools.canvasCellDimensions.height,
+        svgPath[0]
+      );
+      context.fill(path);
+      context.stroke(path);
+    }
+  };
+
   const updateStitch = ({
     row,
     col,
@@ -109,12 +136,23 @@ export default function usePixelGridStitchCanvasTools({
       curCanvasWindowTools.canvasCellDimensions.height
     );
     if (stitch) {
-      const svgPathSteps = knitting[stitch].svgPaths;
-      if (isSvgPath(svgPathSteps)) {
-        drawStitchPathStep(x, y, svgPathSteps, context, curCanvasWindowTools);
+      const isCable = stitch.includes("cable");
+      if (isCable) {
+        drawCableStitch(x, y, stitch, context, curCanvasWindowTools);
       } else {
-        for (const svgPathStep of svgPathSteps) {
-          drawStitchPathStep(x, y, svgPathStep, context, curCanvasWindowTools);
+        const svgPathSteps = KNITTING_STITCHES[stitch].svgPaths;
+        if (isSvgPath(svgPathSteps)) {
+          drawStitchPathStep(x, y, svgPathSteps, context, curCanvasWindowTools);
+        } else {
+          for (const svgPathStep of svgPathSteps) {
+            drawStitchPathStep(
+              x,
+              y,
+              svgPathStep,
+              context,
+              curCanvasWindowTools
+            );
+          }
         }
       }
     }
@@ -137,11 +175,23 @@ export const createFromSvgPath = (
 ) => {
   const path = new Path2D();
   const mat = new DOMMatrix();
-  mat.translateSelf(
-    x + 100 * (width / 100) * 0.1,
-    y + 100 * (height / 100) * 0.1
-  );
+  mat.translateSelf(x + width * 0.1, y + height * 0.1);
   mat.scaleSelf((width / 100) * 0.8, (height / 100) * 0.8, 1);
+  path.addPath(new Path2D(d), mat);
+  return path;
+};
+
+export const createCableFromSvgPath = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  d: string
+) => {
+  const path = new Path2D();
+  const mat = new DOMMatrix();
+  mat.translateSelf(x + width / 100, y + height / 100);
+  mat.scaleSelf(width / 100, height / 100, 1);
   path.addPath(new Path2D(d), mat);
   return path;
 };

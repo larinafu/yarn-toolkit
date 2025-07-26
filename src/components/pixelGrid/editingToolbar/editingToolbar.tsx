@@ -28,7 +28,10 @@ import {
   PixelGridSpecialShapesCanvasTools,
   SpecialShape,
 } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
-import { knitting } from "@/constants/pixelGrid/stitches";
+import {
+  KNITTING_CABLE_STITCHES,
+  KNITTING_STITCHES,
+} from "@/constants/pixelGrid/stitches";
 import Link from "next/link";
 
 type EditModeIcon = {
@@ -293,7 +296,10 @@ export default function EditingToolbar({
     },
     {
       mode: "symbolChange",
-      icon: knitting[activeStitchPalette[activeStitchIdx]].svg,
+      icon: (
+        KNITTING_STITCHES[activeStitchPalette[activeStitchIdx]] ||
+        KNITTING_CABLE_STITCHES[activeStitchPalette[activeStitchIdx]]
+      ).svg,
       color: stitchColor,
     },
     {
@@ -350,12 +356,6 @@ export default function EditingToolbar({
   ]);
   return (
     <header className="card grow m-2 p-0 flex justify-center overflow-auto">
-      <Image
-        width={50}
-        height={50}
-        alt=""
-        src={"/stitches/knitting/cable/4_2_RPC.svg"}
-      />
       <div className="grow overflow-x-auto">
         <div className="flex align-center">
           <Link

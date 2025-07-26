@@ -12,7 +12,10 @@ import {
   SvgPaths,
 } from "@/types/pixelGrid";
 import { numberFormatGuides } from "@/constants/pixelGrid/numberFormatGuides";
-import { knitting } from "@/constants/pixelGrid/stitches";
+import {
+  KNITTING_STITCHES,
+  KNITTING_CABLE_STITCHES,
+} from "@/constants/pixelGrid/stitches";
 import { createFromSvgPath } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
 
@@ -86,8 +89,8 @@ const drawStitchPath = (
   ctx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D
 ) => {
   ctx.lineWidth = 2;
-  ctx.lineJoin = "round"
-  ctx.lineCap = "round"
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
   if (svgPathStep[1] === "stroke") {
     ctx.stroke(createFromSvgPath(x, y, w, h, svgPathStep[0]));
   } else {
@@ -168,7 +171,9 @@ const drawPixelGridColorsAndStitches = ({
       if (stitch) {
         stitchCtx.strokeStyle = cells[row][col].stitchColor || "#000";
         stitchCtx.fillStyle = cells[row][col].stitchColor || "#000";
-        const svgPathSteps = knitting[stitch].svgPaths;
+        const svgPathSteps = (
+          KNITTING_STITCHES[stitch] || KNITTING_CABLE_STITCHES[stitch]
+        ).svgPaths;
         if (isSvgPath(svgPathSteps)) {
           drawStitchPath(
             col * cellDims.width + curOffset.width,

@@ -2,7 +2,10 @@ import Image from "next/image";
 import { ActiveStitchPalette } from "@/hooks/pixelGrid/usePixelGridEditingConfigTools";
 import { useState } from "react";
 import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
-import { knitting } from "@/constants/pixelGrid/stitches";
+import {
+  KNITTING_STITCHES,
+  KNITTING_CABLE_STITCHES,
+} from "@/constants/pixelGrid/stitches";
 import SimpleColorPicker from "../simpleColorPicker/simpleColorPicker";
 
 type StitchCategory = "simple" | "cable";
@@ -56,6 +59,7 @@ const StitchOption = ({
   stitch: string;
   swapStitchInPalette: (stitchIdx: number, stitch: string) => void;
 }) => {
+  const [isCable, setCable] = useState<boolean>(false);
   const [openExpand, setOpenExpand] = useState(false);
   const expandRef = useRefWithClickawayListener(() => setOpenExpand(false), []);
   const handlePaletteSelection = () => {
@@ -76,39 +80,104 @@ const StitchOption = ({
         } size-10`}
         onClick={handlePaletteSelection}
       >
-        <Image src={knitting[stitch].svg} alt={stitch} width={25} height={25} />
+        <Image
+          src={
+            (KNITTING_STITCHES[stitch] || KNITTING_CABLE_STITCHES[stitch]).svg
+          }
+          alt={stitch}
+          width={25}
+          height={25}
+        />
       </button>
       {openExpand && (
         <section
-          className={`absolute card overflow-auto z-40 left-0 right-0 m-auto w-xs sm:w-sm fadeInFast`}
+          className={`absolute card overflow-auto z-40 left-0 right-0 m-auto w-xs fadeInFast`}
         >
-          {Object.entries(knitting).map(([stitchKey, stitch]) => (
-            <button
-              key={stitchKey}
-              className="buttonBlank p-1 size-10 m-1 border border-gray-500"
-              onClick={() => {
-                swapStitchInPalette(idx, stitchKey);
-                setOpenExpand(false);
-              }}
+          <div className="relative flex items-center bg-amaranth-light rounded-full transition-all duration-300 m-1">
+            {/* Slider */}
+            <div
+              className={`absolute top-0 left-0 bottom-0 w-1/2 h-full flex transition-transform duration-300 ${
+                isCable ? "translate-x-full" : "translate-x-0"
+              }`}
             >
-              <Image
-                src={stitch.svg}
-                alt={stitchKey}
-                width={20}
-                height={20}
-                className="w-full h-full"
-              />
-            </button>
-          ))}
-          <button className="flex rounded-4xl h-7">
-            <p>cable</p>
-            <Image
-              width={20}
-              height={20}
-              alt="right arrow"
-              src={"/right-line-arrow.svg"}
-            />
-          </button>
+              <div className="grow m-1 bg-white rounded-full shadow-md"></div>
+            </div>
+
+            {/* Buttons */}
+            <div className="relative z-10 flex w-full">
+              <button
+                className={`buttonBlank w-1/2 my-1 text-sm font-medium rounded-full transition-colors duration-300 ${
+                  isCable ? "text-gray-500" : "text-black"
+                }`}
+                onClick={() => setCable(false)}
+              >
+                regular
+              </button>
+              <button
+                className={`buttonBlank w-1/2 my-1 text-sm font-medium rounded-full transition-colors duration-300 ${
+                  isCable ? "text-black" : "text-gray-500"
+                }`}
+                onClick={() => setCable(true)}
+              >
+                cable
+              </button>
+            </div>
+          </div>
+
+          <section
+            className={`${
+              isCable
+                ? "max-h-75 overflow-auto"
+                : "flex flex-wrap justify-center"
+            }`}
+          >
+            {isCable
+              ? Object.entries(KNITTING_CABLE_STITCHES).map(
+                  ([stitchKey, stitch]) => {
+                    const width =
+                      (stitchKey
+                        .match(/\d+/g)
+                        ?.reduce((a, b) => a + Number(b), 0) ?? 0) * 30;
+                    return (
+                      <div key={stitchKey} className="flex items-center">
+                        <button
+                          className={`buttonBlank p-0 m-1 border border-gray-500 shrink-0`}
+                          onClick={() => {
+                            swapStitchInPalette(idx, stitchKey);
+                            setOpenExpand(false);
+                          }}
+                        >
+                          <Image
+                            src={stitch.svg}
+                            alt={stitch.name}
+                            width={width}
+                            height={30}
+                          />
+                        </button>
+                        <p>{stitch.name}</p>
+                      </div>
+                    );
+                  }
+                )
+              : Object.entries(KNITTING_STITCHES).map(([stitchKey, stitch]) => (
+                  <button
+                    key={stitchKey}
+                    className="buttonBlank p-1 size-10 m-1 border border-gray-500"
+                    onClick={() => {
+                      swapStitchInPalette(idx, stitchKey);
+                      setOpenExpand(false);
+                    }}
+                  >
+                    <Image
+                      src={stitch.svg}
+                      alt={stitchKey}
+                      width={20}
+                      height={20}
+                      className="w-full h-full"
+                    />
+                  </button>
+                ))}
+          </section>
         </section>
       )}
     </div>

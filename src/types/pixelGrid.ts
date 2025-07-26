@@ -53,6 +53,7 @@ export type PixelGridCanvasCell = {
   hex: string;
   stitch?: string;
   stitchColor?: string;
+  cable?: boolean | string;
 };
 
 export type PixelGridCanvasCellDimensions = {
