@@ -53,7 +53,7 @@ export type PixelGridCanvasCell = {
   hex: string;
   stitch?: string;
   stitchColor?: string;
-  cable?: boolean | string;
+  isPartOfCable: boolean;
 };
 
 export type PixelGridCanvasCellDimensions = {
@@ -164,8 +164,12 @@ export type SymbolChangeSession = {
   data: {
     [row: number]: {
       [col: number]: {
-        prev: { stitch: string; stitchColor: string };
-        new: { stitch: string; stitchColor: string };
+        prev:
+          | { stitch: string; stitchColor: string; isPartOfCable?: boolean }
+          | { isPartOfCable: boolean };
+        new:
+          | { stitch: string; stitchColor: string; isPartOfCable?: boolean }
+          | { isPartOfCable: boolean };
       };
     };
   };

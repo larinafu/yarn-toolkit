@@ -51,7 +51,9 @@ export default function InitCustomization({
   );
   const [patternSizeInputs, setPatternSizeInputs] =
     useState<PatternSizeDisplay>(patternSize);
-  const [basePattern, setBasePattern] = useState<{ hex: string }[][]>(
+  const [basePattern, setBasePattern] = useState<
+    { hex: string; isPartOfCable: boolean }[][]
+  >(
     imageInfo
       ? generateNewPixelGrid({
           imgData: imageInfo.imageData,

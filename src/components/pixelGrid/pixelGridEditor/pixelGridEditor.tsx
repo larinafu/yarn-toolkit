@@ -95,8 +95,8 @@ export default function PixelGridEditor({
 
   const stitchCanvasTools = usePixelGridStitchCanvasTools({
     canvasWindowTools,
-    interactionLayerTools,
     savedCanvasDataRef,
+    interactionLayerTools,
   });
 
   const specialShapesTools = usePixelGridSpecialShapesCanvasTools({
@@ -194,7 +194,7 @@ export default function PixelGridEditor({
     savedCanvasDataRef,
     specialShapesRef: specialShapesTools.specialShapesRef,
     updatePixelColor: colorCanvasTools.updatePixelColor,
-    updateStitch: stitchCanvasTools.updateStitch,
+    stitchCanvasTools: stitchCanvasTools,
     updateFullCanvas,
     viewboxTools,
     drawShapesOnCanvas: specialShapesTools.drawShapesOnCanvas,
@@ -219,6 +219,7 @@ export default function PixelGridEditor({
     activeShapeIdx: editConfigTools.activeShapeIdx,
     stitchColor: editConfigTools.stitchColor,
     shapeColor: editConfigTools.shapeColor,
+    stitchWidthUnit: editConfigTools.stitchWidthUnit,
   });
 
   const resizeObserverRef = useRef<null | ResizeObserver>(null);
@@ -389,6 +390,7 @@ export default function PixelGridEditor({
               pixelGridCanvasRefWithRect={pixelGridCanvasRefWithRect}
               isPointerDownFromCanvas={isPointerDownFromCanvas}
               setPointerDownFromCanvas={setPointerDownFromCanvas}
+              stitchWidthUnit={editConfigTools.stitchWidthUnit}
             />
           </RowColTracker>
         </section>

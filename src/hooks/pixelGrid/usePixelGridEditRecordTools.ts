@@ -10,6 +10,8 @@ import {
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 import { ViewboxTools } from "./useViewboxTools";
+import { getCableStitchWidthUnits, isCable } from "@/utils/general/stitchUtils";
+import { StitchCanvasTools } from "./usePixelGridStitchCanvasTools";
 
 type Record = Session[];
 
@@ -30,7 +32,6 @@ export default function usePixelGridEditRecordTools({
   savedCanvasDataRef,
   specialShapesRef,
   updatePixelColor,
-  updateStitch,
   viewboxTools,
   drawShapesOnCanvas,
   setChangedShapes,
@@ -38,6 +39,7 @@ export default function usePixelGridEditRecordTools({
   canvasWindowTools,
   undoGridSizing,
   redoGridSizing,
+  stitchCanvasTools,
 }: {
   editMode: EditMode;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
@@ -50,21 +52,6 @@ export default function usePixelGridEditRecordTools({
     row: number;
     col: number;
     hex: string;
-  }) => void;
-  updateStitch: ({
-    row,
-    col,
-    stitch,
-    color,
-    ctx,
-    windowTools,
-  }: {
-    row: number;
-    col: number;
-    stitch: string;
-    color: string;
-    ctx?: CanvasRenderingContext2D;
-    windowTools?: Partial<PixelGridWindowTools>;
   }) => void;
   viewboxTools: ViewboxTools;
   drawShapesOnCanvas: ({
@@ -93,6 +80,7 @@ export default function usePixelGridEditRecordTools({
   redoGridSizing: (
     session: GridSizeChangeAddSession | GridSizeChangeDeleteSession
   ) => void;
+  stitchCanvasTools: StitchCanvasTools;
 }): EditRecordTools {
   const sessionRef = useRef<Session>(null);
   const [record, setRecord] = useState<Record>([]);
@@ -119,17 +107,46 @@ export default function usePixelGridEditRecordTools({
           stitch: savedCanvasDataRef.current.pixels[row][col].stitch as string,
           stitchColor: savedCanvasDataRef.current.pixels[row][col]
             .stitchColor as string,
+          isPartOfCable:
+            savedCanvasDataRef.current.pixels[row][col].isPartOfCable,
         };
         if (!sessionRef.current || sessionRef.current.mode === "symbolChange") {
+          const stitch = data.stitch;
           sessionRef.current = sessionRef.current || {
             mode: "symbolChange",
             data: {},
           };
           sessionRef.current.data[row] = sessionRef.current.data[row] || {};
-          sessionRef.current.data[row][col] = {
-            prev: prevData,
-            new: { stitch: data.stitch, stitchColor: data.stitchColor },
-          };
+          if (isCable(stitch)) {
+            sessionRef.current.data[row][col] = {
+              prev: prevData,
+              new: {
+                stitch: stitch,
+                stitchColor: data.stitchColor,
+                isPartOfCable: true,
+              },
+            };
+            const stitchWidth = getCableStitchWidthUnits(stitch);
+            for (
+              let curCol = col + 1;
+              curCol < col + stitchWidth;
+              curCol += 1
+            ) {
+              sessionRef.current.data[row][curCol] = {
+                prev: prevData,
+                new: { isPartOfCable: true },
+              };
+            }
+          } else {
+            sessionRef.current.data[row][col] = {
+              prev: prevData,
+              new: {
+                stitch: stitch,
+                stitchColor: data.stitchColor,
+                isPartOfCable: false,
+              },
+            };
+          }
         }
         break;
       case "specialShapeChange":
@@ -192,12 +209,16 @@ export default function usePixelGridEditRecordTools({
                     ].hex = data.new;
                     break;
                   case "symbolChange":
+                    const curSavedStitch =
+                      savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                        parseInt(colIdx)
+                      ];
                     savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                       parseInt(colIdx)
-                    ].stitch = data.new.stitch;
-                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                      parseInt(colIdx)
-                    ].stitchColor = data.new.stitchColor;
+                    ] = {
+                      ...curSavedStitch,
+                      ...data.new,
+                    };
                 }
               }
             }
@@ -269,13 +290,18 @@ export default function usePixelGridEditRecordTools({
                   });
                   break;
                 case "symbolChange":
+                  const curSavedStitch =
+                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                      parseInt(colIdx)
+                    ];
                   savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                     parseInt(colIdx)
-                  ].stitch = data.prev.stitch;
-                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                    parseInt(colIdx)
-                  ].stitchColor = data.prev.stitchColor;
-                  updateStitch({
+                  ] = {
+                    ...curSavedStitch,
+                    isPartOfCable: false,
+                    ...data.prev,
+                  };
+                  stitchCanvasTools.updateStitch({
                     row: parseInt(rowIdx),
                     col: parseInt(colIdx),
                     stitch: (data as SymbolChangeSessionData).prev.stitch,
@@ -359,18 +385,27 @@ export default function usePixelGridEditRecordTools({
                   });
                   break;
                 case "symbolChange":
+                  const curSavedStitch =
+                    savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
+                      parseInt(colIdx)
+                    ];
                   savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
                     parseInt(colIdx)
-                  ].stitch = (data as any).new.stitch;
-                  savedCanvasDataRef.current.pixels[parseInt(rowIdx)][
-                    parseInt(colIdx)
-                  ].stitchColor = (data as any).new.stitchColor;
-                  updateStitch({
-                    row: parseInt(rowIdx),
-                    col: parseInt(colIdx),
-                    stitch: (data as SymbolChangeSessionData).new.stitch,
-                    color: (data as SymbolChangeSessionData).new.stitchColor,
-                  });
+                  ] = {
+                    ...curSavedStitch,
+                    ...data.new,
+                  };
+                  if (
+                    (data.new.isPartOfCable && data.new.stitch) ||
+                    !data.new.isPartOfCable
+                  ) {
+                    stitchCanvasTools.updateStitch({
+                      row: parseInt(rowIdx),
+                      col: parseInt(colIdx),
+                      stitch: (data as SymbolChangeSessionData).new.stitch,
+                      color: (data as SymbolChangeSessionData).new.stitchColor,
+                    });
+                  }
               }
             }
           }

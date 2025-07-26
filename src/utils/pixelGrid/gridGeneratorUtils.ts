@@ -9,8 +9,13 @@ const getColorIndicesForCoord = (x: number, y: number, imgWidth: number) => {
 
 export const generateNewPixelGridNoImage = (patternSize: PatternSize) =>
   Array(patternSize.numRows)
-    .fill({ hex: DEFAULT_CELL_COLOR })
-    .map(() => Array(patternSize.numCols).fill({ hex: DEFAULT_CELL_COLOR }));
+    .fill({ hex: DEFAULT_CELL_COLOR, isPartOfCable: false })
+    .map(() =>
+      Array(patternSize.numCols).fill({
+        hex: DEFAULT_CELL_COLOR,
+        isPartOfCable: false,
+      })
+    );
 
 export const generateNewPixelGrid = ({
   imgData,
@@ -81,7 +86,10 @@ export const generateNewPixelGrid = ({
         g: pixelInfo.g / pixelInfo.numPixels,
         b: pixelInfo.b / pixelInfo.numPixels,
       });
-      pixelRow.push({ hex: colorMatch?.value || "#fff" });
+      pixelRow.push({
+        hex: colorMatch?.value || "#fff",
+        isPartOfCable: false,
+      });
     }
     pixelGrid.push(pixelRow);
   }

@@ -27,6 +27,7 @@ export default function usePixelGridEditTools({
   activeShapeIdx,
   stitchColor,
   shapeColor,
+  stitchWidthUnit,
 }: {
   colorCanvasTools: ColorCanvasTools;
   stitchCanvasTools: StitchCanvasTools;
@@ -39,6 +40,7 @@ export default function usePixelGridEditTools({
   activeShapeIdx: number | "erase" | null;
   stitchColor: string;
   shapeColor: string;
+  stitchWidthUnit: number;
 }): PixelGridEditTools {
   const specialShapesRefLength =
     specialShapesTools.specialShapesRef.current.length;
@@ -51,6 +53,7 @@ export default function usePixelGridEditTools({
       e,
       editMode
     );
+    const session = editRecordTools.sessionRef.current;
     switch (editMode) {
       case "colorChange":
         if (
@@ -68,9 +71,11 @@ export default function usePixelGridEditTools({
         break;
       case "symbolChange":
         if (
-          !editRecordTools.sessionRef.current ||
-          (editRecordTools.sessionRef.current.mode === "symbolChange" &&
-            !editRecordTools.sessionRef.current.data[row]?.[col])
+          !session ||
+          (session.mode === "symbolChange" &&
+            Array.from({ length: stitchWidthUnit }, (_, i) => col + i).every(
+              (col) => !(col in (session.data[row] ?? {}))
+            ))
         ) {
           stitchCanvasTools.updateStitch({
             row,

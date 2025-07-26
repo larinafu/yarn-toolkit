@@ -32,6 +32,7 @@ export default function PixelGridCanvas({
   pixelGridCanvasRefWithRect,
   isPointerDownFromCanvas,
   setPointerDownFromCanvas,
+  stitchWidthUnit,
 }: {
   activeShapeIdx: number | "erase" | null;
   setActiveShapeIdx: React.Dispatch<
@@ -56,6 +57,7 @@ export default function PixelGridCanvas({
   };
   isPointerDownFromCanvas: boolean;
   setPointerDownFromCanvas: React.Dispatch<React.SetStateAction<boolean>>;
+  stitchWidthUnit: number;
 }) {
   const pointerEventsRef = useRef<any>(null);
   useIsPointerDown({
@@ -167,7 +169,9 @@ export default function PixelGridCanvas({
             <rect
               x={pixelPos.x}
               y={pixelPos.y}
-              width={canvasWindowTools.canvasCellDimensions.width}
+              width={
+                canvasWindowTools.canvasCellDimensions.width * stitchWidthUnit
+              }
               height={canvasWindowTools.canvasCellDimensions.height}
               fill="none"
               stroke="red"

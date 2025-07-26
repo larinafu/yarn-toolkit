@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 import { PixelGridInteractionLayerTools } from "./usePixelGridInteractionLayerTools";
 import {
@@ -10,6 +10,7 @@ import {
   KNITTING_CABLE_STITCHES,
   KNITTING_STITCHES,
 } from "@/constants/pixelGrid/stitches";
+import { getCableStitchWidthUnits, isCable } from "@/utils/general/stitchUtils";
 
 export type StitchCanvasTools = {
   ctx: CanvasRenderingContext2D | null;
@@ -30,6 +31,10 @@ export type StitchCanvasTools = {
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
   }) => void;
+  findCableStitchStartingPos: (
+    curRow: number,
+    curCol: number
+  ) => { cableStartingRow: number; cableStartingCol: number; stitch: string };
 };
 
 export default function usePixelGridStitchCanvasTools({
@@ -44,6 +49,18 @@ export default function usePixelGridStitchCanvasTools({
   const stitchCanvasRef = useRef(null);
   const [stitchCanvasContext, setStitchCanvasContext] =
     useState<CanvasRenderingContext2D | null>(null);
+
+  const findCableStitchStartingPos = (curRow: number, curCol: number) => {
+    let curCell = savedCanvasDataRef.current.pixels[curRow][curCol];
+    while (!(curCell.stitch && isCable(curCell.stitch))) {
+      curCell = savedCanvasDataRef.current.pixels[curRow][curCol - 1];
+    }
+    return {
+      cableStartingRow: curRow,
+      cableStartingCol: curCol,
+      stitch: curCell.stitch,
+    };
+  };
 
   const drawStitchPathStep = (
     x: number,
@@ -85,9 +102,26 @@ export default function usePixelGridStitchCanvasTools({
     context: CanvasRenderingContext2D,
     windowTools: PixelGridWindowTools
   ) => {
+    const stitchWidthUnit = getCableStitchWidthUnits(stitch);
+    context.fillStyle = "white";
+    context.fillRect(
+      x,
+      y,
+      windowTools.canvasCellDimensions.width * stitchWidthUnit,
+      canvasWindowTools.canvasCellDimensions.height
+    );
+    context.strokeRect(
+      x,
+      y,
+      windowTools.canvasCellDimensions.width * stitchWidthUnit,
+      canvasWindowTools.canvasCellDimensions.height
+    );
     const svgPaths = KNITTING_CABLE_STITCHES[stitch].svgPaths;
     context.strokeStyle = "#000";
     context.lineWidth = 2;
+    context.lineJoin = "round";
+    context.lineCap = "round";
+
     for (const svgPath of svgPaths) {
       context.fillStyle = svgPath[1];
       const path = createCableFromSvgPath(
@@ -100,6 +134,13 @@ export default function usePixelGridStitchCanvasTools({
       context.fill(path);
       context.stroke(path);
     }
+    context.strokeStyle = "gray";
+    context.strokeRect(
+      x,
+      y,
+      windowTools.canvasCellDimensions.width * stitchWidthUnit,
+      canvasWindowTools.canvasCellDimensions.height
+    );
   };
 
   const updateStitch = ({
@@ -136,8 +177,7 @@ export default function usePixelGridStitchCanvasTools({
       curCanvasWindowTools.canvasCellDimensions.height
     );
     if (stitch) {
-      const isCable = stitch.includes("cable");
-      if (isCable) {
+      if (isCable(stitch)) {
         drawCableStitch(x, y, stitch, context, curCanvasWindowTools);
       } else {
         const svgPathSteps = KNITTING_STITCHES[stitch].svgPaths;
@@ -163,6 +203,7 @@ export default function usePixelGridStitchCanvasTools({
     setCtx: setStitchCanvasContext,
     ref: stitchCanvasRef,
     updateStitch,
+    findCableStitchStartingPos,
   };
 }
 
