@@ -97,6 +97,7 @@ export default function PixelGridEditor({
     canvasWindowTools,
     savedCanvasDataRef,
     interactionLayerTools,
+    activeStitchWidthUnit: editConfigTools.stitchWidthUnit,
   });
 
   const specialShapesTools = usePixelGridSpecialShapesCanvasTools({

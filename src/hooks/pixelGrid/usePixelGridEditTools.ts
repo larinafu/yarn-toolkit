@@ -1,4 +1,7 @@
-import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
+import {
+  PixelGridCanvasSavedData,
+  SymbolChangeSession,
+} from "@/types/pixelGrid";
 import { ColorCanvasTools } from "./useColorCanvasTools";
 import { EditMode } from "./usePixelGridEditingConfigTools";
 import { PixelGridInteractionLayerTools } from "./usePixelGridInteractionLayerTools";
@@ -77,11 +80,22 @@ export default function usePixelGridEditTools({
               (col) => !(col in (session.data[row] ?? {}))
             ))
         ) {
+          const shouldExpandAffectedColsEndInterval =
+            !session || !(col + stitchWidthUnit in (session.data[row] ?? {}));
+          const shouldExpandAffectedColsStartInterval =
+            !session || !(col - 1 in (session.data[row] ?? {}));
+          const affectedColsInterval = {
+            ...(shouldExpandAffectedColsStartInterval ? {} : { startCol: col }),
+            ...(shouldExpandAffectedColsEndInterval
+              ? {}
+              : { endCol: col + stitchWidthUnit }),
+          };
           stitchCanvasTools.updateStitch({
             row,
             col,
             stitch: activeStitch,
             color: stitchColor,
+            affectedColsInterval,
           });
           editRecordTools.addToSession(row, col, {
             stitch: activeStitch,

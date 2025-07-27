@@ -23,6 +23,7 @@ export type StitchCanvasTools = {
     color,
     ctx,
     windowTools,
+    affectedColsInterval,
   }: {
     row: number;
     col: number;
@@ -30,7 +31,11 @@ export type StitchCanvasTools = {
     color: string;
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
-  }) => void;
+    affectedColsInterval?: {
+      startCol?: number;
+      endCol?: number;
+    };
+  }) => { affectedColsStart: number; affectedColsEnd: number };
   findCableStitchStartingPos: (
     curRow: number,
     curCol: number
@@ -41,10 +46,12 @@ export default function usePixelGridStitchCanvasTools({
   canvasWindowTools,
   savedCanvasDataRef,
   interactionLayerTools,
+  activeStitchWidthUnit,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   interactionLayerTools: PixelGridInteractionLayerTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
+  activeStitchWidthUnit: number;
 }): StitchCanvasTools {
   const stitchCanvasRef = useRef(null);
   const [stitchCanvasContext, setStitchCanvasContext] =
@@ -143,6 +150,34 @@ export default function usePixelGridStitchCanvasTools({
     );
   };
 
+  const getEraseInterval = (row: number, col: number) => {
+    let curColPos = col;
+    let eraseStart = col;
+    while (curColPos < col + activeStitchWidthUnit) {
+      let colStartPos = curColPos;
+      while (
+        colStartPos > 0 &&
+        savedCanvasDataRef.current.pixels[row][colStartPos].isPartOfCable &&
+        !savedCanvasDataRef.current.pixels[row][colStartPos].stitch
+      ) {
+        colStartPos -= 1;
+      }
+      eraseStart = Math.min(eraseStart, colStartPos);
+      curColPos =
+        colStartPos +
+        (isCable(savedCanvasDataRef.current.pixels[row][colStartPos].stitch)
+          ? getCableStitchWidthUnits(
+              savedCanvasDataRef.current.pixels[row][colStartPos]
+                .stitch as string
+            )
+          : 1);
+    }
+    return {
+      startCol: eraseStart,
+      endCol: curColPos,
+    };
+  };
+
   const updateStitch = ({
     row,
     col,
@@ -150,6 +185,7 @@ export default function usePixelGridStitchCanvasTools({
     color,
     ctx,
     windowTools,
+    affectedColsInterval,
   }: {
     row: number;
     col: number;
@@ -157,6 +193,10 @@ export default function usePixelGridStitchCanvasTools({
     color: string;
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
+    affectedColsInterval?: {
+      startCol?: number;
+      endCol?: number;
+    };
   }) => {
     const context = ctx || (stitchCanvasContext as CanvasRenderingContext2D);
     context.strokeStyle = color;
@@ -165,15 +205,31 @@ export default function usePixelGridStitchCanvasTools({
       ...canvasWindowTools,
       ...windowTools,
     };
+    const { startCol: colEraseStart, endCol: colEraseEnd } = {
+      ...getEraseInterval(row, col),
+      ...affectedColsInterval,
+    };
+
+    const stitchWidthUnit = colEraseEnd - colEraseStart;
+
+    const { x: startColClearX } = interactionLayerTools.getXYCoordsFromPixelPos(
+      {
+        row,
+        col: colEraseStart,
+        windowTools: curCanvasWindowTools,
+      }
+    );
+
     const { x, y } = interactionLayerTools.getXYCoordsFromPixelPos({
       row,
       col,
       windowTools: curCanvasWindowTools,
     });
+
     context.clearRect(
-      x,
+      startColClearX,
       y,
-      curCanvasWindowTools.canvasCellDimensions.width,
+      curCanvasWindowTools.canvasCellDimensions.width * stitchWidthUnit,
       curCanvasWindowTools.canvasCellDimensions.height
     );
     if (stitch) {
@@ -196,6 +252,7 @@ export default function usePixelGridStitchCanvasTools({
         }
       }
     }
+    return { affectedColsStart: colEraseStart, affectedColsEnd: colEraseEnd };
   };
 
   return {

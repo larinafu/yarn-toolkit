@@ -147,7 +147,7 @@ const StitchOption = ({
                         >
                           <Image
                             src={stitch.svg}
-                            alt={stitch.name}
+                            alt={`${stitch.name} cable stitch chart symbol`}
                             width={width}
                             height={30}
                           />
