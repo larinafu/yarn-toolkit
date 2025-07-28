@@ -51,8 +51,8 @@ export type CreateData = {
 
 export type PixelGridCanvasCell = {
   hex: string;
-  stitch?: string;
-  stitchColor?: string;
+  stitch: string | null;
+  stitchColor: string | null;
   isPartOfCable: boolean;
 };
 
@@ -155,22 +155,15 @@ export type ColorChangeSession = {
 };
 
 export type SymbolChangeSessionData = {
-  prev: { stitch: string; stitchColor: string };
-  new: { stitch: string; stitchColor: string };
+  prev: Partial<PixelGridCanvasCell>;
+  new: Partial<PixelGridCanvasCell>;
 };
 
 export type SymbolChangeSession = {
   mode: "symbolChange";
   data: {
     [row: number]: {
-      [col: number]: {
-        prev:
-          | { stitch: string; stitchColor: string; isPartOfCable?: boolean }
-          | { isPartOfCable: boolean };
-        new:
-          | { stitch: string; stitchColor: string; isPartOfCable?: boolean }
-          | { isPartOfCable: boolean };
-      };
+      [col: number]: SymbolChangeSessionData;
     };
   };
 };

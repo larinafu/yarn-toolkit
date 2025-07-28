@@ -10,12 +10,18 @@ import {
   KNITTING_CABLE_STITCHES,
   KNITTING_STITCHES,
 } from "@/constants/pixelGrid/stitches";
-import { getCableStitchWidthUnits, isCable } from "@/utils/general/stitchUtils";
+import {
+  getStitchWidthUnitsFromId,
+  isCable,
+} from "@/utils/general/stitchUtils";
 
 export type StitchCanvasTools = {
   ctx: CanvasRenderingContext2D | null;
   setCtx: React.Dispatch<React.SetStateAction<CanvasRenderingContext2D | null>>;
   ref: React.RefObject<HTMLCanvasElement | null>;
+  updateFullCanvas: (args?: {
+    windowTools?: Partial<PixelGridWindowTools>;
+  }) => void;
   updateStitch: ({
     row,
     col,
@@ -23,17 +29,20 @@ export type StitchCanvasTools = {
     color,
     ctx,
     windowTools,
-    affectedColsInterval,
+    config,
   }: {
     row: number;
     col: number;
-    stitch: string;
+    stitch: string | undefined;
     color: string;
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
-    affectedColsInterval?: {
-      startCol?: number;
-      endCol?: number;
+    config?: {
+      affectedColsInterval?: {
+        startCol?: number;
+        endCol?: number;
+      };
+      stitchWidthUnit?: number;
     };
   }) => { affectedColsStart: number; affectedColsEnd: number };
   findCableStitchStartingPos: (
@@ -109,7 +118,7 @@ export default function usePixelGridStitchCanvasTools({
     context: CanvasRenderingContext2D,
     windowTools: PixelGridWindowTools
   ) => {
-    const stitchWidthUnit = getCableStitchWidthUnits(stitch);
+    const stitchWidthUnit = getStitchWidthUnitsFromId(stitch);
     context.fillStyle = "white";
     context.fillRect(
       x,
@@ -150,10 +159,22 @@ export default function usePixelGridStitchCanvasTools({
     );
   };
 
-  const getEraseInterval = (row: number, col: number) => {
+  const getEraseInterval = (
+    row: number,
+    col: number,
+    config?: {
+      stitchWithUnit?: number;
+    }
+  ) => {
     let curColPos = col;
     let eraseStart = col;
-    while (curColPos < col + activeStitchWidthUnit) {
+    while (
+      curColPos <
+      Math.min(
+        canvasWindowTools.canvasNumRowsAndCols.numCols,
+        col + (config?.stitchWithUnit ?? activeStitchWidthUnit)
+      )
+    ) {
       let colStartPos = curColPos;
       while (
         colStartPos > 0 &&
@@ -166,7 +187,7 @@ export default function usePixelGridStitchCanvasTools({
       curColPos =
         colStartPos +
         (isCable(savedCanvasDataRef.current.pixels[row][colStartPos].stitch)
-          ? getCableStitchWidthUnits(
+          ? getStitchWidthUnitsFromId(
               savedCanvasDataRef.current.pixels[row][colStartPos]
                 .stitch as string
             )
@@ -185,7 +206,7 @@ export default function usePixelGridStitchCanvasTools({
     color,
     ctx,
     windowTools,
-    affectedColsInterval,
+    config,
   }: {
     row: number;
     col: number;
@@ -193,9 +214,12 @@ export default function usePixelGridStitchCanvasTools({
     color: string;
     ctx?: CanvasRenderingContext2D;
     windowTools?: Partial<PixelGridWindowTools>;
-    affectedColsInterval?: {
-      startCol?: number;
-      endCol?: number;
+    config?: {
+      affectedColsInterval?: {
+        startCol?: number;
+        endCol?: number;
+      };
+      stitchWidthUnit?: number;
     };
   }) => {
     const context = ctx || (stitchCanvasContext as CanvasRenderingContext2D);
@@ -207,7 +231,7 @@ export default function usePixelGridStitchCanvasTools({
     };
     const { startCol: colEraseStart, endCol: colEraseEnd } = {
       ...getEraseInterval(row, col),
-      ...affectedColsInterval,
+      ...config?.affectedColsInterval,
     };
 
     const stitchWidthUnit = colEraseEnd - colEraseStart;
@@ -255,12 +279,57 @@ export default function usePixelGridStitchCanvasTools({
     return { affectedColsStart: colEraseStart, affectedColsEnd: colEraseEnd };
   };
 
+  const updateFullCanvas = (args?: {
+    windowTools?: Partial<PixelGridWindowTools>;
+  }) => {
+    const curWindowTools = {
+      ...canvasWindowTools,
+      ...args?.windowTools,
+    };
+    if (stitchCanvasContext) {
+      stitchCanvasContext.clearRect(
+        0,
+        0,
+        curWindowTools.gridDimensions.width,
+        curWindowTools.gridDimensions.height
+      );
+    }
+    for (
+      let row = curWindowTools.canvasWindow.startRow;
+      row <
+      curWindowTools.canvasWindow.startRow +
+        curWindowTools.canvasWindow.visibleRows;
+      row++
+    ) {
+      for (
+        let col = curWindowTools.canvasWindow.startCol;
+        col <
+        curWindowTools.canvasWindow.startCol +
+          curWindowTools.canvasWindow.visibleCols;
+        col++
+      ) {
+        if (savedCanvasDataRef.current.pixels[row][col].stitch) {
+          updateStitch({
+            row,
+            col,
+            stitch: savedCanvasDataRef.current.pixels[row][col]
+              .stitch as string,
+            color:
+              savedCanvasDataRef.current.pixels[row][col].stitchColor || "#000",
+            windowTools: curWindowTools,
+          });
+        }
+      }
+    }
+  };
+
   return {
     ctx: stitchCanvasContext,
     setCtx: setStitchCanvasContext,
     ref: stitchCanvasRef,
     updateStitch,
     findCableStitchStartingPos,
+    updateFullCanvas,
   };
 }
 

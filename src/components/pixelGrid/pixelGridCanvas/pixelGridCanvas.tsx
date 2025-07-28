@@ -164,6 +164,18 @@ export default function PixelGridCanvas({
     if (pixelPos) {
       switch (editMode) {
         case "colorChange":
+          return (
+            <rect
+              x={pixelPos.x}
+              y={pixelPos.y}
+              width={canvasWindowTools.canvasCellDimensions.width}
+              height={canvasWindowTools.canvasCellDimensions.height}
+              fill="none"
+              stroke="red"
+              strokeWidth={2}
+              className="pointer-events-none"
+            ></rect>
+          );
         case "symbolChange":
           return (
             <rect

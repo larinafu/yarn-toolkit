@@ -22,19 +22,15 @@ export default function Home() {
     <>
       <section className={`p-2`}>
         <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-7xl">
-          <Link href={"/create?source=blank"}>
-            Free Knitting Chart Maker - Design Your Own Colorwork and Lace
-            Patterns, and More
-          </Link>
+          <Link href={"/create?source=blank"}>Free Knitting Chart Maker</Link>
         </h1>
+        <h2 className="text-center text-3xl">Design Your Own Colorwork and Lace Patterns, and More</h2>
         <p>
-          <p>
-            Yarn Toolkit helps knitters design custom stitch charts directly in
-            the browser. Whether you're creating stranded colorwork, openwork
-            lace, or cable knitting motifs, our free knitting chart generator
-            lets you start from scratch or start off with a photo—no software
-            installation required.
-          </p>
+          Yarn Toolkit helps knitters design custom stitch charts directly in
+          the browser. Whether you're creating stranded colorwork, openwork
+          lace, or cable knitting motifs, our free knitting chart generator lets
+          you start from scratch or start off with a photo—no software
+          installation required.
         </p>
         <div className="relative">
           <Image

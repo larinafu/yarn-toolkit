@@ -7,7 +7,7 @@ import {
   KNITTING_CABLE_STITCHES,
 } from "@/constants/pixelGrid/stitches";
 import SimpleColorPicker from "../simpleColorPicker/simpleColorPicker";
-import { getCableStitchWidthUnits } from "@/utils/general/stitchUtils";
+import { getStitchWidthUnitsFromId } from "@/utils/general/stitchUtils";
 
 type StitchCategory = "simple" | "cable";
 
@@ -135,7 +135,7 @@ const StitchOption = ({
             {isCable
               ? Object.entries(KNITTING_CABLE_STITCHES).map(
                   ([stitchKey, stitch]) => {
-                    const width = getCableStitchWidthUnits(stitchKey) * 30;
+                    const width = getStitchWidthUnitsFromId(stitchKey) * 30;
                     return (
                       <div key={stitchKey} className="flex items-center">
                         <button

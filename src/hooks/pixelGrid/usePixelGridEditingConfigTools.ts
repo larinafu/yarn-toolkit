@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { ColorCountTracker } from "./useColorCanvasTools";
 import { defaultInitialColors } from "@/constants/colors";
-import { getCableStitchWidthUnits, isCable } from "@/utils/general/stitchUtils";
+import { getStitchWidthUnitsFromId, isCable } from "@/utils/general/stitchUtils";
 
 export type ActiveColorPalette = [string, number][];
 export type ActiveStitchPalette = string[];
@@ -65,7 +65,7 @@ export default function usePixelGridEditingConfigTools({
 
   const [stitchColor, setStitchColor] = useState<string>("#000000");
   const stitchWidthUnit = isCable(activeStitch)
-    ? getCableStitchWidthUnits(activeStitch)
+    ? getStitchWidthUnitsFromId(activeStitch)
     : 1;
   const [shapeColor, setShapeColor] = useState<string>("red");
   const [gridLineColor, setGridLineColor] = useState<string>("#2f4f4f");

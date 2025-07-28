@@ -221,6 +221,7 @@ export default function PixelGridEditor({
     stitchColor: editConfigTools.stitchColor,
     shapeColor: editConfigTools.shapeColor,
     stitchWidthUnit: editConfigTools.stitchWidthUnit,
+    canvasWindowTools,
   });
 
   const resizeObserverRef = useRef<null | ResizeObserver>(null);

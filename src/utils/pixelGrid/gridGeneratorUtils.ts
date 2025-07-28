@@ -1,5 +1,5 @@
 import { DEFAULT_CELL_COLOR, DEFAULT_COLORS } from "@/constants/colors";
-import { PatternSize } from "@/types/pixelGrid";
+import { PatternSize, PixelGridCanvasCell } from "@/types/pixelGrid";
 import * as nearestColorMap from "nearest-color";
 
 const getColorIndicesForCoord = (x: number, y: number, imgWidth: number) => {
@@ -7,13 +7,17 @@ const getColorIndicesForCoord = (x: number, y: number, imgWidth: number) => {
   return [red, red + 1, red + 2, red + 3];
 };
 
-export const generateNewPixelGridNoImage = (patternSize: PatternSize) =>
+export const generateNewPixelGridNoImage = (
+  patternSize: PatternSize
+): PixelGridCanvasCell[][] =>
   Array(patternSize.numRows)
-    .fill({ hex: DEFAULT_CELL_COLOR, isPartOfCable: false })
+    .fill(null)
     .map(() =>
       Array(patternSize.numCols).fill({
         hex: DEFAULT_CELL_COLOR,
         isPartOfCable: false,
+        stitch: null,
+        stitchColor: null,
       })
     );
 
@@ -27,7 +31,7 @@ export const generateNewPixelGrid = ({
   swatch: any;
   numStitches: number;
   numRows: number;
-}) => {
+}): PixelGridCanvasCell[][] => {
   const colorMap = DEFAULT_COLORS.reduce(
     (map: { [colorName: string]: string }, colorRow) => {
       for (const [colorName, colorObj] of Object.entries(colorRow)) {
@@ -89,6 +93,8 @@ export const generateNewPixelGrid = ({
       pixelRow.push({
         hex: colorMatch?.value || "#fff",
         isPartOfCable: false,
+        stitch: null,
+        stitchColor: null,
       });
     }
     pixelGrid.push(pixelRow);
