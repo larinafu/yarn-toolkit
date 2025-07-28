@@ -98,6 +98,7 @@ export default function PixelGridEditor({
     savedCanvasDataRef,
     interactionLayerTools,
     activeStitchWidthUnit: editConfigTools.stitchWidthUnit,
+    gridLineColor: editConfigTools.gridLineColor,
   });
 
   const specialShapesTools = usePixelGridSpecialShapesCanvasTools({

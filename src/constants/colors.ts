@@ -8,6 +8,8 @@ export const simpleColorConstants: string[] = [
   "blue",
 ];
 
+export const GRID_LINE_COLORS = ["#000", "#2f4f4f", "#D3D3D3"];
+
 export const DEFAULT_COLORS = [
   {
     black: {
@@ -348,10 +350,7 @@ export const DEFAULT_COLORS = [
 ];
 
 export const defaultInitialColors: [string, number][] = [
-  [
-    (DEFAULT_COLORS[1]["red"] as { hex: string; isDark: boolean }).hex,
-    0,
-  ],
+  [(DEFAULT_COLORS[1]["red"] as { hex: string; isDark: boolean }).hex, 0],
   [
     (
       DEFAULT_COLORS[1]["orange"] as {

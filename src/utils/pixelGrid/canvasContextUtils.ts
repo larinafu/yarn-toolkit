@@ -16,8 +16,8 @@ import {
   KNITTING_STITCHES,
   KNITTING_CABLE_STITCHES,
 } from "@/constants/pixelGrid/stitches";
-import { createFromSvgPath } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import { SpecialShape } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+import { getStitchWidthUnitsFromId, isCable } from "../general/stitchUtils";
 
 const drawGridLines = ({
   cellDimensions,
@@ -132,6 +132,77 @@ const drawPixelGridColors = ({
   }
 };
 
+const drawPixelGridStitches = ({
+  stitchCtx,
+  cellDims,
+  cells,
+  offset,
+  gridLineColor,
+  noErase,
+}: {
+  stitchCtx: CanvasRenderingContext2D;
+  cellDims: PixelGridCanvasCellDimensions;
+  cells: PixelGridCanvasCell[][];
+  offset?: PixelGridCanvasDimensions;
+  gridLineColor?: string;
+  noErase?: boolean;
+}) => {
+  const curOffset = {
+    width: 0,
+    height: 0,
+    ...offset,
+  };
+  const numRowsAndCols: PixelGridCanvasNumRowsAndCols = {
+    numRows: cells.length,
+    numCols: cells[0].length,
+  };
+  for (let row = 0; row < numRowsAndCols.numRows; row++) {
+    for (let col = 0; col < numRowsAndCols.numCols; col++) {
+      const stitch = cells[row][col].stitch;
+      if (stitch) {
+        if (isCable(stitch)) {
+          drawCableStitch({
+            x: col * cellDims.width + curOffset.width,
+            y: row * cellDims.height + curOffset.height,
+            cellW: cellDims.width,
+            cellH: cellDims.height,
+            stitch,
+            ctx: stitchCtx,
+            gridLineColor,
+          });
+        } else {
+          stitchCtx.strokeStyle = cells[row][col].stitchColor || "#000";
+          stitchCtx.fillStyle = cells[row][col].stitchColor || "#000";
+          const svgPathSteps = (
+            KNITTING_STITCHES[stitch] || KNITTING_CABLE_STITCHES[stitch]
+          ).svgPaths;
+          if (isSvgPath(svgPathSteps)) {
+            drawStitchPath(
+              col * cellDims.width + curOffset.width,
+              row * cellDims.height + curOffset.height,
+              cellDims.width,
+              cellDims.height,
+              svgPathSteps,
+              stitchCtx
+            );
+          } else {
+            for (const svgPathStep of svgPathSteps) {
+              drawStitchPath(
+                col * cellDims.width + curOffset.width,
+                row * cellDims.height + curOffset.height,
+                cellDims.width,
+                cellDims.height,
+                svgPathStep,
+                stitchCtx
+              );
+            }
+          }
+        }
+      }
+    }
+  }
+};
+
 const drawPixelGridColorsAndStitches = ({
   colorCtx,
   stitchCtx,
@@ -140,8 +211,8 @@ const drawPixelGridColorsAndStitches = ({
   cells,
   offset,
 }: {
-  colorCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
-  stitchCtx: CanvasRenderingContext2D | OffscreenCanvasRenderingContext2D;
+  colorCtx: CanvasRenderingContext2D;
+  stitchCtx: CanvasRenderingContext2D;
   cellDims: PixelGridCanvasCellDimensions;
   gridDims: PixelGridCanvasDimensions;
   cells: PixelGridCanvasCell[][];
@@ -152,47 +223,59 @@ const drawPixelGridColorsAndStitches = ({
     height: 0,
     ...offset,
   };
-  //   stitchCtx.clearRect(0, 0, gridDims.width, gridDims.height);
   const numRowsAndCols: PixelGridCanvasNumRowsAndCols = {
     numRows: cells.length,
     numCols: cells[0].length,
   };
   for (let row = 0; row < numRowsAndCols.numRows; row++) {
     for (let col = 0; col < numRowsAndCols.numCols; col++) {
-      drawColoredSquare({
-        x: col * cellDims.width + curOffset.width,
-        y: row * cellDims.height + curOffset.height,
-        w: cellDims.width,
-        h: cellDims.height,
-        color: cells[row][col].hex,
-        ctx: colorCtx,
-      });
+      if (!cells[row][col].isPartOfCable) {
+        drawColoredSquare({
+          x: col * cellDims.width + curOffset.width,
+          y: row * cellDims.height + curOffset.height,
+          w: cellDims.width,
+          h: cellDims.height,
+          color: cells[row][col].hex,
+          ctx: colorCtx,
+        });
+      }
       const stitch = cells[row][col].stitch;
       if (stitch) {
-        stitchCtx.strokeStyle = cells[row][col].stitchColor || "#000";
-        stitchCtx.fillStyle = cells[row][col].stitchColor || "#000";
-        const svgPathSteps = (
-          KNITTING_STITCHES[stitch] || KNITTING_CABLE_STITCHES[stitch]
-        ).svgPaths;
-        if (isSvgPath(svgPathSteps)) {
-          drawStitchPath(
-            col * cellDims.width + curOffset.width,
-            row * cellDims.height + curOffset.height,
-            cellDims.width,
-            cellDims.height,
-            svgPathSteps,
-            stitchCtx
-          );
+        if (isCable(stitch)) {
+          drawCableStitch({
+            x: col * cellDims.width + curOffset.width,
+            y: row * cellDims.height + curOffset.height,
+            cellW: cellDims.width,
+            cellH: cellDims.height,
+            stitch,
+            ctx: stitchCtx,
+          });
         } else {
-          for (const svgPathStep of svgPathSteps) {
+          stitchCtx.strokeStyle = cells[row][col].stitchColor || "#000";
+          stitchCtx.fillStyle = cells[row][col].stitchColor || "#000";
+          const svgPathSteps = (
+            KNITTING_STITCHES[stitch] || KNITTING_CABLE_STITCHES[stitch]
+          ).svgPaths;
+          if (isSvgPath(svgPathSteps)) {
             drawStitchPath(
               col * cellDims.width + curOffset.width,
               row * cellDims.height + curOffset.height,
               cellDims.width,
               cellDims.height,
-              svgPathStep,
+              svgPathSteps,
               stitchCtx
             );
+          } else {
+            for (const svgPathStep of svgPathSteps) {
+              drawStitchPath(
+                col * cellDims.width + curOffset.width,
+                row * cellDims.height + curOffset.height,
+                cellDims.width,
+                cellDims.height,
+                svgPathStep,
+                stitchCtx
+              );
+            }
           }
         }
       }
@@ -421,11 +504,10 @@ const drawFullCanvasPreview = ({
       gridWidth: gridDims.width + offset.width * 2,
       gridHeight: gridDims.height + offset.height * 2,
     });
-  drawPixelGridColorsAndStitches({
+
+  drawPixelGridColors({
     colorCtx: ctx,
-    stitchCtx: ctx,
     cellDims,
-    gridDims,
     cells: savedCanvasData.pixels,
     offset,
   });
@@ -436,6 +518,13 @@ const drawFullCanvasPreview = ({
     offset,
     ctx,
     lineColor: gridLineColor,
+  });
+  drawPixelGridStitches({
+    stitchCtx: ctx,
+    cellDims,
+    cells: savedCanvasData.pixels,
+    offset,
+    gridLineColor,
   });
   drawGridNumbers({
     ctx,
@@ -479,6 +568,79 @@ const drawFullCanvasPreview = ({
   }
 };
 
+export const drawCableStitch = ({
+  x,
+  y,
+  cellW,
+  cellH,
+  stitch,
+  ctx,
+  gridLineColor,
+}: {
+  x: number;
+  y: number;
+  cellW: number;
+  cellH: number;
+  stitch: string;
+  ctx: CanvasRenderingContext2D;
+  gridLineColor?: string;
+}) => {
+  const stitchWidthUnit = getStitchWidthUnitsFromId(stitch);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(x, y, cellW * stitchWidthUnit, cellH);
+  ctx.clip();
+  ctx.fillStyle = "white";
+  ctx.fillRect(x, y, cellW * stitchWidthUnit, cellH);
+  ctx.strokeRect(x, y, cellW * stitchWidthUnit, cellH);
+  const svgPaths = KNITTING_CABLE_STITCHES[stitch].svgPaths;
+  ctx.strokeStyle = "#000";
+  ctx.lineWidth = 2;
+  ctx.lineJoin = "round";
+  ctx.lineCap = "round";
+
+  for (const svgPath of svgPaths) {
+    ctx.fillStyle = svgPath[1];
+    const path = createSvgPathFromCable(x, y, cellW, cellH, svgPath[0]);
+    ctx.fill(path);
+    ctx.stroke(path);
+  }
+  ctx.lineWidth = 2;
+  ctx.strokeStyle = gridLineColor || "#000";
+  ctx.strokeRect(x, y, cellW * stitchWidthUnit, cellH);
+  ctx.restore();
+};
+
+const createSvgPathFromCable = (
+  x: number,
+  y: number,
+  w: number,
+  h: number,
+  d: string
+) => {
+  const path = new Path2D();
+  const mat = new DOMMatrix();
+  mat.translateSelf(x + w / 100, y + h / 100);
+  mat.scaleSelf(w / 100, h / 100, 1);
+  path.addPath(new Path2D(d), mat);
+  return path;
+};
+
+export const createFromSvgPath = (
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  d: string
+) => {
+  const path = new Path2D();
+  const mat = new DOMMatrix();
+  mat.translateSelf(x + width * 0.1, y + height * 0.1);
+  mat.scaleSelf((width / 100) * 0.8, (height / 100) * 0.8, 1);
+  path.addPath(new Path2D(d), mat);
+  return path;
+};
+
 export default {
   drawGridLines,
   drawPixelGridColors,
@@ -486,5 +648,8 @@ export default {
   drawGridNumbers,
   drawFullCanvasPreview,
   drawSpecialShapes,
+  drawCableStitch,
+  createFromSvgPath,
+  drawPixelGridStitches,
   numberFormatGuides,
 };

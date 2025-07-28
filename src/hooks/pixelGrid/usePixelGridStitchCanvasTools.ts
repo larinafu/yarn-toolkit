@@ -6,14 +6,12 @@ import {
   PixelGridCanvasSavedData,
   SvgPath,
 } from "@/types/pixelGrid";
-import {
-  KNITTING_CABLE_STITCHES,
-  KNITTING_STITCHES,
-} from "@/constants/pixelGrid/stitches";
+import { KNITTING_STITCHES } from "@/constants/pixelGrid/stitches";
 import {
   getStitchWidthUnitsFromId,
   isCable,
 } from "@/utils/general/stitchUtils";
+import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 
 export type StitchCanvasTools = {
   ctx: CanvasRenderingContext2D | null;
@@ -28,6 +26,7 @@ export type StitchCanvasTools = {
     stitch,
     color,
     ctx,
+    gridLineColor,
     windowTools,
     config,
   }: {
@@ -36,6 +35,7 @@ export type StitchCanvasTools = {
     stitch: string | undefined;
     color: string;
     ctx?: CanvasRenderingContext2D;
+    gridLineColor?: string;
     windowTools?: Partial<PixelGridWindowTools>;
     config?: {
       affectedColsInterval?: {
@@ -56,11 +56,13 @@ export default function usePixelGridStitchCanvasTools({
   savedCanvasDataRef,
   interactionLayerTools,
   activeStitchWidthUnit,
+  gridLineColor,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   interactionLayerTools: PixelGridInteractionLayerTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   activeStitchWidthUnit: number;
+  gridLineColor: string;
 }): StitchCanvasTools {
   const stitchCanvasRef = useRef(null);
   const [stitchCanvasContext, setStitchCanvasContext] =
@@ -90,7 +92,7 @@ export default function usePixelGridStitchCanvasTools({
     context.lineCap = "round";
     if (svgPathStep[1] === "stroke") {
       context.stroke(
-        createFromSvgPath(
+        canvasContextUtils.createFromSvgPath(
           x,
           y,
           windowTools.canvasCellDimensions.width,
@@ -100,7 +102,7 @@ export default function usePixelGridStitchCanvasTools({
       );
     } else {
       context.fill(
-        createFromSvgPath(
+        canvasContextUtils.createFromSvgPath(
           x,
           y,
           windowTools.canvasCellDimensions.width,
@@ -109,54 +111,6 @@ export default function usePixelGridStitchCanvasTools({
         )
       );
     }
-  };
-
-  const drawCableStitch = (
-    x: number,
-    y: number,
-    stitch: string,
-    context: CanvasRenderingContext2D,
-    windowTools: PixelGridWindowTools
-  ) => {
-    const stitchWidthUnit = getStitchWidthUnitsFromId(stitch);
-    context.fillStyle = "white";
-    context.fillRect(
-      x,
-      y,
-      windowTools.canvasCellDimensions.width * stitchWidthUnit,
-      canvasWindowTools.canvasCellDimensions.height
-    );
-    context.strokeRect(
-      x,
-      y,
-      windowTools.canvasCellDimensions.width * stitchWidthUnit,
-      canvasWindowTools.canvasCellDimensions.height
-    );
-    const svgPaths = KNITTING_CABLE_STITCHES[stitch].svgPaths;
-    context.strokeStyle = "#000";
-    context.lineWidth = 2;
-    context.lineJoin = "round";
-    context.lineCap = "round";
-
-    for (const svgPath of svgPaths) {
-      context.fillStyle = svgPath[1];
-      const path = createCableFromSvgPath(
-        x,
-        y,
-        windowTools.canvasCellDimensions.width,
-        windowTools.canvasCellDimensions.height,
-        svgPath[0]
-      );
-      context.fill(path);
-      context.stroke(path);
-    }
-    context.strokeStyle = "gray";
-    context.strokeRect(
-      x,
-      y,
-      windowTools.canvasCellDimensions.width * stitchWidthUnit,
-      canvasWindowTools.canvasCellDimensions.height
-    );
   };
 
   const getEraseInterval = (
@@ -258,7 +212,15 @@ export default function usePixelGridStitchCanvasTools({
     );
     if (stitch) {
       if (isCable(stitch)) {
-        drawCableStitch(x, y, stitch, context, curCanvasWindowTools);
+        canvasContextUtils.drawCableStitch({
+          x,
+          y,
+          stitch,
+          ctx: context,
+          cellW: curCanvasWindowTools.canvasCellDimensions.width,
+          cellH: curCanvasWindowTools.canvasCellDimensions.height,
+          gridLineColor,
+        });
       } else {
         const svgPathSteps = KNITTING_STITCHES[stitch].svgPaths;
         if (isSvgPath(svgPathSteps)) {
@@ -332,33 +294,3 @@ export default function usePixelGridStitchCanvasTools({
     updateFullCanvas,
   };
 }
-
-export const createFromSvgPath = (
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  d: string
-) => {
-  const path = new Path2D();
-  const mat = new DOMMatrix();
-  mat.translateSelf(x + width * 0.1, y + height * 0.1);
-  mat.scaleSelf((width / 100) * 0.8, (height / 100) * 0.8, 1);
-  path.addPath(new Path2D(d), mat);
-  return path;
-};
-
-export const createCableFromSvgPath = (
-  x: number,
-  y: number,
-  width: number,
-  height: number,
-  d: string
-) => {
-  const path = new Path2D();
-  const mat = new DOMMatrix();
-  mat.translateSelf(x + width / 100, y + height / 100);
-  mat.scaleSelf(width / 100, height / 100, 1);
-  path.addPath(new Path2D(d), mat);
-  return path;
-};

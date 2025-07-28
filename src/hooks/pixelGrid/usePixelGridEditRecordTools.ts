@@ -232,6 +232,8 @@ export default function usePixelGridEditRecordTools({
             }
             if (sessionRef.current.mode === "colorChange") {
               viewboxTools.drawViewboxColors();
+            } else {
+              viewboxTools.drawViewboxStitches();
             }
           }
           break;

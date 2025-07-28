@@ -64,6 +64,7 @@ export type ViewboxTools = {
     viewContext?: CanvasRenderingContext2D;
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
+  drawViewboxStitches: (ctx?: CanvasRenderingContext2D) => void;
   drawViewboxSpecialShapes: (args?: {
     ctx?: CanvasRenderingContext2D;
     config?: {
@@ -259,6 +260,11 @@ export default function useViewboxTools({
         cellDims: newCellDims,
         cells: savedCanvasDataRef.current.pixels,
       });
+      canvasContextUtils.drawPixelGridStitches({
+        stitchCtx: ctx,
+        cellDims: newCellDims,
+        cells: savedCanvasDataRef.current.pixels,
+      });
       drawViewboxSpecialShapes({
         config: {
           viewboxDims: newViewDims,
@@ -279,6 +285,12 @@ export default function useViewboxTools({
     drawViewboxColors: (ctx?: CanvasRenderingContext2D) =>
       canvasContextUtils.drawPixelGridColors({
         colorCtx: ctx || (viewboxContext as CanvasRenderingContext2D),
+        cellDims: viewboxCellDims,
+        cells: savedCanvasDataRef.current.pixels,
+      }),
+    drawViewboxStitches: (ctx?: CanvasRenderingContext2D) =>
+      canvasContextUtils.drawPixelGridStitches({
+        stitchCtx: ctx || (viewboxContext as CanvasRenderingContext2D),
         cellDims: viewboxCellDims,
         cells: savedCanvasDataRef.current.pixels,
       }),

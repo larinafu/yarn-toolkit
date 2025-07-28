@@ -7,6 +7,7 @@ import {
   PixelGridNumberFormat,
 } from "@/types/pixelGrid";
 import { PixelGridLineCanvasTools } from "@/hooks/pixelGrid/usePixelGridLineCanvasTools";
+import { GRID_LINE_COLORS } from "@/constants/colors";
 
 const numberFormattingOptions: {
   [key in PixelGridNumberFormat]: { displayText: string; img: string };
@@ -100,28 +101,25 @@ export default function FormattingOptions({
             </fieldset>
           </form>
           <div className="flex items-center p-2">
-            <button
-              className={`buttonBlank ${
-                gridLineColor === "#000000" ? "bg-amaranth-light" : ""
-              }`}
-              onClick={() => {
-                setGridLineColor("#000000");
-                gridLineTools.drawCanvasLines({ lineColor: "#000000" });
-              }}
-            >
-              <div className="size-5 rounded-full bg-black shadowBig"></div>
-            </button>
-            <button
-              className={`buttonBlank ${
-                gridLineColor === "#FFFFFF" ? "bg-amaranth-light" : ""
-              }`}
-              onClick={() => {
-                setGridLineColor("#FFFFFF");
-                gridLineTools.drawCanvasLines({ lineColor: "#FFFFFF" });
-              }}
-            >
-              <div className="size-5 rounded-full bg-white shadowBig"></div>
-            </button>
+            {GRID_LINE_COLORS.map((color) => (
+              <button
+                key={color}
+                className={`buttonBlank ${
+                  gridLineColor === color ? "bg-amaranth-light" : ""
+                }`}
+                onClick={() => {
+                  setGridLineColor(color);
+                  gridLineTools.drawCanvasLines({ lineColor: color });
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: color,
+                  }}
+                  className={`size-5 rounded-full shadowBig`}
+                ></div>
+              </button>
+            ))}
           </div>
         </div>
       </Dropdown>
