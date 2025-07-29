@@ -51,8 +51,9 @@ export type CreateData = {
 
 export type PixelGridCanvasCell = {
   hex: string;
-  stitch?: string;
-  stitchColor?: string;
+  stitch: string | null;
+  stitchColor: string | null;
+  isPartOfCable: boolean;
 };
 
 export type PixelGridCanvasCellDimensions = {
@@ -130,6 +131,16 @@ export type StitchGroup = {
   };
 };
 
+export type CableStitch = {
+  name: string;
+  svgPaths: [string, "#FFF" | "#000"][];
+  svg: string;
+};
+
+export type CableStitchGroup = {
+  [stitchId: string]: CableStitch;
+};
+
 // Sessions
 export type ColorChangeSession = {
   mode: "colorChange";
@@ -144,18 +155,15 @@ export type ColorChangeSession = {
 };
 
 export type SymbolChangeSessionData = {
-  prev: { stitch: string; stitchColor: string };
-  new: { stitch: string; stitchColor: string };
+  prev: Partial<PixelGridCanvasCell>;
+  new: Partial<PixelGridCanvasCell>;
 };
 
 export type SymbolChangeSession = {
   mode: "symbolChange";
   data: {
     [row: number]: {
-      [col: number]: {
-        prev: { stitch: string; stitchColor: string };
-        new: { stitch: string; stitchColor: string };
-      };
+      [col: number]: SymbolChangeSessionData;
     };
   };
 };

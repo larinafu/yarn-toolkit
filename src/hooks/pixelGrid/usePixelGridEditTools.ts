@@ -1,10 +1,16 @@
-import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
+import {
+  PixelGridCanvasSavedData,
+  PixelGridCanvasWindow,
+  SymbolChangeSession,
+} from "@/types/pixelGrid";
 import { ColorCanvasTools } from "./useColorCanvasTools";
 import { EditMode } from "./usePixelGridEditingConfigTools";
 import { PixelGridInteractionLayerTools } from "./usePixelGridInteractionLayerTools";
 import { StitchCanvasTools } from "./usePixelGridStitchCanvasTools";
 import { EditRecordTools } from "./usePixelGridEditRecordTools";
 import { PixelGridSpecialShapesCanvasTools } from "./usePixelGridSpecialShapesCanvasTools";
+import { isCable } from "@/utils/general/stitchUtils";
+import { PixelGridWindowTools } from "./usePixelGridWindowTools";
 
 export type PixelGridEditTools = {
   handleCanvasEdit: (
@@ -27,6 +33,8 @@ export default function usePixelGridEditTools({
   activeShapeIdx,
   stitchColor,
   shapeColor,
+  stitchWidthUnit,
+  canvasWindowTools,
 }: {
   colorCanvasTools: ColorCanvasTools;
   stitchCanvasTools: StitchCanvasTools;
@@ -39,6 +47,8 @@ export default function usePixelGridEditTools({
   activeShapeIdx: number | "erase" | null;
   stitchColor: string;
   shapeColor: string;
+  stitchWidthUnit: number;
+  canvasWindowTools: PixelGridWindowTools;
 }): PixelGridEditTools {
   const specialShapesRefLength =
     specialShapesTools.specialShapesRef.current.length;
@@ -51,6 +61,7 @@ export default function usePixelGridEditTools({
       e,
       editMode
     );
+    const session = editRecordTools.sessionRef.current;
     switch (editMode) {
       case "colorChange":
         if (
@@ -68,16 +79,43 @@ export default function usePixelGridEditTools({
         break;
       case "symbolChange":
         if (
-          !editRecordTools.sessionRef.current ||
-          (editRecordTools.sessionRef.current.mode === "symbolChange" &&
-            !editRecordTools.sessionRef.current.data[row]?.[col])
+          col + stitchWidthUnit <=
+            canvasWindowTools.canvasNumRowsAndCols.numCols &&
+          (!session ||
+            (session.mode === "symbolChange" &&
+              Array.from({ length: stitchWidthUnit }, (_, i) => col + i).every(
+                (col) =>
+                  !(isCable(activeStitch)
+                    ? session.data[row]?.[col]?.new.isPartOfCable
+                    : session.data[row]?.[col]?.new.stitch === activeStitch)
+              )))
         ) {
-          stitchCanvasTools.updateStitch({
-            row,
-            col,
-            stitch: activeStitch,
-            color: stitchColor,
-          });
+          const shouldExpandAffectedColsEndInterval =
+            !session || !(col + stitchWidthUnit in (session.data[row] ?? {}));
+          const shouldExpandAffectedColsStartInterval =
+            !session || !(col - 1 in (session.data[row] ?? {}));
+          const affectedColsInterval = {
+            ...(shouldExpandAffectedColsStartInterval ? {} : { startCol: col }),
+            ...(shouldExpandAffectedColsEndInterval
+              ? {}
+              : { endCol: col + stitchWidthUnit }),
+          };
+          const { affectedColsStart, affectedColsEnd } =
+            stitchCanvasTools.updateStitch({
+              row,
+              col,
+              stitch: activeStitch,
+              color: stitchColor,
+              config: {
+                affectedColsInterval,
+              },
+            });
+          for (let i = affectedColsStart; i < affectedColsEnd; i += 1) {
+            editRecordTools.addToSession(row, i, {
+              stitch: null,
+              stitchColor,
+            });
+          }
           editRecordTools.addToSession(row, col, {
             stitch: activeStitch,
             stitchColor,

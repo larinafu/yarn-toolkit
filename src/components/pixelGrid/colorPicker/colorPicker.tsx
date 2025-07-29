@@ -20,7 +20,7 @@ export default function ColorPicker({
     <div className="flex items-center justify-center rounded-2xl h-fit w-fit">
       {activeColorPalette.map(([colorHex, _], idx) => (
         <ColorOption
-          key={colorHex}
+          key={idx}
           colorHex={colorHex}
           colorIdx={idx}
           selected={idx === activeColorIdx}

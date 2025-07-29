@@ -80,7 +80,12 @@ export default function usePixelGridSizingTools({
       config?.row ||
         new Array(savedCanvasDataRef.current.pixels[0].length)
           .fill(null)
-          .map(() => ({ hex: DEFAULT_CELL_COLOR }))
+          .map(() => ({
+            hex: DEFAULT_CELL_COLOR,
+            isPartOfCable: false,
+            stitch: null,
+            stitchColor: null,
+          }))
     );
     !config?.noSessionAdd &&
       saveSession({
@@ -105,6 +110,9 @@ export default function usePixelGridSizingTools({
         0,
         config?.col?.[i] || {
           hex: DEFAULT_CELL_COLOR,
+          isPartOfCable: false,
+          stitch: null,
+          stitchColor: null,
         }
       );
     }

@@ -1,11 +1,7 @@
 import React, { useRef, useEffect } from "react";
 
-import useViewboxTools, {
-  ViewboxTools,
-} from "@/hooks/pixelGrid/useViewboxTools";
+import { ViewboxTools } from "@/hooks/pixelGrid/useViewboxTools";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
-import { ColorCanvasTools } from "@/hooks/pixelGrid/useColorCanvasTools";
-import { StitchCanvasTools } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 
@@ -28,6 +24,10 @@ export default function ImageViewbox({
       viewboxTools.specialShapesRef.current as HTMLCanvasElement
     ).getContext("2d") as CanvasRenderingContext2D;
     viewboxTools.setSpecialShapesCtx(viewboxSpecialShapesContext);
+    const viewboxStitchesContext = (
+      viewboxTools.stitchesRef.current as HTMLCanvasElement
+    ).getContext("2d") as CanvasRenderingContext2D;
+    viewboxTools.setStitchesCtx(viewboxStitchesContext);
     canvasSizingUtils.resizeCanvas({
       ref: viewboxTools.ref as React.RefObject<HTMLCanvasElement>,
       gridWidth: viewboxTools.viewboxDims.width,
@@ -38,13 +38,28 @@ export default function ImageViewbox({
       gridWidth: viewboxTools.viewboxDims.width,
       gridHeight: viewboxTools.viewboxDims.height,
     });
+    canvasSizingUtils.resizeCanvas({
+      ref: viewboxTools.stitchesRef as React.RefObject<HTMLCanvasElement>,
+      gridWidth: viewboxTools.viewboxDims.width,
+      gridHeight: viewboxTools.viewboxDims.height,
+    });
     viewboxTools.drawViewboxColors(viewboxContext);
   }, []);
 
   // window resize
   useEffect(() => {
     const handleResize = () => {
-      viewboxTools.updateFullCanvas({});
+      viewboxTools.updateFullCanvas({
+        viewContext: viewboxTools.ref.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+        specialShapesContext: viewboxTools.specialShapesRef.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+        stitchesContext: viewboxTools.stitchesRef.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+      });
     };
     window.addEventListener("resize", handleResize);
     return () => {
@@ -58,6 +73,10 @@ export default function ImageViewbox({
   return (
     <section className="m-auto mt-0 mb-0 relative touch-none">
       <canvas ref={viewboxTools.ref}></canvas>
+      <canvas
+        ref={viewboxTools.stitchesRef}
+        className="absolute top-0 left-0"
+      ></canvas>
       <canvas
         ref={viewboxTools.specialShapesRef}
         className="absolute top-0 left-0"

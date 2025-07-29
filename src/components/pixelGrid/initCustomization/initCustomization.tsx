@@ -3,6 +3,7 @@ import {
   ImageInfo,
   PatternSize,
   PatternSizeDisplay,
+  PixelGridCanvasCell,
   PixelGridCanvasSavedData,
   SwatchInputs,
 } from "@/types/pixelGrid";
@@ -51,7 +52,7 @@ export default function InitCustomization({
   );
   const [patternSizeInputs, setPatternSizeInputs] =
     useState<PatternSizeDisplay>(patternSize);
-  const [basePattern, setBasePattern] = useState<{ hex: string }[][]>(
+  const [basePattern, setBasePattern] = useState<PixelGridCanvasCell[][]>(
     imageInfo
       ? generateNewPixelGrid({
           imgData: imageInfo.imageData,

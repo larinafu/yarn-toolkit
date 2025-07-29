@@ -18,24 +18,28 @@ const PixelGridPreviewDisplay = ({
   specialShapesRef,
   gridLineColor,
   gridDims,
+  previewRef,
 }: {
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
   gridLineColor: string;
   gridDims: PixelGridCanvasDimensions;
+  previewRef: React.RefObject<HTMLCanvasElement>;
 }) => {
-  const previewRef = useRef<any>(null);
   useEffect(() => {
     const ctx = previewRef.current.getContext("2d");
-    canvasContextUtils.drawFullCanvasPreview({
-      maxPxWidth: gridDims.width,
-      maxPxHeight: gridDims.height,
-      savedCanvasData: savedCanvasDataRef.current,
-      specialShapes: specialShapesRef.current,
-      ref: previewRef,
-      ctx,
-      gridLineColor,
-    });
+    if (ctx) {
+      canvasContextUtils.drawFullCanvasPreview({
+        maxPxWidth: gridDims.width,
+        maxPxHeight: gridDims.height,
+        savedCanvasData: savedCanvasDataRef.current,
+        specialShapes: specialShapesRef.current,
+        ref: previewRef,
+        ctx,
+        gridLineColor,
+        includeWatermark: true,
+      });
+    }
   }, [gridDims.width, gridDims.height]);
   return (
     <div className="grow bg-gray-300 overflow-auto border-2 border-amaranth rounded-xl lg:w-4/5">
@@ -59,6 +63,7 @@ export default function PixelGridDownloadPreview({
   canvasCellWidthHeightRatio: number;
   gridLineColor: string;
 }) {
+  const previewRef = useRef<any>(null);
   const [sizeSelection, setSizeSelection] = useState<sizer>("m");
   const sizesInfo: {
     [size in sizer]: {
@@ -102,47 +107,26 @@ export default function PixelGridDownloadPreview({
       }).gridDims,
     },
   };
-  const generateImage = async (width: number, height: number) => {
-    const offscreenCanvas = new OffscreenCanvas(width, height);
-    const offscreenCanvasCtx = offscreenCanvas.getContext("2d");
-    canvasContextUtils.drawFullCanvasPreview({
-      maxPxWidth: width,
-      maxPxHeight: height,
-      savedCanvasData: savedCanvasDataRef.current,
-      specialShapes: specialShapesRef.current,
-      ctx: offscreenCanvasCtx as OffscreenCanvasRenderingContext2D,
-    });
-    const blob = await offscreenCanvas.convertToBlob();
-    return blob;
-  };
+
   const [blob, setBlob] = useState<string | null>();
 
-  const generateBlob = useThrottler(async (width: number, height: number) => {
-    const blob = await generateImage(width, height);
-    setBlob(URL.createObjectURL(blob));
+  const generateBlob = useThrottler(() => {
+    previewRef.current?.toBlob((blob: Blob) => {
+      setBlob(URL.createObjectURL(blob));
+    });
   });
 
   const ModalTools = useModalTools((isOpen) => {
     if (isOpen) {
       setBlob(null);
-      generateBlob.throttle(
-        sizesInfo[sizeSelection].dimensions.width,
-        sizesInfo[sizeSelection].dimensions.height
-      );
+      generateBlob.throttle();
     }
   });
 
   return (
     <>
       <ModalTools.btn>
-        <div className="m-2">
-          <Image
-            src="/download.svg"
-            alt="preview pattern"
-            height={25}
-            width={25}
-          />
-        </div>
+        <span className="text-black">Download</span>
       </ModalTools.btn>
       <ModalTools.modal className="size-4/5">
         <div className="p-1 size-full flex flex-col">
@@ -156,6 +140,7 @@ export default function PixelGridDownloadPreview({
                 width: sizesInfo[sizeSelection].dimensions.width,
                 height: sizesInfo[sizeSelection].dimensions.height,
               }}
+              previewRef={previewRef}
             />
             <form className="h-fit mt-auto mb-auto lg:ml-4">
               <fieldset>
