@@ -53,16 +53,16 @@ const SOFTWARE_SCHEMA = {
 
 const SAMPLE_PATTERNS = [
   {
-    src: "/photos/patterns/repeating-hearts.png",
-    alt: "Repeating hearts knitting chart pattern for colorwork projects",
-  },
-  {
     src: "/photos/patterns/lace.png",
-    alt: "Lace knitting chart pattern with openwork stitch design",
+    alt: "Lace knitting chart pattern with openwork stitch design generated using Yarn Toolkit knitting chart maker",
   },
   {
-    src: "/photos/patterns/flower.png",
-    alt: "Floral knitting chart pattern featuring pixelated flower design",
+    src: "/photos/patterns/repeating-hearts.png",
+    alt: "Repeating hearts colorwork chart generated using Yarn Toolkit knitting chart maker",
+  },
+  {
+    src: "/photos/patterns/cable-chart.png",
+    alt: "Knitting cable chart with diamond motif generated using Yarn Toolkit knitting chart maker",
   },
 ];
 
@@ -102,7 +102,7 @@ export default function Home() {
                   alt={pattern.alt}
                   width={1000}
                   height={1000}
-                  className="max-h-full w-auto max-w-full m-auto z-20"
+                  className="max-h-full w-auto max-w-full m-auto z-20 px-1"
                 />
               </div>
             ))}

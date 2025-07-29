@@ -14,7 +14,6 @@
 	},
 	"dependencies": {
 		"@opennextjs/cloudflare": "^1.1.0",
-		"axios": "^1.10.0",
 		"browser-image-compression": "^2.0.2",
 		"nearest-color": "^0.4.4",
 		"next": "15.3.2",
