@@ -15,9 +15,9 @@ export default function PrivacyPolicy() {
 
       <section className="mb-6">
         <p>
-          Yarn Toolkit (“we,” “us,” or “our”) respects your privacy. This
-          Privacy Policy explains how we handle information when you use our
-          website, located at{" "}
+          Yarn Toolkit (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;)
+          respects your privacy. This Privacy Policy explains how we handle
+          information when you use our website, located at{" "}
           <a href="https://yarntoolkit.com" className="text-blue-600 underline">
             https://yarntoolkit.com
           </a>
@@ -72,7 +72,9 @@ export default function PrivacyPolicy() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">5. Children's Privacy</h2>
+        <h2 className="text-xl font-semibold mb-2">
+          5. Children&apos;s Privacy
+        </h2>
         <p>
           Yarn Toolkit is not intended for children under the age of 13. We do
           not knowingly collect personal information from anyone under 13. If we
@@ -103,9 +105,8 @@ export default function PrivacyPolicy() {
         <h2 className="text-xl font-semibold mb-2">8. Contact</h2>
         <p>
           If you have any questions about this Privacy Policy, please reach out
-          through our
+          through our{" "}
           <a href="/contact" className="text-blue-600 underline">
-            {" "}
             contact page
           </a>{" "}
           (when available).

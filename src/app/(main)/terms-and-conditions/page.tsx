@@ -15,12 +15,19 @@ export default function TermsAndConditions() {
 
       <section className="mb-8">
         <p>
-          Welcome to Yarn Toolkit! These Terms and Conditions (“Terms”) govern
-          your access to and use of our website, located at
-          https://yarntoolkit.com/ (“Site”), operated by an individual in New
-          Jersey (“we,” “us,” or “our”). By accessing or using Yarn Toolkit, you
-          agree to be bound by these Terms. If you do not agree, please do not
-          use the Site.
+          Welcome to Yarn Toolkit! These Terms and Conditions
+          (&quot;Terms&quot;) govern your access to and use of our website,
+          located at{" "}
+          <a
+            href="https://yarntoolkit.com/"
+            className="text-blue-600 underline"
+          >
+            https://yarntoolkit.com/
+          </a>{" "}
+          (&quot;Site&quot;), operated by an individual in New Jersey
+          (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;). By accessing or
+          using Yarn Toolkit, you agree to be bound by these Terms. If you do
+          not agree, please do not use the Site.
         </p>
       </section>
 
@@ -54,7 +61,7 @@ export default function TermsAndConditions() {
         <ul className="list-disc pl-6 mt-2 space-y-1">
           <li>
             Violates intellectual property rights by replicating another
-            creator’s work without permission.
+            creator&apos;s work without permission.
           </li>
           <li>Contains hateful, obscene, offensive, or illegal material.</li>
           <li>
@@ -94,10 +101,10 @@ export default function TermsAndConditions() {
           6. Disclaimer of Warranties
         </h2>
         <p>
-          Yarn Toolkit is provided “as is” and “as available.” We make no
-          warranties or guarantees regarding the functionality, availability, or
-          accuracy of the Site, and we disclaim all liability for any errors or
-          interruptions.
+          Yarn Toolkit is provided &quot;as is&quot; and &quot;as
+          available.&quot; We make no warranties or guarantees regarding the
+          functionality, availability, or accuracy of the Site, and we disclaim
+          all liability for any errors or interruptions.
         </p>
       </section>
 
