@@ -78,7 +78,7 @@ export default async function CreatePage({
   return (
     <>
       <JsonLd json={SOFTWARE_SCHEMA} />
-      <Create source={(await searchParams).source as BaseOption} />;
+      <Create source={(await searchParams).source as BaseOption} />
     </>
   );
 }

@@ -20,16 +20,18 @@ const footerLinks = [
 ];
 export default function Footer() {
   return (
-    <footer className="w-full p-4 bg-amaranth-light flex flex-col sm:flex-row justify-center">
-      {footerLinks.map((link) => (
-        <Link
-          key={link.title}
-          href={link.href}
-          className="text-amaranth hover:underline ml-2 first:ml-0"
-        >
-          {link.title}
-        </Link>
-      ))}
+    <footer className="w-full p-4 bg-amaranth-light">
+      <div className="w-1/2 flex flex-col sm:flex-row sm:justify-center text-center m-auto sm:w-full">
+        {footerLinks.map((link) => (
+          <Link
+            key={link.title}
+            href={link.href}
+            className="text-amaranth hover:underline sm:ml-2 sm:first:ml-0"
+          >
+            {link.title}
+          </Link>
+        ))}
+      </div>
     </footer>
   );
 }
