@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 
 type DropdownProps = {
   btnContent: React.ReactNode;
@@ -11,7 +11,7 @@ export default function Dropdown({
   children,
   singleClickClose = false,
 }: DropdownProps) {
-  const [isOpen, setIsOpen] = useState(false);
+  const [isOpen, setOpen] = useState(false);
   const [position, setPosition] = useState<{ top: number; left: number }>({
     top: 0,
     left: 0,
@@ -43,22 +43,27 @@ export default function Dropdown({
 
     // Calculate horizontal placement
     let left = buttonRect.left;
-    if (left + dropdownRect.width > screenWidth) {
-      left = Math.max(screenWidth - dropdownRect.width - 10, 10); // clamp right edge
-    }
+    // if (left + dropdownRect.width > screenWidth) {
+    left = Math.max(screenWidth - dropdownRect.width - 10, 10); // clamp right edge
+    // }
 
     setPosition({ top, left });
   };
 
   const handleDropdownClick = () => {
-    if (singleClickClose) setIsOpen(false);
+    if (singleClickClose) setOpen(false);
   };
 
   useEffect(() => {
     if (isOpen) {
       updatePosition();
-
-      const handleResize = () => updatePosition();
+      const handleResize = () => {
+        setOpen(false);
+        setPosition({
+          top: 0,
+          left: 0,
+        });
+      };
       window.addEventListener("resize", handleResize);
       return () => window.removeEventListener("resize", handleResize);
     }
@@ -71,7 +76,7 @@ export default function Dropdown({
         !buttonRef.current?.contains(e.target as Node) &&
         !dropdownRef.current?.contains(e.target as Node)
       ) {
-        setIsOpen(false);
+        setOpen(false);
       }
     };
     if (isOpen) {
@@ -84,7 +89,7 @@ export default function Dropdown({
     <>
       <button
         ref={buttonRef}
-        onClick={() => setIsOpen(!isOpen)}
+        onClick={() => setOpen(!isOpen)}
         className="buttonBlank p-0"
       >
         {btnContent}
@@ -94,7 +99,7 @@ export default function Dropdown({
         <div
           ref={dropdownRef}
           onClick={handleDropdownClick}
-          className="fixed z-50 p-2"
+          className={`fixed z-50`}
           style={{
             top: position.top,
             left: position.left,

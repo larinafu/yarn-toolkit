@@ -235,6 +235,7 @@ export default function EditingToolbar({
               <ResponsiveList
                 items={[
                   <FormattingOptions
+                    key={"grid-format"}
                     numberFormat={numberFormat}
                     setNumberFormat={setNumberFormat}
                     savedCanvasDataRef={savedCanvasDataRef}
@@ -243,6 +244,7 @@ export default function EditingToolbar({
                     gridLineTools={gridLineTools}
                   />,
                   <PixelGridDownloadPreview
+                    key={"download-preview"}
                     savedCanvasDataRef={savedCanvasDataRef}
                     specialShapesRef={specialShapesRef}
                     canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}

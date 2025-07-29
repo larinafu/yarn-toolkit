@@ -1,7 +1,7 @@
 import Image from "next/image";
 import Dropdown from "@/components/general/dropdown/dropdown";
 
-import React from "react";
+import React, { useRef } from "react";
 import {
   PixelGridCanvasSavedData,
   PixelGridNumberFormat,
