@@ -34,7 +34,7 @@ export default function Create({ source }: { source?: BaseOption }) {
         Create a Knitting Chart Online
       </h1>
       <p className="text-center text-xl m-auto mb-6 max-w-4/5">
-        Use Yarn Toolkit's chart editor to turn an image into a pixel-based
+        Use Yarn Toolkit&apos;s chart editor to turn an image into a pixel-based
         knitting pattern or create a custom knitting chart from scratch. No
         download required. Ideal for colorwork, lace, and projects of all
         difficulty levels.
