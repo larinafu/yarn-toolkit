@@ -5,22 +5,35 @@ import ScreenDemo from "@/components/general/screenDemo/screenDemo";
 const SAMPLE_PATTERNS = [
   {
     src: "/photos/patterns/repeating-hearts.png",
-    alt: "repeating hearts",
+    alt: "Repeating hearts knitting chart pattern for colorwork projects",
   },
-  { src: "/photos/patterns/lace.png", alt: "lace" },
+  {
+    src: "/photos/patterns/lace.png",
+    alt: "Lace knitting chart pattern with openwork stitch design",
+  },
   {
     src: "/photos/patterns/flower.png",
-    alt: "flower",
+    alt: "Floral knitting chart pattern featuring pixelated flower design",
   },
 ];
 
 export default function Home() {
   return (
     <>
-      <div className={`p-2`}>
+      <section className={`p-2`}>
         <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-7xl">
-          <Link href={"/create?source=blank"}>Create knitting charts for free.</Link>
+          <Link href={"/create?source=blank"}>Free Knitting Chart Maker</Link>
         </h1>
+        <h2 className="text-center text-3xl">
+          Design Your Own Colorwork and Lace Patterns, and More
+        </h2>
+        <p>
+          Yarn Toolkit helps knitters design custom stitch charts directly in
+          the browser. Whether you&apos;re creating stranded colorwork, openwork
+          lace, or cable knitting motifs, our free knitting chart generator lets
+          you start from scratch or start off with a photo—no software
+          installation required.
+        </p>
         <div className="relative">
           <Image
             src="/yarn-thread.svg"
@@ -50,18 +63,18 @@ export default function Home() {
             ))}
           </div>
         </div>
-      </div>
-      <div
+      </section>
+      <section
         className={`p-2 flex flex-col lg:flex-row justify-evenly items-center bg-amaranth-light lg:h-200`}
       >
         <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl lg:ml-20">
-          Effortlessly edit across all devices.
+          Easy-To-Use Pattern Design Interface on Desktop, Tablet, or Phone
         </h1>
         <div className="flex justify-center">
           <ScreenDemo />
         </div>
-      </div>
-      <div
+      </section>
+      <section
         className={`p-2 pt-10 flex flex-col-reverse lg:flex-row items-center`}
       >
         <div className="p-4 flex flex-col lg:flex-row justify-center items-center">
@@ -69,35 +82,49 @@ export default function Home() {
             src={"/photos/earth.jpg"}
             width={1000}
             height={1000}
-            alt="earth"
+            alt="Drawing of Earth to be converted to a color chart"
             className="border border-black sm:w-1/2 lg:w-1/3"
           />
           <Image
             src={"/curve-right-arrow.svg"}
             width={400}
             height={400}
-            alt="arrow"
+            alt="Rightward curved arrow illustrating image-to-pattern conversion flow"
             className="hidden lg:block lg:rotate-0 size-1/4"
           />
           <Image
             src={"/curve-down-arrow.svg"}
             width={400}
             height={400}
-            alt="arrow"
+            alt="Downward curved arrow indicating image-to-chart conversion process"
             className="lg:hidden size-1/6"
           />
           <Image
             src="/photos/earth-pixelated.png"
             width={1000}
             height={1000}
-            alt="pixelated earth"
+            alt="Pixelated Earth image symbolizing automatic image to knitting chart conversion"
             className="sm:w-1/2 lg:w-1/3"
           />
         </div>
         <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl">
-          <Link href={"/create?source=image"}>Convert images to color charts.</Link>
+          <Link href={"/create?source=image"}>
+            Image to Knitting Chart Converter - Turn Photos into Pixel Art
+            Patterns
+          </Link>
         </h1>
-      </div>
+        <h2>
+          Upload images and generate pixel-based knitting charts for intarsia
+          and colorwork
+        </h2>
+        <p>
+          Easily convert photos into colorwork knitting patterns with our
+          automatic image-to-chart tool. Upload any image and get a pixelated
+          knitting chart you can use for intarsia, tapestry crochet, or fair
+          isle. Control color depth and pattern dimensions to match your
+          project.
+        </p>
+      </section>
       <Link
         href="create"
         className="block sticky bottom-2 right-0 ml-auto button text-4xl md:text-5xl rounded-3xl w-fit m-5 z-30"

@@ -1,6 +1,5 @@
+import { PROJ_MAX_SIZE } from "@/constants/pixelGrid/projectSizeLimits";
 import { PatternSizeInputs, SwatchInputs } from "@/types/pixelGrid";
-
-export const PROJ_SIZE_LIMIT = 75;
 
 export const isInputAllZeros = (val: string) => {
   return /^[0*]+$/.test(val);
@@ -33,11 +32,11 @@ export const isValidProjectSize = (patternSize: PatternSizeInputs) => {
     isValid = false;
     error = "Enter a column number";
   } else if (
-    patternSize.numRows > PROJ_SIZE_LIMIT ||
-    patternSize.numCols > PROJ_SIZE_LIMIT
+    patternSize.numRows > PROJ_MAX_SIZE ||
+    patternSize.numCols > PROJ_MAX_SIZE
   ) {
     isValid = false;
-    error = `Pattern cannot exceed ${PROJ_SIZE_LIMIT} rows or columns`;
+    error = `Pattern cannot exceed ${PROJ_MAX_SIZE} rows or columns`;
   }
   return {
     isValid,

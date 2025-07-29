@@ -5,7 +5,7 @@ export default function ScreenDemo({}) {
     <div className="relative m-4">
       <Image
         src={"/photos/phone-editor.png"}
-        alt={"Knitting chart maker on a phone screen"}
+        alt={"Knitting chart generator tool on a phone screen"}
         width={1000}
         height={1000}
         objectFit="contain"
@@ -14,7 +14,7 @@ export default function ScreenDemo({}) {
       <div className="pl-5 pb-4">
         <Image
           src={"/photos/laptop-editor.png"}
-          alt={"Knitting chart maker on a laptop"}
+          alt={"Knitting chart generator tool on a laptop"}
           width={1000}
           height={1000}
           className="border-4 md:border-6 lg:border-8 border-gray-700 w-full rounded-xl lg:rounded-3xl z-20"

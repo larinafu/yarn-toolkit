@@ -1,3 +1,8 @@
+import {
+  Point,
+  SpecialShape,
+} from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
+
 export type BaseOption = "image" | "blank";
 
 export type Swatch = {
@@ -35,6 +40,8 @@ export type AspectRatio = {
 
 export type CanvasPixelData = { hex: string; isSelected?: boolean }[][];
 
+export type GridLayer = "row" | "col";
+
 export type CreateData = {
   pixels: CanvasPixelData;
   curImg: string;
@@ -44,8 +51,9 @@ export type CreateData = {
 
 export type PixelGridCanvasCell = {
   hex: string;
-  stitch?: string;
-  stitchColor?: string;
+  stitch: string | null;
+  stitchColor: string | null;
+  isPartOfCable: boolean;
 };
 
 export type PixelGridCanvasCellDimensions = {
@@ -122,3 +130,88 @@ export type StitchGroup = {
     svg: string;
   };
 };
+
+export type CableStitch = {
+  name: string;
+  svgPaths: [string, "#FFF" | "#000"][];
+  svg: string;
+};
+
+export type CableStitchGroup = {
+  [stitchId: string]: CableStitch;
+};
+
+// Sessions
+export type ColorChangeSession = {
+  mode: "colorChange";
+  data: {
+    [row: number]: {
+      [col: number]: {
+        prev: any;
+        new: any;
+      };
+    };
+  };
+};
+
+export type SymbolChangeSessionData = {
+  prev: Partial<PixelGridCanvasCell>;
+  new: Partial<PixelGridCanvasCell>;
+};
+
+export type SymbolChangeSession = {
+  mode: "symbolChange";
+  data: {
+    [row: number]: {
+      [col: number]: SymbolChangeSessionData;
+    };
+  };
+};
+
+export type SpecialShapeChangeCreateUpdateSession = {
+  mode: "specialShapeChange";
+  data: {
+    shapeId: number;
+    type: "create" | "update";
+    prev: Point[];
+    new: Point[];
+    color: string;
+  };
+};
+
+export type SpecialShapeChangeEraseSession = {
+  mode: "specialShapeChange";
+  data: {
+    type: "erase";
+    prev: [number, SpecialShape][];
+    new: null;
+  };
+};
+
+export type GridSizeChangeAddSession = {
+  mode: "gridSizeChange";
+  data: {
+    action: "add";
+    gridLayer: GridLayer;
+    idx: number;
+  };
+};
+
+export type GridSizeChangeDeleteSession = {
+  mode: "gridSizeChange";
+  data: {
+    action: "delete";
+    gridLayer: GridLayer;
+    idx: number;
+    layer: PixelGridCanvasCell[];
+  };
+};
+
+export type Session =
+  | null
+  | ColorChangeSession
+  | SymbolChangeSession
+  | SpecialShapeChangeCreateUpdateSession
+  | SpecialShapeChangeEraseSession
+  | GridSizeChangeAddSession
+  | GridSizeChangeDeleteSession;

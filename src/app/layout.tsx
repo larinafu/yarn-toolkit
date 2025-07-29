@@ -6,10 +6,11 @@ export const metadata: Metadata = {
   applicationName: "Yarn Toolkit",
   title: {
     template: "%s | Yarn Toolkit",
-    default: "Yarn Toolkit - Create knitting charts and crochet patterns for free",
+    default:
+      "Create knitting charts and crochet patterns for free | Yarn Toolkit",
   },
   description:
-    "Create knitting charts and crochet patterns for free. Easily convert uploaded images into beautiful color charts instantly.",
+    "Create custom knitting charts for free on Yarn Toolkit. Design colorwork, cables, and lace charts with ease—optimized for all devices.",
   keywords: [
     "crochet",
     "knitting",

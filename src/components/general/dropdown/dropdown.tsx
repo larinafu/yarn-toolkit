@@ -1,77 +1,113 @@
-import React, { useState } from "react";
-
-import { useRefWithClickawayListener } from "@/hooks/general/useRefWithClickawayListener";
-import useEffectWithContainerDimensions from "@/hooks/general/useEffectWithContainerDims";
+import { useState, useRef, useEffect, useLayoutEffect } from "react";
 
 type DropdownProps = {
   btnContent: React.ReactNode;
   children: React.ReactNode;
-  isOpenFromContainer?: boolean;
-  setOpenFromContainer?: React.Dispatch<React.SetStateAction<boolean>>;
+  singleClickClose?: boolean;
 };
 
 export default function Dropdown({
   btnContent,
   children,
-  isOpenFromContainer,
-  setOpenFromContainer,
+  singleClickClose = false,
 }: DropdownProps) {
   const [isOpen, setOpen] = useState(false);
-  const ref = useRefWithClickawayListener(() => {
-    setOpen(false);
-    setOpenFromContainer?.(false);
-  }, []);
-  const [dropdownPosition, setDropdownPosition] = useState<{
-    top: "auto" | number;
-    bottom: "auto" | number;
-    left: "auto" | number;
-    right: "auto" | number;
-  }>({
-    top: "auto",
-    bottom: "auto",
-    left: "auto",
-    right: "auto",
+  const [position, setPosition] = useState<{ top: number; left: number }>({
+    top: 0,
+    left: 0,
   });
 
-  const dropdown = useEffectWithContainerDimensions(
-    (rect) => {
-      if (isOpen && rect) {
-        if (rect.right > innerWidth - 10) {
-          setDropdownPosition({
-            ...dropdownPosition,
-            right: 10,
-          });
-        }
-      }
-    },
-    [isOpen]
-  );
+  const buttonRef = useRef<HTMLButtonElement>(null);
+  const dropdownRef = useRef<HTMLDivElement>(null);
 
-  const shouldBeOpen =
-    isOpenFromContainer || (isOpen && isOpenFromContainer === undefined);
+  const updatePosition = () => {
+    const buttonRect = buttonRef.current?.getBoundingClientRect();
+    const dropdown = dropdownRef.current;
+
+    if (!buttonRect || !dropdown) return;
+
+    const dropdownRect = dropdown.getBoundingClientRect();
+    const screenHeight = window.innerHeight;
+    const screenWidth = window.innerWidth;
+
+    // Try placing dropdown below the button
+    let top = buttonRect.bottom;
+    if (top + dropdownRect.height > screenHeight) {
+      // Not enough space below → try above
+      const aboveTop = buttonRect.top - dropdownRect.height;
+      top =
+        aboveTop >= 0
+          ? aboveTop
+          : Math.max(screenHeight - dropdownRect.height, 0);
+    }
+
+    // Calculate horizontal placement
+    let left = buttonRect.left;
+    // if (left + dropdownRect.width > screenWidth) {
+    left = Math.max(screenWidth - dropdownRect.width - 10, 10); // clamp right edge
+    // }
+
+    setPosition({ top, left });
+  };
+
+  const handleDropdownClick = () => {
+    if (singleClickClose) setOpen(false);
+  };
+
+  useEffect(() => {
+    if (isOpen) {
+      updatePosition();
+      const handleResize = () => {
+        setOpen(false);
+        setPosition({
+          top: 0,
+          left: 0,
+        });
+      };
+      window.addEventListener("resize", handleResize);
+      return () => window.removeEventListener("resize", handleResize);
+    }
+  }, [isOpen]);
+
+  // Close on outside click
+  useEffect(() => {
+    const handleClick = (e: MouseEvent) => {
+      if (
+        !buttonRef.current?.contains(e.target as Node) &&
+        !dropdownRef.current?.contains(e.target as Node)
+      ) {
+        setOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener("mousedown", handleClick);
+      return () => document.removeEventListener("mousedown", handleClick);
+    }
+  }, [isOpen]);
 
   return (
-    <div ref={ref}>
+    <>
       <button
-        onClick={() => {
-          setOpen(!isOpen);
-          setOpenFromContainer?.(!isOpenFromContainer);
-        }}
-        className="buttonBlank block p-0"
+        ref={buttonRef}
+        onClick={() => setOpen(!isOpen)}
+        className="buttonBlank p-0"
       >
         {btnContent}
       </button>
-      {shouldBeOpen && (
-        <section
-          ref={dropdown.ref}
-          className={`fadeInFast absolute z-40`}
+
+      {isOpen && (
+        <div
+          ref={dropdownRef}
+          onClick={handleDropdownClick}
+          className={`fixed z-50`}
           style={{
-            ...dropdownPosition,
+            top: position.top,
+            left: position.left,
           }}
         >
           {children}
-        </section>
+        </div>
       )}
-    </div>
+    </>
   );
 }
