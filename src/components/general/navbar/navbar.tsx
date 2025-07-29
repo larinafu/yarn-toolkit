@@ -9,11 +9,18 @@ export default function Navbar() {
       <div className="lg:text-4xl">
         <Link href="/" className="flex items-center">
           <p>yarn</p>
-          <Image src={"/logo.jpg"} width={40} height={40} alt="logo" />{" "}
+          <Image
+            src={"/logo.jpg"}
+            width={40}
+            height={40}
+            alt="Yarn Toolkit – Knitting Chart Generator"
+          />{" "}
           <p>toolkit</p>
         </Link>
       </div>
-      <div className={`${styles.center} flex bg-white rounded-2xl pl-2 pr-2 text-amaranth`}>
+      <div
+        className={`${styles.center} flex bg-white rounded-2xl pl-2 pr-2 text-amaranth`}
+      >
         <Link href="create">
           <p>create now</p>
         </Link>

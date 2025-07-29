@@ -271,11 +271,13 @@ export default function usePixelGridEditRecordTools({
           });
       }
     }
-    if (recordPos === RECORD_CACHE_SIZE) {
-      setRecord([...record.slice(1, recordPos), sessionRef.current]);
-    } else {
-      setRecord([...record.slice(0, recordPos), sessionRef.current]);
-      setRecordPos(recordPos + 1);
+    if (sessionRef.current) {
+      if (recordPos === RECORD_CACHE_SIZE) {
+        setRecord([...record.slice(1, recordPos), sessionRef.current]);
+      } else {
+        setRecord([...record.slice(0, recordPos), sessionRef.current]);
+        setRecordPos(recordPos + 1);
+      }
     }
 
     sessionRef.current = null;

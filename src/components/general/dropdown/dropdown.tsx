@@ -4,12 +4,14 @@ type DropdownProps = {
   btnContent: React.ReactNode;
   children: React.ReactNode;
   singleClickClose?: boolean;
+  btnClass?: string;
 };
 
 export default function Dropdown({
   btnContent,
   children,
   singleClickClose = false,
+  btnClass,
 }: DropdownProps) {
   const [isOpen, setOpen] = useState(false);
   const [position, setPosition] = useState<{ top: number; left: number }>({
@@ -43,18 +45,24 @@ export default function Dropdown({
 
     // Calculate horizontal placement
     let left = buttonRect.left;
-    // if (left + dropdownRect.width > screenWidth) {
-    left = Math.max(screenWidth - dropdownRect.width - 10, 10); // clamp right edge
-    // }
+    if (left + dropdownRect.width > screenWidth) {
+      left = Math.max(screenWidth - dropdownRect.width - 10, 10); // clamp right edge
+    }
 
     setPosition({ top, left });
   };
 
   const handleDropdownClick = () => {
-    if (singleClickClose) setOpen(false);
+    if (singleClickClose) {
+      setOpen(false);
+      setPosition({
+        top: 0,
+        left: 0,
+      });
+    }
   };
 
-  useEffect(() => {
+  useLayoutEffect(() => {
     if (isOpen) {
       updatePosition();
       const handleResize = () => {
@@ -77,6 +85,10 @@ export default function Dropdown({
         !dropdownRef.current?.contains(e.target as Node)
       ) {
         setOpen(false);
+        setPosition({
+          top: 0,
+          left: 0,
+        });
       }
     };
     if (isOpen) {
@@ -90,7 +102,7 @@ export default function Dropdown({
       <button
         ref={buttonRef}
         onClick={() => setOpen(!isOpen)}
-        className="buttonBlank p-0"
+        className={`block buttonBlank p-0 border-0 ${btnClass || ""}`}
       >
         {btnContent}
       </button>

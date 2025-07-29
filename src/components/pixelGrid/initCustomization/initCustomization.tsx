@@ -198,10 +198,10 @@ export default function InitCustomization({
   return (
     <section className="fadeIn h-dvh flex flex-col pt-10">
       <div>
-        <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
+        <h2 className="text-center text-3xl mt-6 mb-2">
           Chart Preview
         </h2>
-        <p className="text-center text-2xl md:text-3xl ml-1 mr-1 mb-6">
+        <p className="text-center text-xl ml-1 mr-1 mb-6">
           We need a few more details to generate your starting pattern.
         </p>
       </div>

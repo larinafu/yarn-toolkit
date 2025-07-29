@@ -35,8 +35,17 @@ export default function useModalTools(onOpen?: (isOpen: boolean) => void): {
     [isOpen]
   );
   const btn = useCallback(
-    ({ children }: { children: React.ReactElement }) => (
-      <button className="buttonBlank p-0" onClick={() => setOpen(true)}>
+    ({
+      children,
+      btnClass,
+    }: {
+      children: React.ReactElement;
+      btnClass?: string;
+    }) => (
+      <button
+        className={`buttonBlank p-0 ${btnClass || ""}`}
+        onClick={() => setOpen(true)}
+      >
         {children}
       </button>
     ),
