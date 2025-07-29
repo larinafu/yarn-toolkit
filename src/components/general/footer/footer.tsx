@@ -20,7 +20,7 @@ const footerLinks = [
 ];
 export default function Footer() {
   return (
-    <footer className="w-full p-4 bg-amaranth-light flex justify-center">
+    <footer className="w-full p-4 bg-amaranth-light flex flex-col sm:flex-row justify-center">
       {footerLinks.map((link) => (
         <Link
           key={link.title}

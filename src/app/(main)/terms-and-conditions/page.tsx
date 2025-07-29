@@ -46,7 +46,30 @@ export default function TermsAndConditions() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">3. User Uploads</h2>
+        <h2 className="text-xl font-semibold mb-2">3. Acceptable Use</h2>
+        <p>
+          You agree not to use Yarn Toolkit to upload, generate, or distribute
+          any content that:
+        </p>
+        <ul className="list-disc pl-6 mt-2 space-y-1">
+          <li>
+            Violates intellectual property rights by replicating another
+            creator’s work without permission.
+          </li>
+          <li>Contains hateful, obscene, offensive, or illegal material.</li>
+          <li>
+            Attempts to circumvent or remove Yarn Toolkit watermarks placed on
+            downloaded charts.
+          </li>
+        </ul>
+        <p className="mt-2">
+          Any such actions are a clear violation of these Terms and may result
+          in restriction or termination of access to the Site.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">4. User Uploads</h2>
         <p>
           You may upload an image to assist in generating a knitting chart.
           However, images are not stored or shared—they are processed
@@ -56,7 +79,19 @@ export default function TermsAndConditions() {
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold mb-2">
-          4. Disclaimer of Warranties
+          5. Commercial Use of Generated Charts
+        </h2>
+        <p>
+          Charts created with Yarn Toolkit may be used for commercial purposes,
+          provided that you retain the original Yarn Toolkit watermark included
+          on the downloaded chart. Removing or altering this watermark is a
+          violation of these Terms.
+        </p>
+      </section>
+
+      <section className="mb-6">
+        <h2 className="text-xl font-semibold mb-2">
+          6. Disclaimer of Warranties
         </h2>
         <p>
           Yarn Toolkit is provided “as is” and “as available.” We make no
@@ -68,7 +103,7 @@ export default function TermsAndConditions() {
 
       <section className="mb-6">
         <h2 className="text-xl font-semibold mb-2">
-          5. Limitation of Liability
+          7. Limitation of Liability
         </h2>
         <p>
           To the fullest extent permitted by law, Yarn Toolkit and its operator
@@ -78,7 +113,7 @@ export default function TermsAndConditions() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">6. Privacy</h2>
+        <h2 className="text-xl font-semibold mb-2">8. Privacy</h2>
         <p>
           Please refer to our{" "}
           <a href="/privacy" className="text-blue-600 underline">
@@ -89,7 +124,7 @@ export default function TermsAndConditions() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">7. Modifications</h2>
+        <h2 className="text-xl font-semibold mb-2">9. Modifications</h2>
         <p>
           We may update these Terms from time to time. Changes will be posted on
           this page with an updated effective date. Your continued use of the
@@ -99,7 +134,7 @@ export default function TermsAndConditions() {
       </section>
 
       <section className="mb-6">
-        <h2 className="text-xl font-semibold mb-2">8. Governing Law</h2>
+        <h2 className="text-xl font-semibold mb-2">10. Governing Law</h2>
         <p>
           These Terms shall be governed by and construed in accordance with the
           laws of the State of New Jersey, without regard to its conflict of law
@@ -108,7 +143,7 @@ export default function TermsAndConditions() {
       </section>
 
       <section>
-        <h2 className="text-xl font-semibold mb-2">9. Contact</h2>
+        <h2 className="text-xl font-semibold mb-2">11. Contact</h2>
         <p>
           If you have any questions about these Terms, please contact us via the{" "}
           <a href="/contact" className="text-blue-600 underline">
