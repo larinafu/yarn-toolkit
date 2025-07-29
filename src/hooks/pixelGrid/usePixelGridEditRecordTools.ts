@@ -313,6 +313,7 @@ export default function usePixelGridEditRecordTools({
             }
           }
           stitchCanvasTools.updateFullCanvas();
+          viewboxTools.drawViewboxStitches();
           break;
         case "specialShapeChange":
           switch (session.data.type) {
@@ -397,6 +398,7 @@ export default function usePixelGridEditRecordTools({
             }
           }
           stitchCanvasTools.updateFullCanvas();
+          viewboxTools.drawViewboxStitches();
           break;
         case "specialShapeChange":
           switch (session.data.type) {

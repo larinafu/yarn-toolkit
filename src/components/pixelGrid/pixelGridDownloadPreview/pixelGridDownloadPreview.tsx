@@ -126,14 +126,7 @@ export default function PixelGridDownloadPreview({
   return (
     <>
       <ModalTools.btn>
-        <div className="m-2">
-          <Image
-            src="/download.svg"
-            alt="preview pattern"
-            height={25}
-            width={25}
-          />
-        </div>
+        <span className="text-black">Download</span>
       </ModalTools.btn>
       <ModalTools.modal className="size-4/5">
         <div className="p-1 size-full flex flex-col">

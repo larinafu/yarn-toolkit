@@ -79,9 +79,8 @@ export default function usePixelGridEditTools({
         break;
       case "symbolChange":
         if (
-          Array.from({ length: stitchWidthUnit }, (_, i) => col + i).every(
-            (col) => col < canvasWindowTools.canvasNumRowsAndCols.numCols
-          ) &&
+          col + stitchWidthUnit <=
+            canvasWindowTools.canvasNumRowsAndCols.numCols &&
           (!session ||
             (session.mode === "symbolChange" &&
               Array.from({ length: stitchWidthUnit }, (_, i) => col + i).every(

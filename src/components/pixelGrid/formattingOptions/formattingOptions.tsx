@@ -48,17 +48,7 @@ export default function FormattingOptions({
 }) {
   return (
     <>
-      <Dropdown
-        btnContent={
-          <Image
-            src={"/gridNumberFormat/numbers-between.svg"}
-            alt="grid"
-            height={50}
-            width={50}
-            className={`block border border-gray-400 rounded-xl pd-0`}
-          />
-        }
-      >
+      <Dropdown btnContent={<span className="text-black">Format</span>}>
         <div className="card p-0">
           <form className="pb-1 border-b border-b-amaranth">
             <fieldset className="flex">

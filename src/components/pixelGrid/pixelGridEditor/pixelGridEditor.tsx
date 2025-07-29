@@ -88,17 +88,18 @@ export default function PixelGridEditor({
     colorCountTracker: colorCanvasTools.colorCountTracker,
   });
 
-  const gridLineTools = usePixelGridLineCanvasTools({
-    canvasWindowTools,
-    gridLineColor: editConfigTools.gridLineColor,
-  });
-
   const stitchCanvasTools = usePixelGridStitchCanvasTools({
     canvasWindowTools,
     savedCanvasDataRef,
     interactionLayerTools,
     activeStitchWidthUnit: editConfigTools.stitchWidthUnit,
     gridLineColor: editConfigTools.gridLineColor,
+  });
+
+  const gridLineTools = usePixelGridLineCanvasTools({
+    canvasWindowTools,
+    gridLineColor: editConfigTools.gridLineColor,
+    stitchCanvasTools,
   });
 
   const specialShapesTools = usePixelGridSpecialShapesCanvasTools({
@@ -163,14 +164,15 @@ export default function PixelGridEditor({
           curCanvasWindowTools.canvasWindow.visibleCols;
         col++
       ) {
+        const cell = savedCanvasDataRef.current.pixels[row][col];
         colorCanvasTools.updatePixelColor({
           row,
           col,
-          hex: savedCanvasDataRef.current.pixels[row][col].hex,
+          hex: cell.hex,
           ctx: colorCtx,
           windowTools: curCanvasWindowTools,
         });
-        if (savedCanvasDataRef.current.pixels[row][col].stitch) {
+        if (cell.stitch) {
           stitchCanvasTools.updateStitch({
             row,
             col,
@@ -180,6 +182,29 @@ export default function PixelGridEditor({
               savedCanvasDataRef.current.pixels[row][col].stitchColor || "#000",
             ctx: stitchCtx,
             windowTools: curCanvasWindowTools,
+          });
+        } else if (
+          col === curCanvasWindowTools.canvasWindow.startCol &&
+          cell.isPartOfCable
+        ) {
+          let colStartPos = col;
+          while (
+            colStartPos > 0 &&
+            savedCanvasDataRef.current.pixels[row][colStartPos].isPartOfCable &&
+            !savedCanvasDataRef.current.pixels[row][colStartPos].stitch
+          ) {
+            colStartPos -= 1;
+          }
+          stitchCanvasTools.updateStitch({
+            row,
+            col: colStartPos,
+            stitch: savedCanvasDataRef.current.pixels[row][colStartPos]
+              .stitch as string,
+            color:
+              savedCanvasDataRef.current.pixels[row][colStartPos].stitchColor ||
+              "#000",
+            windowTools: curCanvasWindowTools,
+            ctx: stitchCtx,
           });
         }
       }
@@ -225,11 +250,9 @@ export default function PixelGridEditor({
     canvasWindowTools,
   });
 
-  const resizeObserverRef = useRef<null | ResizeObserver>(null);
-
   // canvas resize
   useEffect(() => {
-    resizeObserverRef.current = new ResizeObserver((entries) => {
+    const observer = new ResizeObserver((entries) => {
       for (const _ of entries) {
         const colorCanvasRef =
           colorCanvasTools.ref as React.RefObject<HTMLCanvasElement>;
@@ -306,18 +329,19 @@ export default function PixelGridEditor({
             gridLineTools.drawCanvasLines({
               ctx: gridLineCtx,
               windowTools: { canvasWindow, gridDimensions },
+              lineColor: editConfigTools.gridLineColor,
+              stitchCtx: stitchCtx,
             });
           }
         }
       }
     });
-    if (pixelGridCanvasRefWithRect.ref.current) {
-      resizeObserverRef.current.observe(pixelGridCanvasRefWithRect.ref.current);
+    const canvasRef = pixelGridCanvasRefWithRect.ref.current;
+    if (canvasRef) {
+      observer.observe(pixelGridCanvasRefWithRect.ref.current);
     }
     return () => {
-      if (pixelGridCanvasRefWithRect.ref.current) {
-        resizeObserverRef.current?.disconnect();
-      }
+      observer.disconnect();
     };
   }, [
     pixelGridCanvasRefWithRect.ref.current,
@@ -325,6 +349,7 @@ export default function PixelGridEditor({
     canvasWindowTools.canvasCellDimensions.height,
     canvasWindowTools.canvasNumRowsAndCols.numRows,
     canvasWindowTools.canvasNumRowsAndCols.numCols,
+    editConfigTools.gridLineColor,
   ]);
 
   return (

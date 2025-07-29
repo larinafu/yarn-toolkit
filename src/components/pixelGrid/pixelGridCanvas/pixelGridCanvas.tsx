@@ -104,9 +104,10 @@ export default function PixelGridCanvas({
     gridLineTools.setCtx(lineCanvasContext);
     stitchCanvasTools.setCtx(stitchCanvasContext);
     specialShapesTools.setCtx(specialShapesCanvasContext);
-    gridLineTools.handleInitialRender(
-      lineCanvasContext as CanvasRenderingContext2D
-    );
+    gridLineTools.drawCanvasLines({
+      ctx: lineCanvasContext as CanvasRenderingContext2D,
+      stitchCtx: stitchCanvasContext as CanvasRenderingContext2D,
+    });
     for (
       let row = canvasWindowTools.canvasWindow.startRow;
       row <

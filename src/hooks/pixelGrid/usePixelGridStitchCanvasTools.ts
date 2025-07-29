@@ -19,6 +19,8 @@ export type StitchCanvasTools = {
   ref: React.RefObject<HTMLCanvasElement | null>;
   updateFullCanvas: (args?: {
     windowTools?: Partial<PixelGridWindowTools>;
+    gridLineColor?: string;
+    ctx?: CanvasRenderingContext2D;
   }) => void;
   updateStitch: ({
     row,
@@ -174,6 +176,7 @@ export default function usePixelGridStitchCanvasTools({
         endCol?: number;
       };
       stitchWidthUnit?: number;
+      gridLineColor?: string;
     };
   }) => {
     const context = ctx || (stitchCanvasContext as CanvasRenderingContext2D);
@@ -219,7 +222,7 @@ export default function usePixelGridStitchCanvasTools({
           ctx: context,
           cellW: curCanvasWindowTools.canvasCellDimensions.width,
           cellH: curCanvasWindowTools.canvasCellDimensions.height,
-          gridLineColor,
+          gridLineColor: config?.gridLineColor || gridLineColor,
         });
       } else {
         const svgPathSteps = KNITTING_STITCHES[stitch].svgPaths;
@@ -243,19 +246,21 @@ export default function usePixelGridStitchCanvasTools({
 
   const updateFullCanvas = (args?: {
     windowTools?: Partial<PixelGridWindowTools>;
+    gridLineColor?: string;
+    ctx?: CanvasRenderingContext2D;
   }) => {
     const curWindowTools = {
       ...canvasWindowTools,
       ...args?.windowTools,
     };
-    if (stitchCanvasContext) {
-      stitchCanvasContext.clearRect(
-        0,
-        0,
-        curWindowTools.gridDimensions.width,
-        curWindowTools.gridDimensions.height
-      );
-    }
+    const curCtx =
+      args?.ctx || (stitchCanvasContext as CanvasRenderingContext2D);
+    curCtx.clearRect(
+      0,
+      0,
+      curWindowTools.gridDimensions.width,
+      curWindowTools.gridDimensions.height
+    );
     for (
       let row = curWindowTools.canvasWindow.startRow;
       row <
@@ -270,7 +275,8 @@ export default function usePixelGridStitchCanvasTools({
           curWindowTools.canvasWindow.visibleCols;
         col++
       ) {
-        if (savedCanvasDataRef.current.pixels[row][col].stitch) {
+        const cell = savedCanvasDataRef.current.pixels[row][col];
+        if (cell.stitch) {
           updateStitch({
             row,
             col,
@@ -279,6 +285,36 @@ export default function usePixelGridStitchCanvasTools({
             color:
               savedCanvasDataRef.current.pixels[row][col].stitchColor || "#000",
             windowTools: curWindowTools,
+            ctx: curCtx,
+            config: {
+              gridLineColor: args?.gridLineColor || gridLineColor,
+            },
+          });
+        } else if (
+          col === curWindowTools.canvasWindow.startCol &&
+          cell.isPartOfCable
+        ) {
+          let colStartPos = col;
+          while (
+            colStartPos > 0 &&
+            savedCanvasDataRef.current.pixels[row][colStartPos].isPartOfCable &&
+            !savedCanvasDataRef.current.pixels[row][colStartPos].stitch
+          ) {
+            colStartPos -= 1;
+          }
+          updateStitch({
+            row,
+            col: colStartPos,
+            stitch: savedCanvasDataRef.current.pixels[row][colStartPos]
+              .stitch as string,
+            color:
+              savedCanvasDataRef.current.pixels[row][colStartPos].stitchColor ||
+              "#000",
+            windowTools: curWindowTools,
+            ctx: curCtx,
+            config: {
+              gridLineColor: args?.gridLineColor || gridLineColor,
+            },
           });
         }
       }

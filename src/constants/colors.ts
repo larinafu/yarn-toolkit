@@ -8,7 +8,7 @@ export const simpleColorConstants: string[] = [
   "blue",
 ];
 
-export const GRID_LINE_COLORS = ["#000", "#2f4f4f", "#D3D3D3"];
+export const GRID_LINE_COLORS = ["#000", "#2f4f4f", "#d3d3d3"];
 
 export const DEFAULT_COLORS = [
   {
