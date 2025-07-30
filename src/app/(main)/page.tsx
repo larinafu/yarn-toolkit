@@ -71,7 +71,7 @@ export default function Home() {
     <>
       <JsonLd json={WEBSITE_SCHEMA} />
       <JsonLd json={SOFTWARE_SCHEMA} />
-      <section className={`m-5`}>
+      <section className={`m-10`}>
         <h1 className="text-5xl mb-2">
           <Link href={"/create?source=blank"}>Free Knitting Chart Maker</Link>
         </h1>
@@ -109,7 +109,7 @@ export default function Home() {
           </div>
         </div>
       </section>
-      <section className={`bg-amaranth-light p-5`}>
+      <section className={`bg-amaranth-light p-10`}>
         <h2 className="text-5xl">
           Easy-To-Use Pattern Design Interface on all Screen Sizes
         </h2>
@@ -117,13 +117,13 @@ export default function Home() {
           <ScreenDemo />
         </div>
       </section>
-      <section className={`m-5`}>
+      <section className={`m-10`}>
         <h2 className="text-5xl mb-2">
           <Link href={"/create?source=image"}>
             Turn Photos into Pixel Art Patterns
           </Link>
         </h2>
-        <p className="mb-2">
+        <p className="mb-6">
           Our image to chart Converter lets you upload images generate
           pixel-based knitting or crochet charts for intarsia and
           colorworkEasily convert photos into colorwork knitting patterns with
@@ -132,13 +132,13 @@ export default function Home() {
           crochet, or fair isle. Control color depth and pattern dimensions to
           match your project.
         </p>
-        <div className="flex justify-center items-center">
+        <div className="flex justify-center items-center px-2">
           <Image
             src={"/photos/earth.jpg"}
             width={1000}
             height={1000}
             alt="Drawing of Earth to be converted to a color chart"
-            className="border border-black w-5/12"
+            className="border border-black size-1/2 sm:size-1/3"
           />
           <Image
             src={"/curve-right-arrow.svg"}
@@ -152,7 +152,7 @@ export default function Home() {
             width={1000}
             height={1000}
             alt="Pixelated Earth image symbolizing automatic image to knitting chart conversion"
-            className="w-5/12"
+            className="size-1/2 sm:size-1/3"
           />
         </div>
       </section>
