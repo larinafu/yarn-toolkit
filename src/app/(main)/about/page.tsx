@@ -51,12 +51,12 @@ export default function Page({}) {
           <p className="mb-4">
             Originally created to provide knitters with a robust editing
             platform for crafting intricate patterns and detailed knitting
-            charts, our mission has grown to become the essential digital
-            workspace for all needlework creators—whether your passion lies in
-            knitting, crochet, cross-stitch, or any other thread-based craft. We
-            envision Yarn Toolkit as a virtual extension of your hands, where
-            creativity flows without friction and technical limitations never
-            hold you back.
+            charts, Yarn Toolkit&apos;s mission has grown to become the
+            essential digital workspace for all needlework creators—whether your
+            passion lies in knitting, crochet, cross-stitch, or any other
+            thread-based craft. This site strives to be a virtual extension of
+            your hands, where creativity flows without friction and technical
+            limitations never hold you back.
           </p>
           <div className="h-1/2 m-auto">
             <ScreenDemo />
@@ -65,15 +65,15 @@ export default function Page({}) {
             Much like a trusted toolkit that a skilled craftsperson relies on to
             construct complex, beautiful works, Yarn Toolkit was created to
             simplify the planning and design process so that more time can be
-            spent making. We aim to remove the barriers of repetitive manual
-            charting and confusing symbol placement, making the journey from
-            idea to finished project as smooth, intuitive, and enjoyable as
+            spent making. This site aims to remove the barriers of repetitive
+            manual charting and confusing symbol placement, making the journey
+            from idea to finished project as smooth, intuitive, and enjoyable as
             possible. With Yarn Toolkit, you&apos;re not just
             designing—you&apos;re crafting with confidence and freedom.
           </p>
         </section>
         <section>
-          <h2 className="text-5xl mb-2">What We Offer</h2>
+          <h2 className="text-5xl mb-2">What This Site Offers</h2>
           <p className="mb-4">
             Yarn Toolkit offers a suite of user-friendly tools tailored
             specifically to the needs of fiber artists. At its core is a
@@ -97,20 +97,19 @@ export default function Page({}) {
             . This feature allows users to upload an image—such as a logo,
             photo, or drawing—which is then automatically pixelated and
             translated into a color chart. From there, users can fine-tune the
-            design manually using the editor. This fusion of automation and
-            customizability helps bridge the gap between inspiration and
-            execution, empowering crafters to bring even the most complex ideas
-            to life with greater ease.
+            design manually using the editor. This helps bridge the gap between
+            inspiration and execution, empowering crafters to bring even the
+            most complex ideas to life with greater ease.
           </p>
         </section>
         <section>
           <h2 className="text-5xl mb-2">This is Just the Beginning!</h2>
           <p>
-            As the platform evolves, Yarn Toolkit plans to expand its offerings
+            As the platform evolves, I plan to expand this site&apos;s offerings
             to include support for other crafts like crochet and cross-stitch.
             Whether you&apos;re designing for yourself, teaching others, or
             publishing professional patterns, Yarn Toolkit is here to help you
-            create without compromise.
+            create without compromise!
           </p>
         </section>
       </div>

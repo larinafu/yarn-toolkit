@@ -17,9 +17,10 @@ export default function PrivacyPolicy() {
 
       <section className="mb-6">
         <p>
-          Yarn Toolkit (&quot;we,&quot; &quot;us,&quot; or &quot;our&quot;)
-          respects your privacy. This Privacy Policy explains how we handle
-          information when you use our website, located at{" "}
+          Yarn Toolkit (&quot;I,&quot; &quot;my,&quot; &quot;we,&quot;
+          &quot;us,&quot; or &quot;our&quot;) respects your privacy. This
+          Privacy Policy explains how we handle information when you use this
+          website, located at{" "}
           <a href="https://yarntoolkit.com" className="text-blue-600 underline">
             https://yarntoolkit.com
           </a>
@@ -30,19 +31,18 @@ export default function PrivacyPolicy() {
       <section className="mb-6">
         <h2 className="text-3xl mb-2">1. No Personal Data Collected</h2>
         <p>
-          We do not collect any personally identifiable information (PII). You
-          do not need to create an account or share personal details to use our
-          site.
+          No personally identifiable information (PII) is collected. You do not
+          need to create an account or share personal details to use this site.
         </p>
       </section>
 
       <section className="mb-6">
         <h2 className="text-3xl mb-2">2. Temporary Session Data</h2>
         <p>
-          We use session storage to temporarily store your chart configuration
-          and preferences, allowing you to maintain progress if you refresh the
-          page. This data is not saved to our servers and is cleared once your
-          session ends (e.g., when you close the tab or browser).
+          This site uses session storage to temporarily store your chart
+          configuration and preferences. This data is not saved to any server
+          and is cleared once your session ends (e.g., when you close the tab or
+          browser).
         </p>
       </section>
 
@@ -58,12 +58,12 @@ export default function PrivacyPolicy() {
       <section className="mb-6">
         <h2 className="text-3xl mb-2">4. Analytics and Hosting</h2>
         <p>
-          We use Google Search Console and Cloudflare insights to understand
+          Google Search Console and Cloudflare are used insights to understand
           general site performance (e.g., traffic volume, errors). These tools
-          do not give us access to individual user data.
+          do not give the site owner access to individual user data.
         </p>
         <p className="mt-2">
-          Our site is hosted using Cloudflare Workers, which may collect
+          This site is hosted using Cloudflare Workers, which may collect
           aggregated traffic data to help us detect and prevent abuse (e.g.,
           denial of service attacks).
         </p>
@@ -72,10 +72,10 @@ export default function PrivacyPolicy() {
       <section className="mb-6">
         <h2 className="text-3xl mb-2">5. Children&apos;s Privacy</h2>
         <p>
-          Yarn Toolkit is not intended for children under the age of 13. We do
-          not knowingly collect personal information from anyone under 13. If we
-          learn that such information has been provided, we will take steps to
-          delete it immediately.
+          Yarn Toolkit is not intended for children under the age of 13.
+          Personal information from anyone under 13 is not knowlingly collected.
+          If the site owner is alerted that such information has been provided,
+          steps will be taken to delete it immediately.
         </p>
       </section>
 
@@ -84,7 +84,7 @@ export default function PrivacyPolicy() {
         <p>
           Yarn Toolkit is accessible worldwide. By using the site, you
           understand that data (including session data) may be processed in the
-          United States, where our hosting services are based.
+          United States, where the hosting services are based.
         </p>
       </section>
 
@@ -101,7 +101,7 @@ export default function PrivacyPolicy() {
         <h2 className="text-3xl mb-2">8. Contact</h2>
         <p>
           If you have any questions about this Privacy Policy, please reach out
-          via email at{" "}
+          to me via email at{" "}
           <Link
             href="mailto:info@yarntoolkit.com"
             className="text-blue-600 underline"
