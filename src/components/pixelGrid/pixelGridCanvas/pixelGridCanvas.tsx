@@ -32,6 +32,7 @@ export default function PixelGridCanvas({
   pixelGridCanvasRefWithRect,
   isPointerDownFromCanvas,
   setPointerDownFromCanvas,
+  stitchWidthUnit,
 }: {
   activeShapeIdx: number | "erase" | null;
   setActiveShapeIdx: React.Dispatch<
@@ -56,6 +57,7 @@ export default function PixelGridCanvas({
   };
   isPointerDownFromCanvas: boolean;
   setPointerDownFromCanvas: React.Dispatch<React.SetStateAction<boolean>>;
+  stitchWidthUnit: number;
 }) {
   const pointerEventsRef = useRef<any>(null);
   useIsPointerDown({
@@ -102,9 +104,10 @@ export default function PixelGridCanvas({
     gridLineTools.setCtx(lineCanvasContext);
     stitchCanvasTools.setCtx(stitchCanvasContext);
     specialShapesTools.setCtx(specialShapesCanvasContext);
-    gridLineTools.handleInitialRender(
-      lineCanvasContext as CanvasRenderingContext2D
-    );
+    gridLineTools.drawCanvasLines({
+      ctx: lineCanvasContext as CanvasRenderingContext2D,
+      stitchCtx: stitchCanvasContext as CanvasRenderingContext2D,
+    });
     for (
       let row = canvasWindowTools.canvasWindow.startRow;
       row <
@@ -162,12 +165,26 @@ export default function PixelGridCanvas({
     if (pixelPos) {
       switch (editMode) {
         case "colorChange":
-        case "symbolChange":
           return (
             <rect
               x={pixelPos.x}
               y={pixelPos.y}
               width={canvasWindowTools.canvasCellDimensions.width}
+              height={canvasWindowTools.canvasCellDimensions.height}
+              fill="none"
+              stroke="red"
+              strokeWidth={2}
+              className="pointer-events-none"
+            ></rect>
+          );
+        case "symbolChange":
+          return (
+            <rect
+              x={pixelPos.x}
+              y={pixelPos.y}
+              width={
+                canvasWindowTools.canvasCellDimensions.width * stitchWidthUnit
+              }
               height={canvasWindowTools.canvasCellDimensions.height}
               fill="none"
               stroke="red"

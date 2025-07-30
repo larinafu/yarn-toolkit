@@ -1,12 +1,13 @@
 import Image from "next/image";
 import Dropdown from "@/components/general/dropdown/dropdown";
 
-import React from "react";
+import React, { useRef } from "react";
 import {
   PixelGridCanvasSavedData,
   PixelGridNumberFormat,
 } from "@/types/pixelGrid";
 import { PixelGridLineCanvasTools } from "@/hooks/pixelGrid/usePixelGridLineCanvasTools";
+import { GRID_LINE_COLORS } from "@/constants/colors";
 
 const numberFormattingOptions: {
   [key in PixelGridNumberFormat]: { displayText: string; img: string };
@@ -47,17 +48,7 @@ export default function FormattingOptions({
 }) {
   return (
     <>
-      <Dropdown
-        btnContent={
-          <Image
-            src={"/gridNumberFormat/numbers-between.svg"}
-            alt="grid"
-            height={50}
-            width={50}
-            className={`block border border-gray-400 rounded-xl pd-0`}
-          />
-        }
-      >
+      <Dropdown btnContent={<span className="text-black">Format</span>} btnClass="p-2 w-full text-start">
         <div className="card p-0">
           <form className="pb-1 border-b border-b-amaranth">
             <fieldset className="flex">
@@ -100,28 +91,25 @@ export default function FormattingOptions({
             </fieldset>
           </form>
           <div className="flex items-center p-2">
-            <button
-              className={`buttonBlank ${
-                gridLineColor === "#000000" ? "bg-amaranth-light" : ""
-              }`}
-              onClick={() => {
-                setGridLineColor("#000000");
-                gridLineTools.drawCanvasLines({ lineColor: "#000000" });
-              }}
-            >
-              <div className="size-5 rounded-full bg-black shadowBig"></div>
-            </button>
-            <button
-              className={`buttonBlank ${
-                gridLineColor === "#FFFFFF" ? "bg-amaranth-light" : ""
-              }`}
-              onClick={() => {
-                setGridLineColor("#FFFFFF");
-                gridLineTools.drawCanvasLines({ lineColor: "#FFFFFF" });
-              }}
-            >
-              <div className="size-5 rounded-full bg-white shadowBig"></div>
-            </button>
+            {GRID_LINE_COLORS.map((color) => (
+              <button
+                key={color}
+                className={`buttonBlank ${
+                  gridLineColor === color ? "bg-amaranth-light" : ""
+                }`}
+                onClick={() => {
+                  setGridLineColor(color);
+                  gridLineTools.drawCanvasLines({ lineColor: color });
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: color,
+                  }}
+                  className={`size-5 rounded-full shadowBig`}
+                ></div>
+              </button>
+            ))}
           </div>
         </div>
       </Dropdown>

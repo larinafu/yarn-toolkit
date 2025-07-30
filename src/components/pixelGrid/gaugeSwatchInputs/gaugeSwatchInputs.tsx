@@ -155,7 +155,7 @@ export default function GaugeSwatchInputs({
             >
               <Image
                 src={"/down-arrow.svg"}
-                alt="down"
+                alt="decrease width of individual stitch by a factor of 1 in a gauge swatch"
                 width={20}
                 height={20}
                 className="mr-1"
@@ -187,7 +187,7 @@ export default function GaugeSwatchInputs({
             >
               <Image
                 src={"/up-arrow.svg"}
-                alt="up"
+                alt="increase width of individual stitch by a factor of 1 in a gauge swatch"
                 width={20}
                 height={20}
                 className="ml-1"
@@ -207,7 +207,7 @@ export default function GaugeSwatchInputs({
             >
               <Image
                 src={"/up-arrow.svg"}
-                alt="up"
+                alt="increase height of individual stitch by a factor of 1 in a guage swatch"
                 width={20}
                 height={20}
                 className="fill-amaranth"
@@ -240,7 +240,7 @@ export default function GaugeSwatchInputs({
             >
               <Image
                 src={"/down-arrow.svg"}
-                alt="down"
+                alt="decrease height of individual stitch by a factor of 1 in a guage swatch"
                 width={20}
                 height={20}
               />

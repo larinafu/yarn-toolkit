@@ -6,20 +6,30 @@ export const metadata: Metadata = {
   applicationName: "Yarn Toolkit",
   title: {
     template: "%s | Yarn Toolkit",
-    default: "Yarn Toolkit - Create knitting charts and crochet patterns for free",
+    default: "Free Knitting Chart Maker | Yarn Toolkit",
   },
   description:
-    "Create knitting charts and crochet patterns for free. Easily convert uploaded images into beautiful color charts instantly.",
+    "Design custom knitting charts for colorwork, lace, and more with our free online knitting chart generator.",
   keywords: [
-    "crochet",
-    "knitting",
-    "yarn",
-    "knitting chart",
-    "knitting pattern",
-    "pattern",
-    "chart",
-    "image",
+    "knitting chart generator",
+    "knitting pattern maker",
+    "colorwork knitting",
+    "lace knitting",
+    "crochet chart",
+    "pixel art knitting",
   ],
+  openGraph: {
+    title: "Yarn Toolkit - Free Knitting Chart Maker",
+    description:
+      "Easily create and customize knitting charts for colorwork, lace, and more. No software download required.",
+    url: "https://yarntoolkit.com",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Yarn Toolkit - Free Knitting Chart Maker",
+    description:
+      "Easily create and customize knitting charts for colorwork, lace, and more. No software download required.",
+  },
 };
 
 export default function RootLayout({

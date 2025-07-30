@@ -13,7 +13,7 @@ import canvasContextUtils from "@/utils/pixelGrid/canvasContextUtils";
 import { SpecialShape } from "./usePixelGridSpecialShapesCanvasTools";
 
 const MAX_PREVIEW_WIDTH_VW = 20;
-const MAX_PREVIEW_HEIGHT_VH = 100;
+const MAX_PREVIEW_HEIGHT_VH = 70;
 const MIN_DIM_PX = 200;
 
 type ViewboxDims = PixelGridCanvasCellDimensions;
@@ -35,10 +35,15 @@ export type ViewboxPosition = {
 export type ViewboxTools = {
   ref: React.RefObject<HTMLCanvasElement | null>;
   specialShapesRef: React.RefObject<HTMLCanvasElement | null>;
+  stitchesRef: React.RefObject<HTMLCanvasElement | null>;
   ctx: CanvasRenderingContext2D | null;
   setCtx: React.Dispatch<React.SetStateAction<CanvasRenderingContext2D | null>>;
   specialShapesCtx: CanvasRenderingContext2D | null;
   setSpecialShapesCtx: React.Dispatch<
+    React.SetStateAction<CanvasRenderingContext2D | null>
+  >;
+  stitchesCtx: CanvasRenderingContext2D | null;
+  setStitchesCtx: React.Dispatch<
     React.SetStateAction<CanvasRenderingContext2D | null>
   >;
   pointerActions: PointerActions;
@@ -59,12 +64,29 @@ export type ViewboxTools = {
   updateFullCanvas: ({
     windowTools,
     viewContext,
+    specialShapesContext,
+    stitchesContext,
   }: {
     windowTools?: Partial<PixelGridWindowTools>;
     viewContext?: CanvasRenderingContext2D;
+    specialShapesContext?: CanvasRenderingContext2D;
+    stitchesContext?: CanvasRenderingContext2D;
   }) => void;
   drawViewboxColors: (ctx?: CanvasRenderingContext2D) => void;
-  drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => void;
+  drawViewboxStitches: (args?: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  }) => void;
+  drawViewboxSpecialShapes: (args?: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  }) => void;
   isOpen: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
 };
@@ -149,15 +171,14 @@ export default function useViewboxTools({
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
   specialShapesRef: React.RefObject<SpecialShape[]>;
 }): ViewboxTools {
-  const [maxPreviewWidthPx, maxPreviewHeightPx] = [
-    vwToPx(MAX_PREVIEW_WIDTH_VW),
-    vhToPx(MAX_PREVIEW_HEIGHT_VH),
-  ];
   const viewboxRef: React.RefObject<HTMLCanvasElement | null> = useRef(null);
   const viewboxSpecialShapesRef = useRef(null);
+  const viewboxStitchesRef = useRef(null);
   const [viewboxContext, setViewboxContext] =
     useState<CanvasRenderingContext2D | null>(null);
   const [viewboxSpecialShapesContext, setViewboxSpecialShapesContext] =
+    useState<CanvasRenderingContext2D | null>(null);
+  const [viewboxStitchesContext, setViewboxStitchesContext] =
     useState<CanvasRenderingContext2D | null>(null);
   const widthHeightRatio =
     savedCanvasDataRef.current.swatch.width /
@@ -198,12 +219,35 @@ export default function useViewboxTools({
     );
   };
 
+  const drawViewboxSpecialShapes = ({
+    ctx,
+    config,
+  }: {
+    ctx?: CanvasRenderingContext2D;
+    config?: {
+      viewboxDims?: ViewboxCellDims;
+      viewboxCellDims?: ViewboxCellDims;
+    };
+  } = {}) => {
+    canvasContextUtils.drawSpecialShapes({
+      specialShapesCtx:
+        ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
+      specialShapes: specialShapesRef.current,
+      cellDims: config?.viewboxCellDims || viewboxCellDims,
+      gridDims: config?.viewboxDims || viewboxDims,
+    });
+  };
+
   const updateFullCanvas = ({
     windowTools,
     viewContext,
+    specialShapesContext,
+    stitchesContext,
   }: {
     windowTools?: Partial<PixelGridWindowTools>;
     viewContext?: CanvasRenderingContext2D;
+    specialShapesContext?: CanvasRenderingContext2D;
+    stitchesContext?: CanvasRenderingContext2D;
   }) => {
     const curWindowTools = {
       ...pixelGridCanvasWindowTools,
@@ -218,6 +262,7 @@ export default function useViewboxTools({
         canvasNumRowsAndCols: curWindowTools.canvasNumRowsAndCols,
         canvasCellWidthHeightRatio: widthHeightRatio,
       });
+
     if (
       !(newViewDims.width === parseInt(viewbox.style.width)) ||
       !(newViewDims.height === parseInt(viewbox.style.height))
@@ -232,10 +277,31 @@ export default function useViewboxTools({
         gridHeight: newViewDims.height,
         ref: viewboxSpecialShapesRef as React.RefObject<any>,
       });
+      canvasSizingUtils.resizeCanvas({
+        gridWidth: newViewDims.width,
+        gridHeight: newViewDims.height,
+        ref: viewboxStitchesRef as React.RefObject<any>,
+      });
       canvasContextUtils.drawPixelGridColors({
         colorCtx: ctx,
         cellDims: newCellDims,
         cells: savedCanvasDataRef.current.pixels,
+      });
+      canvasContextUtils.drawPixelGridStitches({
+        stitchCtx:
+          stitchesContext ||
+          (viewboxStitchesContext as CanvasRenderingContext2D),
+        cellDims: newCellDims,
+        cells: savedCanvasDataRef.current.pixels,
+      });
+      drawViewboxSpecialShapes({
+        config: {
+          viewboxDims: newViewDims,
+          viewboxCellDims: newCellDims,
+        },
+        ctx:
+          specialShapesContext ||
+          (viewboxSpecialShapesContext as CanvasRenderingContext2D),
       });
     }
   };
@@ -245,6 +311,9 @@ export default function useViewboxTools({
     ctx: viewboxContext,
     specialShapesRef: viewboxSpecialShapesRef,
     specialShapesCtx: viewboxSpecialShapesContext,
+    stitchesRef: viewboxStitchesRef,
+    stitchesCtx: viewboxStitchesContext,
+    setStitchesCtx: setViewboxStitchesContext,
     isOpen,
     setOpen,
     setSpecialShapesCtx: setViewboxSpecialShapesContext,
@@ -254,15 +323,28 @@ export default function useViewboxTools({
         cellDims: viewboxCellDims,
         cells: savedCanvasDataRef.current.pixels,
       }),
-    drawViewboxSpecialShapes: (ctx?: CanvasRenderingContext2D) => {
-      canvasContextUtils.drawSpecialShapes({
-        specialShapesCtx:
-          ctx || (viewboxSpecialShapesContext as CanvasRenderingContext2D),
-        specialShapes: specialShapesRef.current,
+    drawViewboxStitches: (args?: {
+      ctx?: CanvasRenderingContext2D;
+      config?: {
+        viewboxDims?: ViewboxCellDims;
+        viewboxCellDims?: ViewboxCellDims;
+      };
+    }) => {
+      const curCtx =
+        args?.ctx || (viewboxStitchesContext as CanvasRenderingContext2D);
+      curCtx.clearRect(
+        0,
+        0,
+        args?.config?.viewboxDims?.width || viewboxDims.width,
+        args?.config?.viewboxDims?.height || viewboxDims.height
+      );
+      canvasContextUtils.drawPixelGridStitches({
+        stitchCtx: curCtx,
         cellDims: viewboxCellDims,
-        gridDims: viewboxDims,
+        cells: savedCanvasDataRef.current.pixels,
       });
     },
+    drawViewboxSpecialShapes,
     setCtx: setViewboxContext,
     pointerActions: {
       isPointerDown: pointerDownPos !== null,
@@ -306,7 +388,10 @@ export default function useViewboxTools({
               newColStart === pixelGridCanvasWindowTools.canvasWindow.startCol
             )
           ) {
-            pixelGridCanvasWindowTools.shiftWindow(newRowStart, newColStart);
+            pixelGridCanvasWindowTools.shiftWindow({
+              newStartRow: newRowStart,
+              newStartCol: newColStart,
+            });
           }
           return {
             ...pixelGridCanvasWindow,

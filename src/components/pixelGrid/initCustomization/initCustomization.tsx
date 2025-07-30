@@ -3,6 +3,7 @@ import {
   ImageInfo,
   PatternSize,
   PatternSizeDisplay,
+  PixelGridCanvasCell,
   PixelGridCanvasSavedData,
   SwatchInputs,
 } from "@/types/pixelGrid";
@@ -13,10 +14,7 @@ import InitPixelGridPreview from "../initPixelGridPreview/initPixelGridPreview";
 import GaugeSwatchInputs from "../gaugeSwatchInputs/gaugeSwatchInputs";
 import SpinnerSmall from "@/components/general/spinnerSmall/spinnerSmall";
 import { useRouter } from "next/navigation";
-import {
-  isValidProjectSize,
-  PROJ_SIZE_LIMIT,
-} from "@/utils/general/inputValidationUtils";
+import { isValidProjectSize } from "@/utils/general/inputValidationUtils";
 import {
   getInitialPatternSize,
   getPatternSizeHeightLimited,
@@ -27,6 +25,7 @@ import {
   generateNewPixelGridNoImage,
 } from "@/utils/pixelGrid/gridGeneratorUtils";
 import { SAVED_CANVAS_DATA_LOC } from "@/constants/pixelGrid/sessionStorage";
+import { PROJ_MAX_SIZE } from "@/constants/pixelGrid/projectSizeLimits";
 
 export default function InitCustomization({
   imageInfo,
@@ -44,16 +43,16 @@ export default function InitCustomization({
   const [patternSize, setPatternSize] = useState<PatternSize>(
     imageInfo
       ? getInitialPatternSize(
-          75,
+          50,
           widthHeightRatio,
           imageInfo.imageData.width,
           imageInfo.imageData.height
         )
-      : { numRows: 50, numCols: 50 }
+      : { numRows: 30, numCols: 30 }
   );
   const [patternSizeInputs, setPatternSizeInputs] =
     useState<PatternSizeDisplay>(patternSize);
-  const [basePattern, setBasePattern] = useState<{ hex: string }[][]>(
+  const [basePattern, setBasePattern] = useState<PixelGridCanvasCell[][]>(
     imageInfo
       ? generateNewPixelGrid({
           imgData: imageInfo.imageData,
@@ -106,7 +105,7 @@ export default function InitCustomization({
 
       if (acceptedProjSize.numRows + acceptedProjSize.numCols === 0) {
         acceptedProjSize = getInitialPatternSize(
-          PROJ_SIZE_LIMIT,
+          PROJ_MAX_SIZE,
           width / height,
           imageInfo.imageData.width,
           imageInfo.imageData.height
@@ -150,7 +149,7 @@ export default function InitCustomization({
       setPatternSize(patternSize);
       setSwatchInputs({
         width: swatch.width.toString(),
-        height: swatch.height.toString()
+        height: swatch.height.toString(),
       });
       if (imageInfo) {
         setBasePattern(
@@ -199,10 +198,8 @@ export default function InitCustomization({
   return (
     <section className="fadeIn h-dvh flex flex-col pt-10">
       <div>
-        <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
-          Chart Preview
-        </h2>
-        <p className="text-center text-2xl md:text-3xl ml-1 mr-1 mb-6">
+        <h2 className="text-center text-3xl mt-6 mb-2">Chart Preview</h2>
+        <p className="text-center text-xl ml-1 mr-1 mb-6">
           We need a few more details to generate your starting pattern.
         </p>
       </div>

@@ -1,12 +1,16 @@
+export const DEFAULT_CELL_COLOR = "#ffffff";
+
 export const simpleColorConstants: string[] = [
-  "#ffffff",
+  DEFAULT_CELL_COLOR,
   "gray",
   "#000000",
   "red",
   "blue",
 ];
 
-export const defaultColorsConstants = [
+export const GRID_LINE_COLORS = ["#000", "#2f4f4f", "#d3d3d3"];
+
+export const DEFAULT_COLORS = [
   {
     black: {
       hex: "#000000",
@@ -45,7 +49,7 @@ export const defaultColorsConstants = [
       isDark: false,
     },
     white: {
-      hex: "#ffffff",
+      hex: DEFAULT_CELL_COLOR,
       isDark: false,
     },
   },
@@ -346,13 +350,10 @@ export const defaultColorsConstants = [
 ];
 
 export const defaultInitialColors: [string, number][] = [
-  [
-    (defaultColorsConstants[1]["red"] as { hex: string; isDark: boolean }).hex,
-    0,
-  ],
+  [(DEFAULT_COLORS[1]["red"] as { hex: string; isDark: boolean }).hex, 0],
   [
     (
-      defaultColorsConstants[1]["orange"] as {
+      DEFAULT_COLORS[1]["orange"] as {
         hex: string;
         isDark: boolean;
       }
@@ -361,7 +362,7 @@ export const defaultInitialColors: [string, number][] = [
   ],
   [
     (
-      defaultColorsConstants[1]["yellow"] as {
+      DEFAULT_COLORS[1]["yellow"] as {
         hex: string;
         isDark: boolean;
       }
@@ -370,7 +371,7 @@ export const defaultInitialColors: [string, number][] = [
   ],
   [
     (
-      defaultColorsConstants[1]["green"] as {
+      DEFAULT_COLORS[1]["green"] as {
         hex: string;
         isDark: boolean;
       }
@@ -379,7 +380,7 @@ export const defaultInitialColors: [string, number][] = [
   ],
   [
     (
-      defaultColorsConstants[1]["blue"] as {
+      DEFAULT_COLORS[1]["blue"] as {
         hex: string;
         isDark: boolean;
       }

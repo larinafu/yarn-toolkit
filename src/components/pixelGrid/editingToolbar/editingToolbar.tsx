@@ -28,8 +28,12 @@ import {
   PixelGridSpecialShapesCanvasTools,
   SpecialShape,
 } from "@/hooks/pixelGrid/usePixelGridSpecialShapesCanvasTools";
-import { knitting } from "@/constants/pixelGrid/stitches";
+import {
+  KNITTING_CABLE_STITCHES,
+  KNITTING_STITCHES,
+} from "@/constants/pixelGrid/stitches";
 import Link from "next/link";
+import ResponsiveList from "@/components/general/responsiveList/responsiveList";
 
 type EditModeIcon = {
   mode: EditMode;
@@ -124,7 +128,10 @@ export default function EditingToolbar({
     },
     {
       mode: "symbolChange",
-      icon: knitting[activeStitchPalette[activeStitchIdx]].svg,
+      icon: (
+        KNITTING_STITCHES[activeStitchPalette[activeStitchIdx]] ||
+        KNITTING_CABLE_STITCHES[activeStitchPalette[activeStitchIdx]]
+      ).svg,
       color: stitchColor,
     },
     {
@@ -182,13 +189,15 @@ export default function EditingToolbar({
   return (
     <header className="card grow m-2 p-0 flex justify-center overflow-auto">
       <div className="grow overflow-x-auto">
-        <div className="flex align-center">
-          <Link
-            className="block bg-amaranth p-2 size-fit rounded-2xl m-2"
-            href="/"
-          >
-            <Image src="/logo.jpg" width={30} height={30} alt="exit" />
-          </Link>
+        <div className="flex align-center [&>*]:w-1/3">
+          <div>
+            <Link
+              className="block bg-amaranth p-2 size-fit rounded-2xl m-2"
+              href="/create"
+            >
+              <Image src="/logo.jpg" width={30} height={30} alt="exit" />
+            </Link>
+          </div>
 
           <section className="flex justify-center m-auto mt-0 mb-0">
             {editModeIcons.map((editModeIcon) => (
@@ -221,25 +230,33 @@ export default function EditingToolbar({
               </button>
             ))}
           </section>
-          <section className="flex items-center shrink-0">
-            <FormattingOptions
-              numberFormat={numberFormat}
-              setNumberFormat={setNumberFormat}
-              savedCanvasDataRef={savedCanvasDataRef}
-              gridLineColor={gridLineColor}
-              setGridLineColor={setGridLineColor}
-              gridLineTools={gridLineTools}
-            />
-            <PixelGridDownloadPreview
-              savedCanvasDataRef={savedCanvasDataRef}
-              specialShapesRef={specialShapesRef}
-              canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
-              canvasCellWidthHeightRatio={
-                savedCanvasDataRef.current.swatch.width /
-                savedCanvasDataRef.current.swatch.height
-              }
-              gridLineColor={gridLineColor}
-            />
+          <section className="flex justify-end items-center [&>*]:mx-2 last:mr-0">
+            <div className="absolute">
+              <ResponsiveList
+                items={[
+                  <FormattingOptions
+                    key={"grid-format"}
+                    numberFormat={numberFormat}
+                    setNumberFormat={setNumberFormat}
+                    savedCanvasDataRef={savedCanvasDataRef}
+                    gridLineColor={gridLineColor}
+                    setGridLineColor={setGridLineColor}
+                    gridLineTools={gridLineTools}
+                  />,
+                  <PixelGridDownloadPreview
+                    key={"download-preview"}
+                    savedCanvasDataRef={savedCanvasDataRef}
+                    specialShapesRef={specialShapesRef}
+                    canvasNumRowsAndCols={windowTools.canvasNumRowsAndCols}
+                    canvasCellWidthHeightRatio={
+                      savedCanvasDataRef.current.swatch.width /
+                      savedCanvasDataRef.current.swatch.height
+                    }
+                    gridLineColor={gridLineColor}
+                  />,
+                ]}
+              />
+            </div>
           </section>
         </div>
         <section className="border-t-amaranth border-t-1 flex justify-around items-center">

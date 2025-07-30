@@ -1,42 +1,100 @@
 import Link from "next/link";
 import Image from "next/image";
 import ScreenDemo from "@/components/general/screenDemo/screenDemo";
+import JsonLd from "@/components/general/jsonLd/jsonLd";
+
+const WEBSITE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Yarn Toolkit",
+  url: "https://yarntoolkit.com",
+  description:
+    "Design custom knitting charts for colorwork, lace, and more with our free online knitting chart generator.",
+  publisher: {
+    "@type": "Person",
+    name: "Larina F.",
+    address: {
+      "@type": "PostalAddress",
+      addressRegion: "New Jersey",
+      addressCountry: "US",
+    },
+  },
+  inLanguage: "en",
+  keywords: [
+    "knitting chart generator",
+    "knitting pattern maker",
+    "colorwork knitting",
+    "lace knitting",
+    "crochet chart",
+    "pixel art knitting",
+  ],
+};
+
+const SOFTWARE_SCHEMA = {
+  "@context": "https://schema.org",
+  "@type": "SoftwareApplication",
+  name: "Yarn Toolkit",
+  operatingSystem: "Web",
+  applicationCategory: "DesignApplication",
+  description:
+    "A free browser-based tool to design knitting charts for colorwork, lace, cables, and more.",
+  url: "https://yarntoolkit.com",
+  offers: {
+    "@type": "Offer",
+    price: "0",
+    priceCurrency: "USD",
+  },
+  screenshot: "https://yarntoolkit.com/photos/laptop-editor.png",
+  creator: {
+    "@type": "Person",
+    name: "Larina F.",
+  },
+};
 
 const SAMPLE_PATTERNS = [
   {
-    src: "/photos/patterns/repeating-hearts.png",
-    alt: "repeating hearts",
+    src: "/photos/patterns/lace.png",
+    alt: "Lace knitting chart pattern with openwork stitch design generated using Yarn Toolkit knitting chart maker",
   },
-  { src: "/photos/patterns/lace.png", alt: "lace" },
   {
-    src: "/photos/patterns/flower.png",
-    alt: "flower",
+    src: "/photos/patterns/repeating-hearts.png",
+    alt: "Repeating hearts colorwork chart generated using Yarn Toolkit knitting chart maker",
+  },
+  {
+    src: "/photos/patterns/cable-chart.png",
+    alt: "Knitting cable chart with diamond motif generated using Yarn Toolkit knitting chart maker",
   },
 ];
 
 export default function Home() {
   return (
     <>
-      <div className={`p-2`}>
-        <h1 className="text-center pt-4 text-5xl md:text-6xl lg:text-7xl">
-          <Link href={"/create?source=blank"}>Create knitting charts for free.</Link>
+      <JsonLd json={WEBSITE_SCHEMA} />
+      <JsonLd json={SOFTWARE_SCHEMA} />
+      <section className={`m-10`}>
+        <h1 className="text-5xl mb-2">
+          <Link href={"/create?source=blank"}>Free Knitting Chart Maker</Link>
         </h1>
+        <h2 className="text-3xl mb-2">
+          Design Your Own Colorwork and Lace Patterns, and More
+        </h2>
+        <p>
+          Yarn Toolkit helps knitters and crochet enthusiasts design custom
+          stitch charts directly in the browser. Whether you&apos;re creating
+          stranded colorwork, openwork lace, or cable knitting motifs, our free
+          knitting chart generator lets you start from scratch or start off with
+          a photo—no software installation required.
+        </p>
         <div className="relative">
           <Image
             src="/yarn-thread.svg"
-            alt="yarn thread"
+            alt=""
+            aria-hidden="true"
             width={1000}
             height={50}
-            className="hidden lg:block absolute w-full m-auto top-0 bottom-0"
+            className="absolute w-full m-auto top-0 bottom-0"
           />
-          <Image
-            src="/yarn-thread-vert.svg"
-            alt="yarn thread vertical"
-            width={1000}
-            height={50}
-            className="lg:hidden absolute h-full m-auto left-0 right-0 top-0"
-          />
-          <div className="h-dvh min-h-300 lg:min-h-auto lg:w-11/12 lg:h-auto m-auto flex flex-col lg:flex-row justify-center items-center">
+          <div className="m-auto flex justify-center items-center">
             {SAMPLE_PATTERNS.map((pattern, idx) => (
               <div className="w-3/4 h-1/4 lg:w-1/4 flex" key={idx}>
                 <Image
@@ -44,60 +102,64 @@ export default function Home() {
                   alt={pattern.alt}
                   width={1000}
                   height={1000}
-                  className="max-h-full w-auto max-w-full m-auto z-20"
+                  className="max-h-full w-auto max-w-full m-auto z-20 px-1"
                 />
               </div>
             ))}
           </div>
         </div>
-      </div>
-      <div
-        className={`p-2 flex flex-col lg:flex-row justify-evenly items-center bg-amaranth-light lg:h-200`}
-      >
-        <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl lg:ml-20">
-          Effortlessly edit across all devices.
-        </h1>
+      </section>
+      <section className={`bg-amaranth-light p-10`}>
+        <h2 className="text-5xl mb-2">
+          Easy-To-Use Pattern Design Interface on all Screen Sizes
+        </h2>
+        <p className="mb-6">
+          Yarn Toolkit adapts seamlessly to your screen size. Designed with
+          knitters in mind, the interface makes it easy to draw stitches, switch
+          symbols, and customize rows with precision—using intuitive tools that
+          keep your creative flow uninterrupted.
+        </p>
         <div className="flex justify-center">
           <ScreenDemo />
         </div>
-      </div>
-      <div
-        className={`p-2 pt-10 flex flex-col-reverse lg:flex-row items-center`}
-      >
-        <div className="p-4 flex flex-col lg:flex-row justify-center items-center">
+      </section>
+      <section className={`m-10`}>
+        <h2 className="text-5xl mb-2">
+          <Link href={"/create?source=image"}>
+            Turn Photos into Pixel Art Patterns
+          </Link>
+        </h2>
+        <p className="mb-6">
+          Our image to chart converter lets you upload images and generate
+          pixel-based knitting and crochet charts for intarsia and colorwork.
+          Upload any image and get a pixelated color-matching chart you can use
+          for intarsia, tapestry crochet, or fair isle. Control color depth and
+          pattern dimensions to match your project!
+        </p>
+        <div className="flex justify-center items-center px-2">
           <Image
             src={"/photos/earth.jpg"}
             width={1000}
             height={1000}
-            alt="earth"
-            className="border border-black sm:w-1/2 lg:w-1/3"
+            alt="Drawing of Earth to be converted to a color chart"
+            className="border border-black size-1/2 sm:size-1/3"
           />
           <Image
             src={"/curve-right-arrow.svg"}
             width={400}
             height={400}
-            alt="arrow"
-            className="hidden lg:block lg:rotate-0 size-1/4"
-          />
-          <Image
-            src={"/curve-down-arrow.svg"}
-            width={400}
-            height={400}
-            alt="arrow"
-            className="lg:hidden size-1/6"
+            alt="Rightward curved arrow illustrating image-to-pattern conversion flow"
+            className="size-1/6"
           />
           <Image
             src="/photos/earth-pixelated.png"
             width={1000}
             height={1000}
-            alt="pixelated earth"
-            className="sm:w-1/2 lg:w-1/3"
+            alt="Pixelated Earth image symbolizing automatic image to knitting chart conversion"
+            className="size-1/2 sm:size-1/3"
           />
         </div>
-        <h1 className="m-4 lg:w-1/2 text-5xl md:text-6xl lg:text-7xl">
-          <Link href={"/create?source=image"}>Convert images to color charts.</Link>
-        </h1>
-      </div>
+      </section>
       <Link
         href="create"
         className="block sticky bottom-2 right-0 ml-auto button text-4xl md:text-5xl rounded-3xl w-fit m-5 z-30"

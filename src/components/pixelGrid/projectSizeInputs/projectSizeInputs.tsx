@@ -100,16 +100,14 @@ export default function ProjectSizeInputs({
   return (
     <div className="flex flex-col h-full relative overflow-visible">
       <div className="flex">
-        <h3 className="grow text-center text-2xl">
-          Set your pattern size
-        </h3>
+        <h3 className="grow text-center text-2xl">Set your pattern size</h3>
         <ValidationIndicator errorMsg={isValidPatternSizeDisplay.error} />
       </div>
       <div className="grow flex items-center">
         <div className={`${styles.container} h-fit`}>
           <Image
             src={"/row-indicator.svg"}
-            alt="row indicator"
+            alt="The amount of rows you want in your initial knitting chart. This can be modified later"
             width={100}
             height={100}
           />
@@ -137,7 +135,7 @@ export default function ProjectSizeInputs({
           </svg>
           <Image
             src={"/col-indicator.svg"}
-            alt="column indicator"
+            alt="The amount of columns you want in your initial knitting chart. This can be modified later"
             width={100}
             height={100}
           />
@@ -157,7 +155,7 @@ export default function ProjectSizeInputs({
               >
                 <Image
                   src={"/down-arrow.svg"}
-                  alt="down"
+                  alt="Decrease the number of rows in your chart by 1"
                   width={20}
                   height={20}
                 />
@@ -186,7 +184,12 @@ export default function ProjectSizeInputs({
                   });
                 }}
               >
-                <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
+                <Image
+                  src={"/up-arrow.svg"}
+                  alt="Increase the number of rows in your chart by 1"
+                  width={20}
+                  height={20}
+                />
               </button>
             </div>
             <label htmlFor="num_rows" className="">
@@ -210,7 +213,7 @@ export default function ProjectSizeInputs({
               >
                 <Image
                   src={"/down-arrow.svg"}
-                  alt="down"
+                  alt="Decrese the number of columns in your chart by 1"
                   width={20}
                   height={20}
                 />
@@ -239,7 +242,12 @@ export default function ProjectSizeInputs({
                   });
                 }}
               >
-                <Image src={"/up-arrow.svg"} alt="up" width={20} height={20} />
+                <Image
+                  src={"/up-arrow.svg"}
+                  alt="Increase the number of columns in your chart by 1"
+                  width={20}
+                  height={20}
+                />
               </button>
             </div>
             <label htmlFor="num_cols" className="">

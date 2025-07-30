@@ -1,41 +1,19 @@
 import React, { useRef, useEffect } from "react";
 
-import useViewboxTools, {
-  ViewboxTools,
-} from "@/hooks/pixelGrid/useViewboxTools";
+import { ViewboxTools } from "@/hooks/pixelGrid/useViewboxTools";
 import { PixelGridWindowTools } from "@/hooks/pixelGrid/usePixelGridWindowTools";
-import { ColorCanvasTools } from "@/hooks/pixelGrid/useColorCanvasTools";
-import { StitchCanvasTools } from "@/hooks/pixelGrid/usePixelGridStitchCanvasTools";
 import { PixelGridCanvasSavedData } from "@/types/pixelGrid";
 import canvasSizingUtils from "@/utils/pixelGrid/canvasSizingUtils";
 
 export default function ImageViewbox({
   canvasWindowTools,
-  savedCanvasDataRef,
-  updateFullCanvas,
   viewboxTools,
 }: {
   canvasWindowTools: PixelGridWindowTools;
   savedCanvasDataRef: React.RefObject<PixelGridCanvasSavedData>;
-  updateFullCanvas: ({
-    colorCanvasContext,
-    stitchCanvasContext,
-    specialShapesCanvasContext,
-    windowTools,
-  }: {
-    colorCanvasContext?: CanvasRenderingContext2D;
-    stitchCanvasContext?: CanvasRenderingContext2D;
-    specialShapesCanvasContext?: CanvasRenderingContext2D;
-    windowTools?: Partial<PixelGridWindowTools>;
-  }) => void;
   viewboxTools: ViewboxTools;
 }) {
   const viewboxVisibleRef = useRef(null);
-
-  const [numRows, numCols] = [
-    savedCanvasDataRef.current.pixels.length,
-    savedCanvasDataRef.current.pixels[0].length,
-  ];
 
   useEffect(() => {
     const viewboxContext = (
@@ -46,6 +24,10 @@ export default function ImageViewbox({
       viewboxTools.specialShapesRef.current as HTMLCanvasElement
     ).getContext("2d") as CanvasRenderingContext2D;
     viewboxTools.setSpecialShapesCtx(viewboxSpecialShapesContext);
+    const viewboxStitchesContext = (
+      viewboxTools.stitchesRef.current as HTMLCanvasElement
+    ).getContext("2d") as CanvasRenderingContext2D;
+    viewboxTools.setStitchesCtx(viewboxStitchesContext);
     canvasSizingUtils.resizeCanvas({
       ref: viewboxTools.ref as React.RefObject<HTMLCanvasElement>,
       gridWidth: viewboxTools.viewboxDims.width,
@@ -56,23 +38,45 @@ export default function ImageViewbox({
       gridWidth: viewboxTools.viewboxDims.width,
       gridHeight: viewboxTools.viewboxDims.height,
     });
+    canvasSizingUtils.resizeCanvas({
+      ref: viewboxTools.stitchesRef as React.RefObject<HTMLCanvasElement>,
+      gridWidth: viewboxTools.viewboxDims.width,
+      gridHeight: viewboxTools.viewboxDims.height,
+    });
     viewboxTools.drawViewboxColors(viewboxContext);
   }, []);
 
   // window resize
   useEffect(() => {
     const handleResize = () => {
-      viewboxTools.updateFullCanvas({});
+      viewboxTools.updateFullCanvas({
+        viewContext: viewboxTools.ref.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+        specialShapesContext: viewboxTools.specialShapesRef.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+        stitchesContext: viewboxTools.stitchesRef.current?.getContext(
+          "2d"
+        ) as CanvasRenderingContext2D,
+      });
     };
     window.addEventListener("resize", handleResize);
     return () => {
       window.removeEventListener("resize", handleResize);
     };
-  }, []);
+  }, [
+    canvasWindowTools.canvasNumRowsAndCols.numRows,
+    canvasWindowTools.canvasNumRowsAndCols.numCols,
+  ]);
 
   return (
-    <section className="m-auto mt-0 mb-0 w-fit relative touch-none">
+    <section className="m-auto mt-0 mb-0 relative touch-none">
       <canvas ref={viewboxTools.ref}></canvas>
+      <canvas
+        ref={viewboxTools.stitchesRef}
+        className="absolute top-0 left-0"
+      ></canvas>
       <canvas
         ref={viewboxTools.specialShapesRef}
         className="absolute top-0 left-0"
@@ -95,24 +99,8 @@ export default function ImageViewbox({
           viewboxTools.pointerActions.handleViewboxRelease();
         }}
         onPointerMove={(e) => {
-          const newCanvasWindow =
-            viewboxTools.pointerActions.handleViewboxMove(e);
           if (viewboxTools.pointerActions.isPointerDown) {
-            if (
-              !(
-                newCanvasWindow?.startRow ===
-                  canvasWindowTools.canvasWindow.startRow &&
-                newCanvasWindow?.startCol ===
-                  canvasWindowTools.canvasWindow.startCol
-              )
-            ) {
-              updateFullCanvas({
-                windowTools: {
-                  ...canvasWindowTools,
-                  canvasWindow: newCanvasWindow,
-                },
-              });
-            }
+            viewboxTools.pointerActions.handleViewboxMove(e);
           }
         }}
         onPointerUp={(e) => {

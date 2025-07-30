@@ -55,8 +55,6 @@ export default function usePixelGridSpecialShapesCanvasTools({
 
   const [changedShapes, setChangedShapes] = useState<number[]>([]);
 
-  const specialShapesRefLength = specialShapesRef.current.length;
-
   const addShape = (row: number, col: number, color: string, shape: "line") => {
     setTarPoint({
       shapeId: specialShapesRef.current.length,
