@@ -56,14 +56,7 @@ export default function Page({}) {
             knitting, crochet, cross-stitch, or any other thread-based craft. We
             envision Yarn Toolkit as a virtual extension of your hands, where
             creativity flows without friction and technical limitations never
-            hold you back. Much like a trusted toolkit that a skilled
-            craftsperson relies on to construct complex, beautiful works, Yarn
-            Toolkit was created to simplify the planning and design process so
-            that more time can be spent making. We aim to remove the barriers of
-            repetitive manual charting and confusing symbol placement, making
-            the journey from idea to finished project as smooth, intuitive, and
-            enjoyable as possible. With Yarn Toolkit, you&apos;re not just
-            designing—you&apos;re crafting with confidence and freedom.
+            hold you back.
           </p>
           <div className="h-1/2 m-auto">
             <ScreenDemo />

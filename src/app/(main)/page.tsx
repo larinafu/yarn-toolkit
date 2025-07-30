@@ -79,11 +79,11 @@ export default function Home() {
           Design Your Own Colorwork and Lace Patterns, and More
         </h2>
         <p>
-          Yarn Toolkit helps knitters design custom stitch charts directly in
-          the browser. Whether you&apos;re creating stranded colorwork, openwork
-          lace, or cable knitting motifs, our free knitting chart generator lets
-          you start from scratch or start off with a photo—no software
-          installation required.
+          Yarn Toolkit helps knitters and crochet enthusiasts design custom
+          stitch charts directly in the browser. Whether you&apos;re creating
+          stranded colorwork, openwork lace, or cable knitting motifs, our free
+          knitting chart generator lets you start from scratch or start off with
+          a photo—no software installation required.
         </p>
         <div className="relative">
           <Image
@@ -110,9 +110,15 @@ export default function Home() {
         </div>
       </section>
       <section className={`bg-amaranth-light p-10`}>
-        <h2 className="text-5xl">
+        <h2 className="text-5xl mb-2">
           Easy-To-Use Pattern Design Interface on all Screen Sizes
         </h2>
+        <p className="mb-6">
+          Yarn Toolkit adapts seamlessly to your screen size. Designed with
+          knitters in mind, the interface makes it easy to draw stitches, switch
+          symbols, and customize rows with precision—using intuitive tools that
+          keep your creative flow uninterrupted.
+        </p>
         <div className="flex justify-center">
           <ScreenDemo />
         </div>
@@ -124,13 +130,11 @@ export default function Home() {
           </Link>
         </h2>
         <p className="mb-6">
-          Our image to chart Converter lets you upload images generate
-          pixel-based knitting or crochet charts for intarsia and
-          colorworkEasily convert photos into colorwork knitting patterns with
-          our automatic image-to-chart tool. Upload any image and get a
-          pixelated knitting or crochet chart you can use for intarsia, tapestry
-          crochet, or fair isle. Control color depth and pattern dimensions to
-          match your project.
+          Our image to chart converter lets you upload images and generate
+          pixel-based knitting and crochet charts for intarsia and colorwork.
+          Upload any image and get a pixelated color-matching chart you can use
+          for intarsia, tapestry crochet, or fair isle. Control color depth and
+          pattern dimensions to match your project!
         </p>
         <div className="flex justify-center items-center px-2">
           <Image
