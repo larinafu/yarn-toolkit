@@ -81,7 +81,7 @@ export default function Home() {
         <p>
           Yarn Toolkit helps knitters and crochet enthusiasts design custom
           stitch charts directly in the browser. Whether you&apos;re creating
-          stranded colorwork, openwork lace, or cable knitting motifs, our free
+          stranded colorwork, openwork lace, or cable knitting motifs, this free
           knitting chart generator lets you start from scratch or start off with
           a photo—no software installation required.
         </p>
@@ -130,7 +130,7 @@ export default function Home() {
           </Link>
         </h2>
         <p className="mb-6">
-          Our image to chart converter lets you upload images and generate
+          The image to chart converter lets you upload images and generate
           pixel-based knitting and crochet charts for intarsia and colorwork.
           Upload any image and get a pixelated color-matching chart you can use
           for intarsia, tapestry crochet, or fair isle. Control color depth and

@@ -27,7 +27,7 @@ export type EditRecordTools = {
   redo: () => void;
 };
 
-const RECORD_CACHE_SIZE = 7;
+const RECORD_CACHE_SIZE = 20;
 
 export default function usePixelGridEditRecordTools({
   editMode,
