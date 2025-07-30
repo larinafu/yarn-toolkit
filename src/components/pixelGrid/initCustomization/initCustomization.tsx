@@ -43,12 +43,12 @@ export default function InitCustomization({
   const [patternSize, setPatternSize] = useState<PatternSize>(
     imageInfo
       ? getInitialPatternSize(
-          75,
+          50,
           widthHeightRatio,
           imageInfo.imageData.width,
           imageInfo.imageData.height
         )
-      : { numRows: 50, numCols: 50 }
+      : { numRows: 30, numCols: 30 }
   );
   const [patternSizeInputs, setPatternSizeInputs] =
     useState<PatternSizeDisplay>(patternSize);
@@ -198,10 +198,8 @@ export default function InitCustomization({
   return (
     <section className="fadeIn h-dvh flex flex-col pt-10">
       <div>
-        <h2 className="text-center text-4xl md:text-5xl mt-6 mb-2">
-          Chart Preview
-        </h2>
-        <p className="text-center text-2xl md:text-3xl ml-1 mr-1 mb-6">
+        <h2 className="text-center text-3xl mt-6 mb-2">Chart Preview</h2>
+        <p className="text-center text-xl ml-1 mr-1 mb-6">
           We need a few more details to generate your starting pattern.
         </p>
       </div>

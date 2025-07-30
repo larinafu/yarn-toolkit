@@ -48,7 +48,7 @@ export default function FormattingOptions({
 }) {
   return (
     <>
-      <Dropdown btnContent={<span className="text-black">Format</span>}>
+      <Dropdown btnContent={<span className="text-black">Format</span>} btnClass="p-2 w-full text-start">
         <div className="card p-0">
           <form className="pb-1 border-b border-b-amaranth">
             <fieldset className="flex">

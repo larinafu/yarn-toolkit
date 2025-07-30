@@ -30,12 +30,18 @@ export default function Create({ source }: { source?: BaseOption }) {
 
   return (
     <div className={`fadeIn`}>
-      <h1 className="mt-2 mb-2 text-center text-4xl md:text-5xl">
-        Create New Pattern
+      <h1 className="mt-2 mb-2 text-center text-5xl">
+        Create a Knitting Chart Online
       </h1>
-      <p className="text-center ml-1 mr-1 mb-6 text-2xl md:text-3xl">
-        How would you like to start your pattern?
+      <p className="text-center text-xl m-auto mb-6 max-w-4/5">
+        Use Yarn Toolkit&apos;s chart editor to turn an image into a pixel-based
+        knitting pattern or create a custom knitting chart from scratch. No
+        download required. Ideal for colorwork, lace, and projects of all
+        difficulty levels.
       </p>
+      <h2 className="text-center ml-1 mr-1 mb-6 text-3xl">
+        How would you like to start your pattern?
+      </h2>
       <section className="flex justify-evenly">
         <div
           className={`card m-2 hover:cursor-pointer ${
@@ -44,13 +50,13 @@ export default function Create({ source }: { source?: BaseOption }) {
           onClick={() => handleBaseChoice("image")}
           tabIndex={0}
         >
-          <h3 className={cardHeaderStyle}>Upload image</h3>
+          <p className={cardHeaderStyle}>Upload image</p>
           <p className={cardSubheaderStyle}>
             We&apos;ll match the initial colors on your grid to fit your image
           </p>
           <Image
             src="/image.svg"
-            alt="image"
+            alt="Convert an image to a knitting chart"
             width={100}
             height={100}
             className="m-2 size-1/3"
@@ -63,13 +69,13 @@ export default function Create({ source }: { source?: BaseOption }) {
           onClick={() => handleBaseChoice("blank")}
           tabIndex={0}
         >
-          <h3 className={cardHeaderStyle}>Start from scratch</h3>
+          <p className={cardHeaderStyle}>Start from scratch</p>
           <p className={cardSubheaderStyle}>
             We&apos;ll start you off with a blank grid
           </p>
           <Image
             src="/grid.svg"
-            alt="grid denoting blank pattern"
+            alt="Start from scratch using a blank knitting chart grid"
             width={100}
             height={100}
             className="m-2 size-1/3"
