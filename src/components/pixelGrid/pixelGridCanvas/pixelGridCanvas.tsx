@@ -247,6 +247,7 @@ export default function PixelGridCanvas({
             }
           }
         }}
+        onContextMenu={(e) => e.preventDefault()}
         onPointerLeave={(e) => {
           if (didPointerActuallyLeave(e)) {
             setCurPixel(null);
