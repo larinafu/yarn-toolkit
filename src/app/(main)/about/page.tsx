@@ -94,7 +94,7 @@ export default function Page({}) {
             translated into a color chart. From there, users can fine-tune the
             design manually using the editor. This helps bridge the gap between
             inspiration and execution, empowering crafters to bring even the
-            most complex ideas to lifes.
+            most complex ideas to life.
           </p>
         </section>
         <section>
