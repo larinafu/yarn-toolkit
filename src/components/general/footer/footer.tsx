@@ -22,11 +22,17 @@ export default function Footer() {
   return (
     <footer className="w-full p-4 bg-amaranth-light">
       <div className="w-1/2 flex flex-col sm:flex-row sm:justify-center text-center m-auto sm:w-full">
+        <Link
+          href="/tutorial"
+          className="bg-white rounded-2xl pl-2 pr-2 text-amaranth"
+        >
+          Tutorial
+        </Link>
         {footerLinks.map((link) => (
           <Link
             key={link.title}
             href={link.href}
-            className="text-amaranth hover:underline sm:ml-2 sm:first:ml-0"
+            className="text-amaranth hover:underline sm:ml-2"
           >
             {link.title}
           </Link>
